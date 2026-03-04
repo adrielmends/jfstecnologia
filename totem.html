@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Totem Ex-Envios | Autoatendimento</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #FF9600;
+            --primary-hover: #E68700;
+            --secondary: #0A3750;
+            --text-main: #1A202C;
+            --text-muted: #718096;
+            --white: #ffffff;
+            --border: #E2E8F0;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        html {
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 11px;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: var(--white);
+            padding: 0rem;
+            display: flex;
+            justify-content: center;
+            border-bottom: 3px solid var(--border);
+        }
+
+        header .logo img {
+            height: 88px;
+            padding-top: 9px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+
+            header .logo img {
+                height: 50px;
+            }
+
+            main {
+                padding: 1.5rem 1rem;
+                align-items: center;
+            }
+
+            .screen-container {
+                margin: auto 0;
+            }
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            padding-bottom: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: calc(100vh - 120px);
+        }
+
+        .screen-container {
+            width: 100%;
+            max-width: 950px;
+            margin-top: 1rem;
+            padding: 2rem 0;
+        }
+
+        .screen {
+            display: none;
+            animation: zoomIn 0.5s ease;
+            width: 100%;
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            text-align: center;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            margin-top: -1rem;
+            text-transform: uppercase;
+        }
+
+        .location-card.selected {
+            border-color: var(--primary) !important;
+            background: rgba(255, 107, 0, 0.05);
+        }
+
+        .location-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 107, 0, 0.3) !important;
+        }
+
+        /* Top Progress */
+        .top-progress {
+            height: 10px;
+            background: var(--border);
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .p-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.8s ease;
+        }
+
+        /* Navigation Buttons */
+        .nav-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .stage-label {
+            display: block;
+            text-align: center;
+            font-weight: 800;
+            color: var(--secondary);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        .btn-kiosk-back {
+            background: var(--white);
+            border: 2px solid var(--border);
+            padding: 0.8rem 1.5rem;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: var(--transition);
+            text-transform: uppercase;
+        }
+
+        .btn-kiosk-back:hover {
+            border-color: var(--primary);
+            background: #fff;
+            transform: translateX(-3px);
+        }
+
+        .btn-kiosk-home {
+            background: var(--white);
+            border: 2px solid var(--border);
+            padding: 0.8rem 1.5rem;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: var(--transition);
+            text-transform: uppercase;
+        }
+
+        .btn-kiosk-home:hover {
+            border-color: var(--primary);
+            background: rgba(255, 150, 0, 0.05);
+            transform: translateX(3px);
+        }
+
+        /* Kiosk Grid */
+        .kiosk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .kiosk-card {
+            background: var(--white);
+            border: 3px solid var(--border);
+            border-radius: 30px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .kiosk-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .kiosk-card i {
+            font-size: 3.5rem;
+            color: var(--primary);
+        }
+
+        .kiosk-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            color: var(--secondary);
+            text-transform: uppercase;
+        }
+
+        .kiosk-card span {
+            font-size: 1.4rem;
+            color: #718096;
+            text-transform: uppercase;
+        }
+
+        .location-card {
+            width: 250px;
+            height: 250px;
+            text-align: center !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            gap: 1.2rem !important;
+            padding: 1.5rem !important;
+            flex-shrink: 0;
+            display: flex !important;
+        }
+
+        .location-card div {
+            text-align: center;
+        }
+
+        /* PIX Modal */
+        .pix-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            backdrop-filter: blur(8px);
+        }
+
+        .pix-modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .pix-content {
+            background: var(--white);
+            border-radius: 40px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .qr-code {
+            width: 250px;
+            height: 250px;
+            margin: 2rem auto;
+            background: #f7fafc;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .qr-code img {
+            max-width: 100%;
+        }
+
+        /* Kiosk Form */
+        .kiosk-form {
+            background: var(--white);
+            border-radius: 30px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .kiosk-form {
+                padding: 1.5rem;
+                border-radius: 20px;
+            }
+
+            .grid-inputs {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .grid-tri {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+        }
+
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .grid-tri {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .input-hero {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .input-hero label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-hero input,
+        .input-hero select {
+            width: 100%;
+            padding: 1.2rem;
+            border: 2px solid var(--border);
+            border-radius: 15px;
+            font-size: 1.3rem;
+            outline: none;
+            transition: var(--transition);
+            background: #f8fafc;
+        }
+
+        .input-hero input:focus {
+            border-color: var(--primary);
+            background: #fff;
+        }
+
+        .btn-giant {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1.6rem;
+            border-radius: 20px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transition);
+            margin-top: 1rem;
+            text-transform: uppercase;
+            box-shadow: 0 10px 20px rgba(255, 150, 0, 0.2);
+        }
+
+        .btn-giant:hover {
+            background: var(--primary-hover);
+            transform: scale(1.02);
+        }
+
+        /* Disclaimer Area */
+        .disclaimer-box {
+            background: #fff5f5;
+            border: 2px solid #fed7d7;
+            padding: 2.5rem;
+            border-radius: 30px;
+            color: #c53030;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .disclaimer-box h4 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-transform: uppercase;
+        }
+
+        .quote-card {
+            background: var(--white);
+            border: 3px solid var(--border);
+            border-radius: 25px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .quote-card:hover {
+            border-color: var(--primary);
+            transform: translateX(10px);
+        }
+
+        .quote-card h3,
+        .quote-card p {
+            text-transform: uppercase;
+        }
+
+        .quote-card .price {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #2F855A;
+        }
+
+        /* Centered Layout Refinement */
+        .kiosk-wrapper {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .kiosk-main-content {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(94vh - 300px);
+            padding-bottom: 2rem;
+        }
+
+        /* Shared Global Nav */
+        .kiosk-shared-header {
+            display: none;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+            width: 100%;
+            max-width: 950px;
+            margin: 0 auto 0.5rem auto;
+        }
+
+        .nav-buttons-shared {
+            display: flex;
+            justify-content: space-between;
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        /* Top Bar Step Indicator */
+        .top-step-bar {
+            background: transparent;
+            border-bottom: none;
+            padding-top: 12px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            position: relative;
+            z-index: 1000;
+            font-size: 0.80rem;
+        }
+
+        .step-indicator-list {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .step-indicator-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            opacity: 0.3;
+            transition: var(--transition);
+        }
+
+        .step-indicator-item.active {
+            opacity: 1;
+        }
+
+        .step-indicator-item.active .step-number {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .step-indicator-item.active .step-text {
+            color: var(--secondary);
+            font-weight: 800;
+        }
+
+        .step-indicator-item.completed {
+            opacity: 0.7;
+        }
+
+        .step-indicator-item.completed .step-number {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .step-text {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--secondary);
+        }
+
+        /* Bottom Sticky Summary Bar */
+        .bottom-summary-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--secondary);
+            color: white;
+            padding: 1.2rem 2rem;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
+            z-index: 2000;
+        }
+
+        .summary-content {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .summary-label {
+            color: var(--primary);
+            text-transform: uppercase;
+            font-weight: 900;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            flex-shrink: 0;
+        }
+
+        .order-summary-list {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 0.2rem;
+        }
+
+        .order-summary-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+        }
+
+        .order-summary-item::before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        @media (max-width: 1024px) {
+            header {
+                padding: 0rem;
+            }
+
+            header .logo img {
+                height: 120px;
+            }
+
+            main {
+                align-items: center;
+                min-height: calc(78vh - 60px);
+                padding-bottom: 150px;
+            }
+
+            .kiosk-shared-header {
+                align-items: flex-start;
+                margin-bottom: 3rem;
+            }
+
+            .nav-buttons-shared {
+                justify-content: space-between;
+            }
+
+            .step-indicator-list {
+                gap: 1.2rem;
+                justify-content: center;
+                padding: 0.5rem 0;
+                width: 100%;
+            }
+
+            .step-number {
+                width: 37px;
+                height: 37px;
+                font-size: 1.3rem;
+            }
+
+            .step-text {
+                display: block;
+                font-size: 0.80rem;
+                letter-spacing: 0;
+            }
+
+            .step-indicator-item {
+                flex-direction: column;
+                gap: 0.6rem;
+            }
+
+            .btn-kiosk-back,
+            .btn-kiosk-home {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+                border-radius: 12px;
+            }
+
+            .btn-kiosk-back i,
+            .btn-kiosk-home i {
+                font-size: 0.9rem;
+            }
+
+            .location-card {
+                width: calc(50% - 1rem) !important;
+                height: auto !important;
+                aspect-ratio: 1 / 1;
+                padding: 1rem !important;
+                gap: 0.8rem !important;
+            }
+
+            .location-card i {
+                font-size: 2rem !important;
+            }
+
+            .location-card h3 {
+                font-size: 1rem !important;
+            }
+
+            .location-card p {
+                font-size: 0.8rem !important;
+            }
+
+            .summary-content {
+                flex-direction: column;
+                gap: 0.8rem;
+                align-items: center;
+            }
+
+            .order-summary-list {
+                flex-direction: column;
+                gap: 0.6rem;
+                align-items: center;
+                white-space: normal;
+                width: 100%;
+            }
+
+            .order-summary-item {
+                font-size: 0.95rem;
+                text-align: center;
+            }
+
+            .kiosk-main-content {
+                min-height: auto;
+                align-items: center;
+                padding-bottom: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-progress">
+        <div class="p-fill" id="p-fill" style="width: 5%;"></div>
+    </div>
+    <header>
+        <div class="logo"><a href="https://exenvios.com.br/"><img src="assets/img/logo_exenvios.png"
+                    alt="Ex-Envios"></a></div>
+    </header>
+
+    <main>
+        <div class="kiosk-wrapper">
+            <!-- Global Shared Header -->
+            <div id="kiosk-shared-header" class="kiosk-shared-header">
+                <div class="nav-buttons-shared">
+                    <button id="btn-shared-back" class="btn-kiosk-back" onclick="prevStep()">
+                        <i class="fas fa-arrow-left"></i> VOLTAR
+                    </button>
+                    <button id="btn-shared-home" class="btn-kiosk-home" onclick="goHome()">
+                        <i class="fas fa-home"></i> INICIO
+                    </button>
+                </div>
+                <!-- Top Step Indicator -->
+                <div id="top-step-bar" class="top-step-bar">
+                    <ul class="step-indicator-list">
+                        <li id="step-1" class="step-indicator-item active">
+                            <span class="step-number">1</span>
+                            <span class="step-text">Acesso</span>
+                        </li>
+                        <li id="step-2" class="step-indicator-item">
+                            <span class="step-number">2</span>
+                            <span class="step-text">Necessidade</span>
+                        </li>
+                        <li id="step-3" class="step-indicator-item">
+                            <span class="step-number">3</span>
+                            <span class="step-text">Tipo/Embalagem</span>
+                        </li>
+                        <li id="step-4" class="step-indicator-item">
+                            <span class="step-number">4</span>
+                            <span class="step-text">Etiquetas</span>
+                        </li>
+                        <li id="step-5" class="step-indicator-item">
+                            <span class="step-number">5</span>
+                            <span class="step-text">Postagem</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="kiosk-main-content">
+                <div class="screen-container" style="padding: 0.2rem 0; margin-top: 0;">
+                    <!-- scr-login -->
+                    <div id="scr-login" class="screen active">
+                        <h1>Emitir Novo Frete</h1>
+                        <p class="subtitle">Faça login para gerenciar seus envios no Totem Ex-Envios.</p>
+                        <div class="kiosk-form">
+                            <div class="input-hero"><label>Identificação</label><input type="text"
+                                    placeholder="CPF ou E-mail">
+                            </div>
+                            <div class="input-hero"><label>Senha</label><input type="password" placeholder="••••••••">
+                            </div>
+                            <button class="btn-giant" onclick="nextStep('main', 15)">CONTINUAR <i
+                                    class="fas fa-arrow-right"></i></button>
+
+                            <div style="text-align: center; margin-top: 2rem;">
+                                <p
+                                    style="color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.9rem;">
+                                    Você ainda não tem cadastro?
+                                    <a href="login.html"
+                                        style="color: var(--primary); text-decoration: none; margin-left: 5px;">Faça o
+                                        cadastro agora</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- scr-main -->
+                    <div id="scr-main" class="screen">
+                        <span class="stage-label">IDENTIFICAÇÃO</span>
+                        <h1>O que deseja hoje?</h1>
+                        <div class="kiosk-grid">
+                            <div class="kiosk-card"
+                                onclick="setOrderData('necessidade', 'Preciso de Caixa'); nextStep('boxes', 30)">
+                                <i class="fas fa-box-open"></i>
+                                <h3>PRECISO DE CAIXA</h3>
+                                <span>Ainda não embalei meu item.</span>
+                            </div>
+                            <div class="kiosk-card"
+                                onclick="setOrderData('necessidade', 'Já está embalado'); nextStep('labels', 30)">
+                                <i class="fas fa-shipping-fast"></i>
+                                <h3>JÁ ESTÁ EMBALADO</h3>
+                                <span>Pronto para identificar e postar.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- scr-boxes -->
+                    <div id="scr-boxes" class="screen">
+                        <span class="stage-label">EMBALAGENS</span>
+                        <h1>Escolha a Embalagem</h1>
+                        <div class="kiosk-grid" id="container-embalagens">
+                            <!-- Dynamic Content -->
+                        </div>
+                    </div>
+
+                    <!-- scr-after-pack -->
+                    <div id="scr-after-pack" class="screen">
+                        <span class="stage-label">PRÓXIMOS PASSOS</span>
+                        <h1>Pronto para rotular?</h1>
+                        <div class="kiosk-grid">
+                            <div class="kiosk-card" onclick="nextStep('collection', 90)">
+                                <i class="fas fa-plus-circle"></i>
+                                <h3>GERAR NOVA ETIQUETA</h3>
+                            </div>
+                            <div class="kiosk-card" onclick="nextStep('collection', 90)">
+                                <i class="fas fa-print"></i>
+                                <h3>IMPRIMIR EXISTENTE</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- scr-labels -->
+                    <div id="scr-labels" class="screen">
+                        <span class="stage-label">ETIQUETAGEM</span>
+                        <h1>Etiqueta de Envio</h1>
+                        <div class="kiosk-grid">
+                            <div class="kiosk-card" onclick="nextStep('gen-info', 40)">
+                                <i class="fas fa-file-invoice"></i>
+                                <h3>GERAR ETIQUETA</h3>
+                                <span>Calcular frete e emitir agora.</span>
+                            </div>
+                            <div class="kiosk-card" onclick="nextStep('disclaimer', 40)">
+                                <i class="fas fa-check-circle"></i>
+                                <h3>JÁ TENHO ETIQUETA</h3>
+                                <span>Marketplaces ou transportadoras.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- scr-gen-info -->
+                    <div id="scr-gen-info" class="screen">
+                        <span class="stage-label">CADASTRO</span>
+                        <h1>Seus Dados</h1>
+                        <div class="kiosk-form">
+                            <div class="input-hero"><label>Nome Completo</label><input type="text" id="cust-name"></div>
+                            <div class="grid-inputs">
+                                <div class="input-hero"><label>Data de Nasc.</label><input type="text" id="cust-birth"
+                                        placeholder="DD/MM/AAAA">
+                                </div>
+                                <div class="input-hero"><label>CPF</label><input type="text" id="cust-cpf"></div>
+                            </div>
+                            <div class="input-hero"><label>E-mail</label><input type="email" id="cust-email"></div>
+                            <button class="btn-giant" onclick="nextStep('gen-calc', 60)">CONTINUAR</button>
+                        </div>
+                    </div>
+
+                    <!-- scr-gen-calc -->
+                    <div id="scr-gen-calc" class="screen">
+                        <span class="stage-label">CÁLCULO</span>
+                        <h1>Origem e Destino</h1>
+                        <div class="kiosk-form">
+                            <div class="grid-inputs">
+                                <div class="input-hero"><label>CEP Origem</label><input type="text" value="79115-800">
+                                </div>
+                                <div class="input-hero"><label>CEP Destino</label><input type="text"
+                                        placeholder="00000-000">
+                                </div>
+                            </div>
+                            <div class="grid-tri">
+                                <div class="input-hero"><label>Alt. (cm)</label><input type="text" value="23"></div>
+                                <div class="input-hero"><label>Larg. (cm)</label><input type="text" value="40"></div>
+                                <div class="input-hero"><label>Comp. (cm)</label><input type="text" value="30"></div>
+                            </div>
+                            <button class="btn-giant" onclick="nextStep('gen-quotes', 80)">CALCULAR FRETE</button>
+                        </div>
+                    </div>
+
+                    <!-- scr-gen-quotes -->
+                    <div id="scr-gen-quotes" class="screen">
+                        <span class="stage-label">COTAÇÕES</span>
+                        <h1>Melhores Opções</h1>
+                        <div class="kiosk-form" id="container-quotes">
+                            <!-- Dynamic Content -->
+                        </div>
+                    </div>
+
+                    <!-- scr-disclaimer -->
+                    <div id="scr-disclaimer" class="screen">
+                        <span class="stage-label">AVISO</span>
+                        <h1>Aviso Importante</h1>
+                        <div class="kiosk-form">
+                            <div class="disclaimer-box">
+                                <h4><i class="fas fa-exclamation-triangle"></i> RESPONSABILIDADE</h4>
+                                <p style="font-size: 1.5rem; line-height: 1.4;">Não nos responsabilizamos por etiquetas
+                                    de
+                                    terceiros (Shopee, ML). Erros de rastreio são da plataforma de origem.</p>
+                            </div>
+                            <button class="btn-giant" onclick="nextStep('collection', 90)">ESTOU CIENTE E
+                                CONCORDAR</button>
+                        </div>
+                    </div>
+
+                    <!-- scr-collection -->
+                    <div id="scr-collection" class="screen">
+                        <span class="stage-label">POSTAGEM</span>
+                        <h1>COLETA E POSTAGEM</h1>
+                        <div class="kiosk-grid">
+                            <div class="kiosk-card"
+                                onclick="setOrderData('postagem', 'Agência Própria'); nextStep('agencia', 95)">
+                                <i class="fas fa-store"></i>
+                                <h3>POSTAR EM AGÊNCIA</h3>
+                                <span>Consulte pontos próximos.</span>
+                            </div>
+                            <div class="kiosk-card"
+                                onclick="setOrderData('postagem', 'Solicitar Coleta'); nextStep('coleta-type', 95)">
+                                <i class="fas fa-truck-loading"></i>
+                                <h3>SOLICITAR COLETA</h3>
+                                <span>Buscamos no seu endereço.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Outras telas ocultas omitidas por brevidade, mas o script as gerencia -->
+                    <div id="scr-agencia" class="screen">
+                        <span class="stage-label">AGÊNCIAS</span>
+                        <h1>Pontos Próximos</h1>
+                        <div class="kiosk-grid">
+                            <div class="location-card kiosk-card" onclick="selectLocation(this, 'agencia')">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <h3>EX-ENVIOS MATRIZ</h3>
+                                <p>Av. Afonso Pena, 1234</p>
+                            </div>
+                            <div class="location-card kiosk-card" onclick="selectLocation(this, 'agencia')">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <h3>EX-ENVIOS SHOPPING</h3>
+                                <p>Rua Amazonas, 567</p>
+                            </div>
+                        </div>
+                        <button id="btn-finish-agencia" class="btn-giant"
+                            style="opacity: 0.3; pointer-events: none; margin-top: 2rem;"
+                            onclick="finish('agencia')">FINALIZAR PEDIDO</button>
+                    </div>
+
+                    <div id="scr-coleta-type" class="screen">
+                        <span class="stage-label">COLETA</span>
+                        <h1>Tipo de Coleta</h1>
+                        <div class="kiosk-grid">
+                            <div class="kiosk-card" onclick="nextStep('programada', 98)">
+                                <i class="fas fa-calendar-alt"></i>
+                                <h3>PROGRAMADA</h3>
+                                <span>Defina dia e horário.</span>
+                            </div>
+                            <div class="kiosk-card" onclick="nextStep('locker', 98)">
+                                <i class="fas fa-box"></i>
+                                <h3>LOCKER INTELIGENTE</h3>
+                                <span>Deixe no box seguro.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Summary Bar -->
+        <div id="bottom-summary" class="bottom-summary-bar">
+            <div class="summary-content">
+                <span class="summary-label">Resumo do Pedido</span>
+                <ul id="order-summary-list" class="order-summary-list">
+                    <!-- Dynamic Content -->
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- PIX Modal -->
+    <div id="pix-modal" class="pix-modal">
+        <div class="pix-content">
+            <h2 style="color:var(--secondary); font-size:2rem; font-weight:900;">PAGAMENTO PIX</h2>
+            <p style="color:var(--text-muted); margin:1rem 0;">Escaneie o QR Code abaixo para finalizar seu pedido.</p>
+
+            <div id="pix-qr-container" class="qr-code">
+                <i class="fas fa-sync fa-spin" style="font-size:3rem; color:var(--primary)"></i>
+            </div>
+
+            <div style="background:#f7fafc; padding:1.5rem; border-radius:20px; margin-bottom:2rem;">
+                <span id="pix-copy-paste"
+                    style="font-family:monospace; font-size:0.9rem; word-break:break-all; color:var(--text-main); display:block; margin-bottom:1rem;">---</span>
+                <button class="btn-kiosk-back" style="width:100%; justify-content:center;" onclick="copyPixCode()"><i
+                        class="fas fa-copy"></i> COPIAR CÓDIGO</button>
+            </div>
+
+            <p style="font-weight:700; color:#2F855A;"><i class="fas fa-check-circle"></i> O PEDIDO SERÁ CONFIRMADO
+                AUTOMATICAMENTE</p>
+        </div>
+    </div>
+
+    <script>
+        let navigationHistory = [];
+        let pricingData = {};
+        let currentOrder = {
+            step: 1,
+            necessidade: '',
+            embalagem: '',
+            embalagemValor: 0,
+            servico: '',
+            valor: 0,
+            postagem: '',
+            local: '',
+            total: 0
+        };
+
+        function initTotemData() {
+            const stored = localStorage.getItem('exenvios_pricing_v3');
+            if (stored) {
+                pricingData = JSON.parse(stored);
+            } else {
+                // Fallback defaults
+                pricingData = {
+                    'emb-01': { name: 'Caixa Pequena (20x13x21 cm)', cat: 'empacotamento', method: 'fixo', price: 6.90 },
+                    'emb-02': { name: 'Caixa Média (37x27x23 cm)', cat: 'empacotamento', method: 'fixo', price: 12.50 },
+                    'emb-03': { name: 'Caixa Grande (18x26x48 cm)', cat: 'empacotamento', method: 'fixo', price: 18.90 },
+                    'emb-04': { name: 'Sacola com Bolha', cat: 'empacotamento', method: 'fixo', price: 4.50 },
+                    'fre-01': { name: 'Correios SEDEX', cat: 'fretes', method: 'markup', base: 20.00, markup: 30 },
+                    'fre-02': { name: 'Correios PAC', cat: 'fretes', method: 'markup', base: 12.00, markup: 20 }
+                };
+                localStorage.setItem('exenvios_pricing_v3', JSON.stringify(pricingData));
+            }
+            renderEmbalagens();
+            renderQuotes();
+        }
+
+        function renderEmbalagens() {
+            const container = document.getElementById('container-embalagens');
+            if (!container) return;
+            container.innerHTML = '';
+
+            Object.keys(pricingData).filter(id => pricingData[id].cat === 'empacotamento').forEach(id => {
+                const item = pricingData[id];
+                const card = document.createElement('div');
+                card.className = 'kiosk-card';
+                card.onclick = () => {
+                    setOrderData('embalagem', item.name);
+                    setOrderData('embalagemValor', item.price);
+                    nextStep('after-pack', 45);
+                };
+
+                let name = item.name;
+                let size = '';
+                if (name.includes('(')) {
+                    const parts = name.split('(');
+                    name = parts[0].trim();
+                    size = parts[1].replace(')', '').trim();
+                }
+
+                card.innerHTML = `
+                    <i class="fas fa-box"></i>
+                    <h3 style="text-transform:uppercase">${name}</h3>
+                    ${size ? `<span style="display:block; font-size:1.1rem; color:var(--text-muted); margin-bottom:0.5rem">${size}</span>` : ''}
+                    <span style="font-weight:700; color:var(--secondary)">R$ ${parseFloat(item.price).toFixed(2)}</span>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderQuotes() {
+            const container = document.getElementById('container-quotes');
+            if (!container) return;
+            container.innerHTML = '';
+
+            Object.keys(pricingData).filter(id => pricingData[id].cat === 'fretes').forEach(id => {
+                const item = pricingData[id];
+                let finalPrice = 0;
+                if (item.method === 'fixo') finalPrice = item.price;
+                else if (item.method === 'markup') finalPrice = item.base * (1 + (item.markup / 100));
+
+                const card = document.createElement('div');
+                card.className = 'quote-card';
+                card.onclick = () => {
+                    setOrderData('servico', item.name);
+                    setOrderData('valor', finalPrice);
+                    nextStep('collection', 90);
+                };
+                card.innerHTML = `
+                        <div>
+                            <h3 style="font-size: 1.8rem; color: var(--secondary);">${item.name}</h3>
+                            <p style="color: var(--text-muted);">Entrega rápida e segura</p>
+                        </div>
+                        <span class="price">R$ ${finalPrice.toFixed(2)}</span>
+                    `;
+                container.appendChild(card);
+            });
+        }
+
+        function nextStep(stepId, progress, isBack = false) {
+            const currentActive = document.querySelector('.screen.active');
+            if (currentActive && !isBack) {
+                navigationHistory.push(currentActive.id.replace('scr-', ''));
+            }
+
+            const nextTarget = document.getElementById('scr-' + stepId);
+            if (!nextTarget) return;
+
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            nextTarget.classList.add('active');
+
+            if (progress) {
+                document.getElementById('p-fill').style.width = progress + '%';
+            }
+
+            const sharedHeader = document.getElementById('kiosk-shared-header');
+            const btnBack = document.getElementById('btn-shared-back');
+            const btnHome = document.getElementById('btn-shared-home');
+            const summaryBar = document.getElementById('bottom-summary');
+
+            if (stepId !== 'login') {
+                sharedHeader.style.display = 'flex';
+                summaryBar.style.display = 'flex';
+
+                if (stepId === 'main') {
+                    btnBack.innerHTML = '<i class="fas fa-arrow-left"></i> SAIR';
+                    btnBack.onclick = () => nextStep('login', 5);
+                    btnHome.style.display = 'none';
+                } else {
+                    btnBack.innerHTML = '<i class="fas fa-arrow-left"></i> VOLTAR';
+                    btnBack.onclick = prevStep;
+                    btnHome.style.display = 'flex';
+                }
+
+                updateStepIndicator(stepId);
+            } else {
+                sharedHeader.style.display = 'none';
+                summaryBar.style.display = 'none';
+                resetOrder();
+            }
+
+            updateOrderSummary();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function prevStep() {
+            if (navigationHistory.length > 0) {
+                const prevId = navigationHistory.pop();
+                const progressMap = {
+                    'login': 5, 'main': 15, 'boxes': 30, 'after-pack': 45, 'labels': 30,
+                    'gen-info': 40, 'gen-calc': 60, 'gen-quotes': 80, 'disclaimer': 40,
+                    'collection': 90, 'agencia': 95, 'coleta-type': 95, 'programada': 98, 'locker': 98
+                };
+                nextStep(prevId, progressMap[prevId], true);
+            }
+        }
+
+        function updateStepIndicator(stepId) {
+            const stepMap = {
+                'main': 2, 'boxes': 3, 'after-pack': 3, 'labels': 4, 'gen-info': 4,
+                'gen-calc': 4, 'gen-quotes': 4, 'disclaimer': 4, 'collection': 5,
+                'agencia': 5, 'coleta-type': 5, 'programada': 5, 'locker': 5
+            };
+            const currentStep = stepMap[stepId] || 2;
+            document.querySelectorAll('.step-indicator-item').forEach((item, index) => {
+                const stepNum = index + 1;
+                item.classList.remove('active', 'completed');
+                if (stepNum === currentStep) item.classList.add('active');
+                else if (stepNum < currentStep) item.classList.add('completed');
+            });
+        }
+
+        function updateOrderSummary() {
+            const list = document.getElementById('order-summary-list');
+            if (!list) return;
+            list.innerHTML = '';
+            const items = [];
+            if (currentOrder.necessidade) items.push(`Solicitação: ${currentOrder.necessidade}`);
+            if (currentOrder.embalagem) items.push(`Embalagem: ${currentOrder.embalagem} (R$ ${currentOrder.embalagemValor.toFixed(2)})`);
+            if (currentOrder.servico) items.push(`Frete: ${currentOrder.servico} (R$ ${currentOrder.valor.toFixed(2)})`);
+            if (currentOrder.postagem) items.push(`Postagem: ${currentOrder.postagem}`);
+            if (currentOrder.local) items.push(`Local: ${currentOrder.local}`);
+
+            currentOrder.total = (currentOrder.embalagemValor || 0) + (currentOrder.valor || 0);
+            if (items.length === 0) items.push('Configurando seu envio...');
+            else items.push(`<strong style="color:var(--primary); font-size:1.2rem;">TOTAL: R$ ${currentOrder.total.toFixed(2)}</strong>`);
+
+            items.forEach(text => {
+                const li = document.createElement('li');
+                li.className = 'order-summary-item';
+                li.innerHTML = text;
+                list.appendChild(li);
+            });
+        }
+
+        function setOrderData(key, value) {
+            currentOrder[key] = value;
+            updateOrderSummary();
+        }
+
+        function resetOrder() {
+            currentOrder = { step: 1, necessidade: '', embalagem: '', embalagemValor: 0, servico: '', valor: 0, postagem: '', local: '', total: 0 };
+            updateOrderSummary();
+        }
+
+        window.addEventListener('load', initTotemData);
+
+        function goHome() {
+            navigationHistory = [];
+            nextStep('main', 15, true);
+        }
+
+        function selectLocation(element, type) {
+            element.closest('.screen').querySelectorAll('.location-card').forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+            const locationName = element.querySelector('h3').innerText;
+            setOrderData('local', locationName);
+            const btn = document.getElementById('btn-finish-' + type);
+            if (btn) { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; }
+        }
+
+        function finish(type) {
+            const btn = event?.target;
+            if (btn && btn.classList.contains('btn-giant')) {
+                btn.innerHTML = '<i class="fas fa-sync fa-spin"></i> PROCESSANDO...';
+                btn.style.pointerEvents = 'none';
+            }
+
+            // Collect user data
+            const orderPayload = {
+                ...currentOrder,
+                name: document.getElementById('cust-name')?.value || 'Cliente Totem',
+                email: document.getElementById('cust-email')?.value || '',
+                cpf: document.getElementById('cust-cpf')?.value || '',
+                phone: ''
+            };
+
+            fetch('endpoints/process_order.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderPayload)
+            })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.ok) {
+                        showPixModal(result.data.pix);
+                        // Start checking for payment confirmation (optional, simple redirect for now after delay)
+                        setTimeout(() => {
+                            window.location.href = 'painel?order=' + result.data.orderId;
+                        }, 45000); // Wait 45s or until user closes/redirects
+                    } else {
+                        alert('Erro ao gerar pedido: ' + result.error);
+                        if (btn) btn.innerHTML = 'TENTAR NOVAMENTE';
+                        if (btn) btn.style.pointerEvents = 'auto';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Erro de conexão com o servidor.');
+                });
+        }
+
+        function showPixModal(pixData) {
+            const modal = document.getElementById('pix-modal');
+            const qrContainer = document.getElementById('pix-qr-container');
+            const copyField = document.getElementById('pix-copy-paste');
+
+            if (pixData && pixData.encodedImage) {
+                qrContainer.innerHTML = `<img src="data:image/png;base64,${pixData.encodedImage}" alt="QR Code PIX">`;
+                copyField.innerText = pixData.payload;
+            } else {
+                qrContainer.innerHTML = '<p>Erro ao gerar QR Code</p>';
+            }
+
+            modal.classList.add('active');
+        }
+
+        function copyPixCode() {
+            const code = document.getElementById('pix-copy-paste').innerText;
+            navigator.clipboard.writeText(code);
+            alert('Código PIX copiado!');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('direct') === 'true') nextStep('main', 15);
+        });
+    </script>
+</body>
+
+</html>

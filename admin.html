@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Ex-Envios</title>
+    <link rel="stylesheet" href="assets/css/painel.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --navy-dark: #001a2c;
+            --navy-light: #002b49;
+            --orange-vibrant: #FF6B00;
+        }
+
+        .stat-card.active {
+            border: 2px solid var(--orange-vibrant) !important;
+            box-shadow: 0 4px 12px rgba(255, 107, 0, 0.1) !important;
+        }
+
+        body {
+            background-color: #f0f4f8;
+        }
+
+        .sidebar {
+            background-color: var(--navy-dark);
+            border-right: none;
+        }
+
+        .sidebar-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+        }
+
+        .nav-item {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0.2rem 1rem;
+            border-radius: 8px;
+            border-left: none;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background-color: rgba(255, 107, 0, 0.1) !important;
+            color: var(--orange-vibrant) !important;
+        }
+
+        .nav-item.active {
+            font-weight: 700;
+        }
+
+        .nav-item i {
+            margin-right: 0.6rem;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .sidebar-logo {
+            filter: invert(1) hue-rotate(180deg) brightness(1.2);
+            max-width: 100%;
+        }
+
+        .top-header {
+            background: #ffffff;
+            border-bottom: 1px solid #eef2f6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+            border: 1px solid #eef2f6;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-info h4 {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-info span {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--navy-dark);
+        }
+
+        .admin-table {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+            border: 1px solid #eef2f6;
+            border-collapse: collapse;
+        }
+
+        .admin-table th {
+            text-align: left;
+            padding: 1rem 1.5rem;
+            background: #f8fafc;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .admin-table td {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #f1f5f9;
+            color: var(--navy-dark);
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+
+        .status-deposited {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .status-transit {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .location-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        /* Mobile elements hidden by default on desktop */
+        .mobile-toggle,
+        .notification-mobile {
+            display: none;
+        }
+
+        /* Notification Dropdown */
+        .notification-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 10px;
+            width: 320px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #eef2f6;
+            display: none;
+            z-index: 6000;
+            overflow: hidden;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .notification-header {
+            padding: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
+        }
+
+        .notification-header h4 {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--navy-dark);
+            text-transform: uppercase;
+        }
+
+        .notification-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 1rem;
+            border-bottom: 1px solid #f8fafc;
+            display: flex;
+            gap: 1rem;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .notification-item:hover {
+            background: #f8fafc;
+        }
+
+        .notification-item i {
+            color: var(--orange-vibrant);
+            font-size: 1.2rem;
+            margin-top: 3px;
+        }
+
+        .notification-item-content h5 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            margin-bottom: 2px;
+        }
+
+        .notification-item-content p {
+            font-size: 0.8rem;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        #alert-overlay {
+            display: none !important;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .realtime-alert {
+            background: var(--navy-dark);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            border-left: 5px solid var(--orange-vibrant);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            max-width: 400px;
+        }
+
+        .alert-icon {
+            font-size: 2.5rem;
+            color: var(--orange-vibrant);
+        }
+
+        .alert-content h4 {
+            margin-bottom: 0.3rem;
+            color: var(--orange-vibrant);
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .alert-content p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Section Visibility */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Modal System */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 26, 44, 0.9);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 550px;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: modalIn 0.2s ease-out;
+        }
+
+        @keyframes modalIn {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h3 {
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--navy-dark);
+            font-size: 1.25rem;
+            letter-spacing: 1px;
+        }
+
+        .close-modal {
+            background: #f1f5f9;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background: #e2e8f0;
+            color: #ef4444;
+        }
+
+        .admin-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .admin-form label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--navy-light);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .admin-form input,
+        .admin-form select,
+        .admin-form textarea {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8fafc;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .admin-form input:focus {
+            outline: none;
+            border-color: var(--orange-vibrant);
+            box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.1);
+        }
+
+        .btn-action-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-confirm {
+            flex: 2;
+            padding: 1rem;
+            border-radius: 10px;
+            border: none;
+            background: var(--orange-vibrant);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(255, 107, 0, 0.2);
+        }
+
+        .section-header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-new-item {
+            padding: 0.6rem 1.2rem;
+            background: var(--orange-vibrant);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.2s;
+        }
+
+        .btn-new-item:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+        }
+
+        /* Content Area Area Constraint - CRITICAL FOR DESKTOP */
+        .content-wrapper {
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* MOBILE IMPROVEMENTS - STRICTLY ISOLATED */
+        @media (max-width: 991px) {
+
+            .mobile-toggle,
+            .notification-mobile {
+                display: block !important;
+                background: none;
+                border: none;
+                color: var(--navy-dark);
+                font-size: 1.4rem;
+                padding: 0.5rem;
+                margin-right: 0.5rem;
+                cursor: pointer;
+            }
+
+            .header-left {
+                display: flex;
+                align-items: center;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 280px;
+                background-color: var(--navy-dark);
+                z-index: 5000;
+                transform: translateX(-100%);
+                transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                display: block !important;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .sidebar-nav {
+                display: block !important;
+                padding-top: 10px;
+            }
+
+            .nav-item {
+                display: flex !important;
+                align-items: center;
+                padding: 12px 20px !important;
+                color: rgba(255, 255, 255, 0.7) !important;
+                text-decoration: none !important;
+                font-size: 0.95rem !important;
+            }
+
+            .nav-item i {
+                margin-right: 15px !important;
+                width: 25px !important;
+                text-align: center !important;
+            }
+
+            .nav-item.active {
+                background: rgba(255, 107, 0, 0.15) !important;
+                color: var(--orange-vibrant) !important;
+            }
+
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 4999;
+                display: none;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+
+            .top-header {
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                padding: 1rem;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            }
+
+            .top-header h2 {
+                display: none;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+                color: #000000;
+                font-weight: 700;
+                text-transform: uppercase;
+                margin-bottom: 0.75rem;
+                letter-spacing: 0.05em;
+            }
+
+            .header-right .header-user-info,
+            .header-right .user-greeting {
+                display: none;
+            }
+
+            .admin-table-container {
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                overflow: visible;
+            }
+
+            .admin-table thead {
+                display: none;
+            }
+
+            .admin-table tbody {
+                display: block;
+            }
+
+            .admin-table tr {
+                background: white;
+                border-radius: 16px;
+                padding: 1.25rem;
+                margin-bottom: 1.5rem;
+                box-shadow: 0 10px 25px rgba(240, 244, 248, 0.8);
+                border: 1px solid #E2E8F0;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+                align-items: start;
+            }
+
+            .admin-table td {
+                border: none;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                font-size: 0.85rem;
+                gap: 4px;
+            }
+
+            .admin-table td:first-child {
+                grid-column: span 3;
+                border-bottom: 1px solid #F1F5F9;
+                padding-bottom: 0.75rem;
+                margin-bottom: 0.5rem;
+                font-weight: 800;
+            }
+
+            .admin-table td[data-label="Status"],
+            .admin-table td[data-label="Ações"] {
+                grid-column: span 3;
+                margin-top: 0.5rem;
+                padding-top: 0.5rem;
+                border-top: 1px dashed #F1F5F9;
+            }
+
+            .admin-table td::before {
+                content: attr(data-label);
+                font-weight: 800;
+                color: #8E9BAE;
+                text-transform: uppercase;
+                font-size: 0.65rem;
+                margin-bottom: 2px;
+            }
+
+
+            .main-content {
+                padding-bottom: 2rem;
+                padding-left: 0 !important;
+                width: 100% !important;
+            }
+
+            .btn-new-item {
+                position: fixed;
+                bottom: 2rem;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 2100;
+                box-shadow: 0 8px 25px rgba(255, 107, 0, 0.4);
+                padding: 0.8rem 2rem;
+                border-radius: 50px;
+                width: max-content;
+                border: 2px solid white;
+            }
+
+            .section-header-actions {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .wallet-badge-compact {
+                padding: 3px 6px;
+                border-radius: 4px;
+                font-size: 0.65rem;
+                font-weight: 900;
+            }
+
+            .modal-content {
+                padding: 1.5rem !important;
+                border-radius: 12px !important;
+            }
+
+            .modal-header {
+                margin-bottom: 1.5rem !important;
+            }
+
+            .modal-header h3 {
+                font-size: 1.1rem !important;
+            }
+
+            .btn-action-group {
+                flex-direction: column !important;
+                gap: 0.75rem !important;
+            }
+
+            .btn-action-group button {
+                width: 100% !important;
+                flex: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/img/logo_exenvios.png" alt="Logo" class="sidebar-logo">
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" onclick="switchSection('dashboard', this)">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a>
+                <a href="#" class="nav-item" onclick="switchSection('encomendas', this)">
+                    <i class="fas fa-box"></i> Encomendas
+                </a>
+                <a href="#" class="nav-item" onclick="switchSection('locais', this)">
+                    <i class="fas fa-map-marker-alt"></i> Locais
+                </a>
+                <a href="#" class="nav-item" onclick="switchSection('totens', this)">
+                    <i class="fas fa-microchip"></i> Totens & Lockers
+                </a>
+                <a href="#" class="nav-item" onclick="switchSection('clientes', this)">
+                    <i class="fas fa-users"></i> Clientes
+                </a>
+                <a href="#" class="nav-item" onclick="switchSection('servicos', this)">
+                    <i class="fas fa-tags"></i> Produtos & Serviços
+                </a>
+                <a href="#" class="nav-item" onclick="switchSection('config', this)">
+                    <i class="fas fa-cog"></i> Configurações
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="mobile-toggle" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <!-- Notification Button Mobile -->
+                    <div style="position: relative; display: flex; align-items:center;">
+                        <button class="notification-mobile" onclick="toggleNotifications()">
+                            <i class="fas fa-bell"></i>
+                        </button>
+
+                        <!-- Dropdown -->
+                        <div id="notif-dropdown" class="notification-dropdown">
+                            <div class="notification-header">
+                                <h4>Notificações</h4>
+                                <span style="font-size: 0.7rem; color: var(--orange-vibrant); font-weight: 700;">3
+                                    NOVAS</span>
+                            </div>
+                            <div class="notification-list">
+                                <div class="notification-item">
+                                    <i class="fas fa-wallet"></i>
+                                    <div class="notification-item-content">
+                                        <h5>Novo depósito detectado</h5>
+                                        <p>O cliente <strong>Fernando Costa</strong> acabou de depositar no
+                                            <strong>LOCKER 04</strong>.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="notification-item">
+                                    <i class="fas fa-box"></i>
+                                    <div class="notification-item-content">
+                                        <h5>Coleta solicitada</h5>
+                                        <p><strong>Loja Central</strong> solicitou uma coleta para 14:00.</p>
+                                    </div>
+                                </div>
+                                <div class="notification-item">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <div class="notification-item-content">
+                                        <h5>Alerta de Ocupação</h5>
+                                        <p>Unidade <strong>Shopping Campo Grande</strong> está com 95% de ocupação.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="padding: 0.8rem; text-align: center; border-top: 1px solid #f1f5f9;">
+                                <a href="#"
+                                    style="font-size: 0.75rem; color: var(--orange-vibrant); font-weight: 700; text-decoration: none;">VER
+                                    TODAS</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 style="font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Visão Geral do Sistema
+                    </h2>
+                </div>
+                <div class="header-right">
+                    <div class="header-user-info">
+                        <span class="user-greeting">Olá, Administrador</span>
+                        <span class="wallet-badge-compact">Nível: Super Admin</span>
+                    </div>
+                    <div class="user-avatar">AD</div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <!-- Section: Dashboard -->
+                <div id="section-dashboard" class="content-section active">
+                    <!-- Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #fff7ed; color: #ea580c;">
+                                <i class="fas fa-box-open"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Pacotes Hoje</h4>
+                                <span>158</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #f0fdf4; color: #16a34a;">
+                                <i class="fas fa-map-pin"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Pontos Ativos</h4>
+                                <span>42</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #eff6ff; color: #2563eb;">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Status Totens</h4>
+                                <span>98% OK</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #faf5ff; color: #9333ea;">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Receita Diária</h4>
+                                <span>R$ 4.850</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Locais Section -->
+                    <div class="section-title">Monitoramento de Locais</div>
+                    <div class="admin-table-container" style="margin-bottom: 2rem;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Local / Unidade</th>
+                                    <th>Tipo</th>
+                                    <th>Totens</th>
+                                    <th>Lockers Ocupados</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="Unidade">Shopping Campo Grande</td>
+                                    <td data-label="Tipo">Shopping</td>
+                                    <td data-label="Totens">02</td>
+                                    <td data-label="Ocupação">15/20</td>
+                                    <td data-label="Status"><span class="location-dot"
+                                            style="background: #16a34a;"></span> Operando</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Unidade">Condomínio Royal Park</td>
+                                    <td data-label="Tipo">Residencial</td>
+                                    <td data-label="Totens">01</td>
+                                    <td data-label="Ocupação">04/08</td>
+                                    <td data-label="Status"><span class="location-dot"
+                                            style="background: #16a34a;"></span> Operando</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Unidade">Empresa TechSolutions HQ</td>
+                                    <td data-label="Tipo">Corporativo</td>
+                                    <td data-label="Totens">01</td>
+                                    <td data-label="Ocupação">02/05</td>
+                                    <td data-label="Status"><span class="location-dot"
+                                            style="background: #ea580c;"></span> Manutenção</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Recent Packages -->
+                    <div class="section-title">Últimas Encomendas (Locker/Totem)</div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Envio</th>
+                                    <th>Cliente</th>
+                                    <th>Origem (Ponto)</th>
+                                    <th>Destino</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="ID">EX-8829-BR</td>
+                                    <td data-label="Cliente">Marcos Oliveira</td>
+                                    <td data-label="Origem">Shopping Norte Sul</td>
+                                    <td data-label="Destino">São Paulo, SP</td>
+                                    <td data-label="Status"><span class="status-badge status-deposited">No Locker</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td data-label="ID">EX-8830-BR</td>
+                                    <td data-label="Cliente">Ana Costa</td>
+                                    <td data-label="Origem">Sede Rosário</td>
+                                    <td data-label="Destino">Curitiba, PR</td>
+                                    <td data-label="Status"><span class="status-badge status-transit">Em Trânsito</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td data-label="ID">EX-8831-BR</td>
+                                    <td data-label="Cliente">João Silva</td>
+                                    <td data-label="Origem">Shopping CG</td>
+                                    <td data-label="Destino">Rio de Janeiro, RJ</td>
+                                    <td data-label="Status"><span class="status-badge status-pending">Aguardando
+                                            Coleta</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section: Encomendas -->
+                <div id="section-encomendas" class="content-section">
+                    <div class="section-header-actions">
+                        <div class="section-title" style="margin-bottom:0">Gestão Global de Encomendas</div>
+                        <div style="display:flex; gap:0.5rem">
+                            <button class="btn-new-item" onclick="openModal('modal-encomenda')">
+                                <i class="fas fa-plus"></i> NOVA ENCOMENDA
+                            </button>
+                        </div>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Rastreio</th>
+                                    <th>Data/Hora</th>
+                                    <th>Modal</th>
+                                    <th>Peso</th>
+                                    <th>Valor</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-table-body">
+                                <!-- Dynamic orders loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section: Locais (Full View) -->
+                <div id="section-locais" class="content-section">
+                    <div class="section-header-actions">
+                        <div class="section-title" style="margin-bottom:0">Todos os Pontos de Coleta</div>
+                        <button class="btn-new-item" onclick="openModal('modal-local')">
+                            <i class="fas fa-plus"></i> NOVO LOCAL
+                        </button>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background:rgba(255,107,0,0.1);color:var(--orange-vibrant)"><i
+                                    class="fas fa-shopping-cart"></i></div>
+                            <div class="stat-info">
+                                <h4>Shoppings</h4><span>12</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background:rgba(255,107,0,0.1);color:var(--orange-vibrant)"><i
+                                    class="fas fa-home"></i></div>
+                            <div class="stat-info">
+                                <h4>Condomínios</h4><span>18</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background:rgba(255,107,0,0.1);color:var(--orange-vibrant)"><i
+                                    class="fas fa-building"></i></div>
+                            <div class="stat-info">
+                                <h4>Empresas</h4><span>12</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Unidade</th>
+                                    <th>Cidade</th>
+                                    <th>Giro Mensal</th>
+                                    <th>Manutenção</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="Unidade">Shopping Norte Sul</td>
+                                    <td data-label="Cidade">Campo Grande</td>
+                                    <td data-label="Giro">450 pacotes</td>
+                                    <td data-label="Manutenção">Há 12 dias</td>
+                                    <td data-label="Status"><span class="location-dot"
+                                            style="background: #16a34a;"></span> Ativo</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Unidade">Edifício Trade Center</td>
+                                    <td data-label="Cidade">Campo Grande</td>
+                                    <td data-label="Giro">120 pacotes</td>
+                                    <td data-label="Manutenção">Há 3 dias</td>
+                                    <td data-label="Status"><span class="location-dot"
+                                            style="background: #16a34a;"></span> Ativo</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section: Totens -->
+                <div id="section-totens" class="content-section">
+                    <div class="section-header-actions">
+                        <div class="section-title" style="margin-bottom:0">Hardware & Conectividade</div>
+                        <button class="btn-new-item" onclick="openModal('modal-toten')">
+                            <i class="fas fa-plus"></i> NOVO TOTEM / LOCKER
+                        </button>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Totem</th>
+                                    <th>Localização</th>
+                                    <th>Sinal 5G</th>
+                                    <th>Papel Impressora</th>
+                                    <th>Temperatura</th>
+                                    <th>Hardware</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="ID">T-0428</td>
+                                    <td data-label="Local">Shopping Norte Sul</td>
+                                    <td data-label="Sinal"><i class="fas fa-signal" style="color:#16a34a"></i> Forte
+                                    </td>
+                                    <td data-label="Papel">85%</td>
+                                    <td data-label="Temp">34°C</td>
+                                    <td data-label="Status"><span class="status-badge status-deposited">ONLINE</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section: Clientes -->
+                <div id="section-clientes" class="content-section">
+                    <div class="section-header-actions">
+                        <div class="section-title" style="margin-bottom:0">Base de Clientes Ativos</div>
+                        <button class="btn-new-item" onclick="openModal('modal-cliente')">
+                            <i class="fas fa-plus"></i> NOVO CLIENTE
+                        </button>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>CPF/CNPJ</th>
+                                    <th>E-mail</th>
+                                    <th>Total Envios</th>
+                                    <th>Nível</th>
+                                    <th>Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="Nome">Fernando Costa</td>
+                                    <td data-label="CPF">***.442.889-**</td>
+                                    <td data-label="E-mail">fernando@email.com</td>
+                                    <td data-label="Total">24</td>
+                                    <td data-label="Nível"><span class="wallet-badge-compact">VIP</span></td>
+                                    <td data-label="Saldo">R$ 150,00</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Nome">Juliana Maria Silva</td>
+                                    <td data-label="CPF">***.123.456-**</td>
+                                    <td data-label="E-mail">juliana@email.com</td>
+                                    <td data-label="Total">15</td>
+                                    <td data-label="Nível"><span class="wallet-badge-compact">Prata</span></td>
+                                    <td data-label="Saldo">R$ 45,20</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Nome">Ricardo Ferreira</td>
+                                    <td data-label="CPF">***.789.012-**</td>
+                                    <td data-label="E-mail">ricardo@email.com</td>
+                                    <td data-label="Total">58</td>
+                                    <td data-label="Nível"><span class="wallet-badge-compact"
+                                            style="background:#FFD700;color:#000">OURO</span></td>
+                                    <td data-label="Saldo">R$ 1.250,80</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section: Config -->
+                <div id="section-config" class="content-section">
+                    <div class="section-title">Configurações do Sistema</div>
+                    <div class="stat-card" style="margin-bottom:1rem">
+                        <div class="stat-info">
+                            <h4>API de Cálculo</h4>
+                            <p>Status: Conectado (v2.4.1)</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h4>Notificações</h4>
+                            <p>E-mail: Ativo | WhatsApp: Ativo</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Produtos & Serviços -->
+                <div id="section-servicos" class="content-section">
+                    <div class="section-header-actions">
+                        <div class="section-title" style="margin-bottom:0">Gestão de Produtos & Serviços</div>
+                        <div style="display:flex; gap:0.5rem">
+                            <button class="btn-new-item" onclick="openModal('modal-servico')">
+                                <i class="fas fa-plus"></i> NOVO ITEM
+                            </button>
+                            <button class="btn-new-item" style="background:var(--navy-dark)"
+                                onclick="openModal('modal-markup-global')">
+                                <i class="fas fa-percent"></i> MARKUP GLOBAL
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Category Tabs -->
+                    <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 1rem;">
+                        <button class="stat-card active" onclick="filterServices('todos')" style="cursor:pointer">
+                            <div class="stat-info">
+                                <h4>Todos</h4>
+                            </div>
+                        </button>
+                        <button class="stat-card" onclick="filterServices('empacotamento')" style="cursor:pointer">
+                            <div class="stat-info">
+                                <h4>Empacotamento</h4>
+                            </div>
+                        </button>
+                        <button class="stat-card" onclick="filterServices('coleta')" style="cursor:pointer">
+                            <div class="stat-info">
+                                <h4>Coleta</h4>
+                            </div>
+                        </button>
+                        <button class="stat-card" onclick="filterServices('fretes')" style="cursor:pointer">
+                            <div class="stat-info">
+                                <h4>Fretes/Extras</h4>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Categoria</th>
+                                    <th>Método</th>
+                                    <th>Preço Final</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="services-table-body">
+                                <!-- Empacotamento -->
+                                <tr class="service-row" data-id="emb-01">
+                                    <td data-label="Nome">Caixa Pequena</td>
+                                    <td data-label="Categoria">Empacotamento</td>
+                                    <td data-label="Método">Preço Fixo</td>
+                                    <td data-label="Preço">R$ 6,90</td>
+                                    <td data-label="Status"><span class="status-badge status-deposited">Ativo</span>
+                                    </td>
+                                    <td data-label="Ações">
+                                        <button class="close-modal"
+                                            style="display:inline-flex; width:30px; height:30px; margin:0"
+                                            onclick="editService('emb-01')">
+                                            <i class="fas fa-edit" style="font-size: 0.8rem;"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="service-row" data-id="emb-02">
+                                    <td data-label="Nome">Sacola com Bolha</td>
+                                    <td data-label="Categoria">Empacotamento</td>
+                                    <td data-label="Método">Preço Fixo</td>
+                                    <td data-label="Preço">R$ 4,50</td>
+                                    <td data-label="Status"><span class="status-badge status-deposited">Ativo</span>
+                                    </td>
+                                    <td data-label="Ações"><button class="close-modal"
+                                            style="display:inline-flex; width:30px; height:30px; margin:0"><i
+                                                class="fas fa-edit"></i></button></td>
+                                </tr>
+                                <!-- Coletas -->
+                                <tr class="service-row" data-id="col-01">
+                                    <td data-label="Nome">Coleta Programada</td>
+                                    <td data-label="Categoria">Coleta</td>
+                                    <td data-label="Método">Por Faixa (KM)</td>
+                                    <td data-label="Preço">R$ 8,00 - 18,00</td>
+                                    <td data-label="Status"><span class="status-badge status-deposited">Ativo</span>
+                                    </td>
+                                    <td data-label="Ações">
+                                        <button class="close-modal"
+                                            style="display:inline-flex; width:30px; height:30px; margin:0"
+                                            onclick="editService('col-01')">
+                                            <i class="fas fa-edit" style="font-size: 0.8rem;"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Fretes -->
+                                <tr class="service-row" data-id="fre-01">
+                                    <td data-label="Nome">Frete Correios (SEDEX)</td>
+                                    <td data-label="Categoria">Fretes</td>
+                                    <td data-label="Método">Markup (30%)</td>
+                                    <td data-label="Preço">R$ 26,00</td>
+                                    <td data-label="Status"><span class="status-badge status-deposited">Ativo</span>
+                                    </td>
+                                    <td data-label="Ações">
+                                        <button class="close-modal"
+                                            style="display:inline-flex; width:30px; height:30px; margin:0"
+                                            onclick="editService('fre-01')">
+                                            <i class="fas fa-edit" style="font-size: 0.8rem;"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Extras -->
+                                <tr class="service-row" data-id="ext-01">
+                                    <td data-label="Nome">Seguro Adicional</td>
+                                    <td data-label="Categoria">Fretes</td>
+                                    <td data-label="Método">Markup (15%)</td>
+                                    <td data-label="Preço">Variável</td>
+                                    <td data-label="Status"><span class="status-badge status-deposited">Ativo</span>
+                                    </td>
+                                    <td data-label="Ações">
+                                        <button class="close-modal"
+                                            style="display:inline-flex; width:30px; height:30px; margin:0"
+                                            onclick="editService('ext-01')">
+                                            <i class="fas fa-edit" style="font-size: 0.8rem;"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Alert Overlay -->
+    <div id="alert-overlay">
+        <div class="realtime-alert">
+            <div class="alert-icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="alert-content">
+                <h4>NOVO DEPÓSITO DETECTADO</h4>
+                <p>O cliente <strong id="alert-client-name">Fernando Costa</strong> acabou de depositar no
+                    <strong>LOCKER 04</strong> (Shopping Campo Grande).
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-encomenda" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nova Encomenda</h3><button class="close-modal"
+                    onclick="closeModal('modal-encomenda')">&times;</button>
+            </div>
+            <form class="admin-form" onsubmit="handleFormSubmit(event, 'modal-encomenda')">
+                <div class="form-group"><label>Cliente</label><input type="text" placeholder="Nome do cliente" required>
+                </div>
+                <div class="btn-action-group">
+                    <button type="button" class="btn-cancel" onclick="closeModal('modal-encomenda')">CANCELAR</button>
+                    <button type="submit" class="btn-confirm">CADASTRAR ENCOMENDA</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="modal-cliente" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Novo Cliente</h3><button class="close-modal" onclick="closeModal('modal-cliente')">&times;</button>
+            </div>
+            <form class="admin-form" onsubmit="handleFormSubmit(event, 'modal-cliente')">
+                <div class="form-group"><label>Nome Completo</label><input type="text" placeholder="Nome" required>
+                </div>
+                <div class="btn-action-group">
+                    <button type="button" class="btn-cancel" onclick="closeModal('modal-cliente')">CANCELAR</button>
+                    <button type="submit" class="btn-confirm">SALVAR CLIENTE</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="modal-local" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Novo Local</h3><button class="close-modal" onclick="closeModal('modal-local')">&times;</button>
+            </div>
+            <form class="admin-form" onsubmit="handleFormSubmit(event, 'modal-local')">
+                <div class="form-group"><label>Nome</label><input type="text" placeholder="Local" required></div>
+                <div class="btn-action-group">
+                    <button type="button" class="btn-cancel" onclick="closeModal('modal-local')">CANCELAR</button>
+                    <button type="submit" class="btn-confirm">CADASTRAR LOCAL</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="modal-toten" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Novo Totem</h3><button class="close-modal" onclick="closeModal('modal-toten')">&times;</button>
+            </div>
+            <form class="admin-form" onsubmit="handleFormSubmit(event, 'modal-toten')">
+                <div class="form-group"><label>ID Hardware</label><input type="text" placeholder="ID" required></div>
+                <div class="btn-action-group">
+                    <button type="button" class="btn-cancel" onclick="closeModal('modal-toten')">CANCELAR</button>
+                    <button type="submit" class="btn-confirm">ATIVAR HARDWARE</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="modal-export" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Exportar</h3><button class="close-modal" onclick="closeModal('modal-export')">&times;</button>
+            </div>
+            <form class="admin-form" onsubmit="handleExportSubmit(event)">
+                <div class="btn-action-group">
+                    <button type="button" class="btn-cancel" onclick="closeModal('modal-export')">FECHAR</button>
+                    <button type="submit" class="btn-confirm">GERAR E BAIXAR</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Editar/Novo Serviço -->
+    <div id="modal-servico" class="modal-overlay">
+        <div class="modal-content" style="max-width: 650px;">
+            <div class="modal-header">
+                <h3 id="modal-servico-title">Novo Serviço</h3>
+                <button class="close-modal" onclick="closeModal('modal-servico')">&times;</button>
+            </div>
+            <form class="admin-form" onsubmit="saveService(event)">
+                <input type="hidden" id="service-id">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Nome do Serviço</label>
+                        <input type="text" id="service-name" placeholder="Ex: Caixa Média" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <select id="service-category">
+                            <option value="empacotamento">Empacotamento</option>
+                            <option value="coleta">Coleta</option>
+                            <option value="fretes">Fretes/Extras</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Método de Precificação</label>
+                    <div
+                        style="display:flex; gap: 1rem; margin-top: 0.5rem; background: #f8fafc; padding: 1rem; border-radius: 10px;">
+                        <label
+                            style="display:flex; align-items:center; gap: 5px; cursor:pointer; text-transform:none; white-space:nowrap;">
+                            <input type="radio" name="price-method" value="fixo" checked onchange="togglePriceFields()">
+                            Fixo
+                        </label>
+                        <label
+                            style="display:flex; align-items:center; gap: 5px; cursor:pointer; text-transform:none; white-space:nowrap;">
+                            <input type="radio" name="price-method" value="markup" onchange="togglePriceFields()">
+                            Markup %
+                        </label>
+                        <label
+                            style="display:flex; align-items:center; gap: 5px; cursor:pointer; text-transform:none; white-space:nowrap;">
+                            <input type="radio" name="price-method" value="faixa" onchange="togglePriceFields()"> Por
+                            Faixa
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Method: Fixed -->
+                <div id="method-fixo" class="price-method-fields">
+                    <div class="form-group">
+                        <label>Preço Final (R$)</label>
+                        <input type="number" step="0.01" id="price-fixed" placeholder="0,00">
+                    </div>
+                </div>
+
+                <!-- Method: Markup -->
+                <div id="method-markup" class="price-method-fields" style="display:none">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Custo Base (R$)</label>
+                            <input type="number" step="0.01" id="price-base" placeholder="0,00"
+                                oninput="updatePricePreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>Markup (%)</label>
+                            <input type="number" id="price-markup" placeholder="30" oninput="updatePricePreview()">
+                        </div>
+                    </div>
+                    <div
+                        style="background: #fff7ed; padding: 0.75rem; border-radius: 8px; border: 1px dashed #ea580c; display:flex; justify-content:space-between; align-items:center">
+                        <span style="font-size: 0.8rem; font-weight:700; color:#ea580c">PRÉVIA DO PREÇO FINAL</span>
+                        <span id="price-preview" style="font-size: 1.1rem; font-weight:800; color:#ea580c">R$
+                            0,00</span>
+                    </div>
+                </div>
+
+                <!-- Method: Tiers (Simplified for now) -->
+                <div id="method-faixa" class="price-method-fields" style="display:none">
+                    <div class="form-group">
+                        <label>Configuração de Faixas (Ex: KM ou Peso)</label>
+                        <textarea id="price-tiers" placeholder="0-3km: 8.00&#10;3-8km: 12.00" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="btn-action-group">
+                    <button type="button" class="btn-cancel" onclick="closeModal('modal-servico')">CANCELAR</button>
+                    <button type="submit" class="btn-confirm">SALVAR ALTERAÇÕES</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Markup Global -->
+    <div id="modal-markup-global" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Markup Global / Fontes</h3>
+                <button class="close-modal" onclick="closeModal('modal-markup-global')">&times;</button>
+            </div>
+            <form class="admin-form"
+                onsubmit="event.preventDefault(); alert('Configurações salvas!'); closeModal('modal-markup-global')">
+                <div class="form-group">
+                    <label>Markup Padrão Correios (%)</label>
+                    <input type="number" value="30">
+                </div>
+                <div class="form-group">
+                    <label>Markup Padrão Transportadoras (%)</label>
+                    <input type="number" value="25">
+                </div>
+                <div class="form-group">
+                    <label>Markup Padrão Coleta (%)</label>
+                    <input type="number" value="15">
+                </div>
+                <div class="btn-action-group">
+                    <button type="button" class="btn-cancel" onclick="closeModal('modal-markup-global')">FECHAR</button>
+                    <button type="submit" class="btn-confirm">SALVAR PADRÕES</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Removed - All items in Burger Menu -->
+
+    <script>
+        let pricingData = {};
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar) sidebar.classList.toggle('active');
+            if (overlay) overlay.classList.toggle('active');
+        }
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) modal.style.display = 'flex';
+        }
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) modal.style.display = 'none';
+        }
+
+        function initPricingData() {
+            console.log("Iniciando dados de precificação...");
+            const stored = localStorage.getItem('exenvios_pricing_v3');
+            if (stored) {
+                pricingData = JSON.parse(stored);
+            } else {
+                pricingData = {
+                    'emb-01': { name: 'Caixa Pequena (20x13x21 cm)', cat: 'empacotamento', method: 'fixo', price: 6.90 },
+                    'emb-02': { name: 'Caixa Média (37x27x23 cm)', cat: 'empacotamento', method: 'fixo', price: 12.50 },
+                    'emb-03': { name: 'Caixa Grande (18x26x48 cm)', cat: 'empacotamento', method: 'fixo', price: 18.90 },
+                    'emb-04': { name: 'Sacola com Bolha', cat: 'empacotamento', method: 'fixo', price: 4.50 },
+                    'fre-01': { name: 'Correios SEDEX', cat: 'fretes', method: 'markup', base: 20.00, markup: 30 },
+                    'fre-02': { name: 'Correios PAC', cat: 'fretes', method: 'markup', base: 12.00, markup: 20 }
+                };
+                localStorage.setItem('exenvios_pricing_v3', JSON.stringify(pricingData));
+            }
+            renderServicesTable();
+        }
+
+        function switchSection(sectionId, element) {
+            document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(item => item.classList.remove('active'));
+            if (element) {
+                element.classList.add('active');
+                const companion = document.querySelector(`.nav-item[onclick*="'${sectionId}'"], .mobile-nav-item[onclick*="'${sectionId}'"]`);
+                if (companion) companion.classList.add('active');
+            }
+            document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+            const targetSection = document.getElementById('section-' + sectionId);
+            if (targetSection) targetSection.classList.add('active');
+
+            const titles = {
+                'dashboard': 'Visão Geral do Sistema',
+                'encomendas': 'Gestão de Encomendas',
+                'locais': 'Monitoramento de Unidades',
+                'totens': 'Hardware & Conectividade',
+                'clientes': 'Base de Clientes',
+                'servicos': 'Gestão de Produtos & Serviços',
+                'config': 'Configurações Globais'
+            };
+
+            const titleElement = document.querySelector('.top-header h2');
+            if (titleElement) titleElement.innerText = titles[sectionId] || 'Admin';
+
+            if (sectionId === 'servicos') renderServicesTable();
+
+            if (window.innerWidth < 992) {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar && sidebar.classList.contains('active')) toggleSidebar();
+            }
+        }
+
+        function renderServicesTable() {
+            const tbody = document.getElementById('services-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            Object.keys(pricingData).forEach(id => {
+                const item = pricingData[id];
+                let priceDisplay = '---';
+                let methodDisplay = '';
+
+                if (item.method === 'fixo') {
+                    priceDisplay = `R$ ${parseFloat(item.price).toFixed(2)}`;
+                    methodDisplay = 'Preço Fixo';
+                } else if (item.method === 'markup') {
+                    const final = item.base * (1 + (item.markup / 100));
+                    priceDisplay = `R$ ${final.toFixed(2)}`;
+                    methodDisplay = `Markup (${item.markup}%)`;
+                } else if (item.method === 'faixa') {
+                    priceDisplay = 'Varivável';
+                    methodDisplay = 'Por Faixa';
+                }
+
+                const row = document.createElement('tr');
+                row.className = 'service-row';
+                row.setAttribute('data-id', id);
+                row.innerHTML = `
+                    <td data-label="Nome">${item.name}</td>
+                    <td data-label="Categoria" style="text-transform:capitalize">${item.cat}</td>
+                    <td data-label="Método">${methodDisplay}</td>
+                    <td data-label="Preço">${priceDisplay}</td>
+                    <td data-label="Status"><span class="status-badge status-deposited">Ativo</span></td>
+                    <td data-label="Ações">
+                        <button class="close-modal" style="display:inline-flex; width:30px; height:30px; margin:0; align-items:center; justify-content:center" onclick="editService('${id}')">
+                            <i class="fas fa-edit" style="font-size: 0.8rem;"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function togglePriceFields() {
+            const methodSelect = document.querySelector('input[name="price-method"]:checked');
+            if (!methodSelect) return;
+            const method = methodSelect.value;
+            document.querySelectorAll('.price-method-fields').forEach(div => div.style.display = 'none');
+            const target = document.getElementById('method-' + method);
+            if (target) target.style.display = 'block';
+        }
+
+        function updatePricePreview() {
+            const baseInput = document.getElementById('price-base');
+            const markupInput = document.getElementById('price-markup');
+            if (!baseInput || !markupInput) return;
+            const base = parseFloat(baseInput.value) || 0;
+            const markup = parseFloat(markupInput.value) || 0;
+            const final = base * (1 + (markup / 100));
+            const preview = document.getElementById('price-preview');
+            if (preview) preview.innerText = 'R$ ' + final.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+        }
+
+        function editService(id) {
+            const data = pricingData[id];
+            if (data) {
+                const title = document.getElementById('modal-servico-title');
+                if (title) title.innerText = 'Editar Serviço';
+                document.getElementById('service-id').value = id;
+                document.getElementById('service-name').value = data.name;
+                document.getElementById('service-category').value = data.cat;
+
+                const radio = document.querySelector(`input[name="price-method"][value="${data.method}"]`);
+                if (radio) radio.checked = true;
+                togglePriceFields();
+
+                if (data.method === 'fixo') {
+                    document.getElementById('price-fixed').value = data.price;
+                } else if (data.method === 'markup') {
+                    document.getElementById('price-base').value = data.base;
+                    document.getElementById('price-markup').value = data.markup;
+                    updatePricePreview();
+                } else if (data.method === 'faixa') {
+                    document.getElementById('price-tiers').value = data.tiers || '';
+                }
+                openModal('modal-servico');
+            }
+        }
+
+        function saveService(e) {
+            e.preventDefault();
+            const id = document.getElementById('service-id').value;
+            const methodSelect = document.querySelector('input[name="price-method"]:checked');
+            if (!methodSelect) return;
+            const method = methodSelect.value;
+
+            const newData = {
+                name: document.getElementById('service-name').value,
+                cat: document.getElementById('service-category').value,
+                method: method
+            };
+
+            if (method === 'fixo') newData.price = parseFloat(document.getElementById('price-fixed').value);
+            if (method === 'markup') {
+                newData.base = parseFloat(document.getElementById('price-base').value);
+                newData.markup = parseFloat(document.getElementById('price-markup').value);
+            }
+            if (method === 'faixa') newData.tiers = document.getElementById('price-tiers').value;
+
+            pricingData[id] = newData;
+            localStorage.setItem('exenvios_pricing_v3', JSON.stringify(pricingData));
+
+            renderServicesTable();
+            closeModal('modal-servico');
+            alert('Serviço atualizado e sincronizado com o Totem!');
+        }
+
+        function filterServices(category) {
+            document.querySelectorAll('#section-servicos .stat-card').forEach(btn => btn.classList.remove('active'));
+            if (event && event.currentTarget) event.currentTarget.classList.add('active');
+
+            const rows = document.querySelectorAll('#services-table-body tr');
+            rows.forEach(row => {
+                const catElement = row.querySelector('td[data-label="Categoria"]');
+                if (!catElement) return;
+                const cat = catElement.innerText.toLowerCase();
+                if (category === 'todos' || cat.includes(category)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notif-dropdown');
+            if (!dropdown) return;
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+
+            if (dropdown.style.display === 'block') {
+                setTimeout(() => {
+                    const closeHandler = function (e) {
+                        if (!e.target.closest('.notification-dropdown') && !e.target.closest('.notification-mobile')) {
+                            dropdown.style.display = 'none';
+                            window.removeEventListener('click', closeHandler);
+                        }
+                    };
+                    window.addEventListener('click', closeHandler);
+                }, 10);
+            }
+        }
+
+        function handleFormSubmit(e, modalId) {
+            e.preventDefault();
+            alert('Dados salvos com sucesso!');
+            closeModal(modalId);
+        }
+
+        async function fetchOrders() {
+            try {
+                const response = await fetch('endpoints/get_orders.php');
+                const result = await response.json();
+                if (result.ok) {
+                    renderOrdersTable(result.data);
+                }
+            } catch (error) {
+                console.error('Erro ao buscar encomendas:', error);
+            }
+        }
+
+        function renderOrdersTable(orders) {
+            const tbody = document.getElementById('orders-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            orders.forEach(order => {
+                const row = document.createElement('tr');
+                const date = new Date(order.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+
+                let statusClass = 'status-pending';
+                let statusText = 'Pendente';
+
+                if (order.status === 'paid') {
+                    statusClass = 'status-deposited';
+                    statusText = 'Pago / Coletado';
+                } else if (order.status === 'transit') {
+                    statusClass = 'status-transit';
+                    statusText = 'Em Trânsito';
+                }
+
+                row.innerHTML = `
+                    <td data-label="Rastreio">${order.external_ref}</td>
+                    <td data-label="Data">${date}</td>
+                    <td data-label="Modal"><i class="fas fa-box"></i> ${order.service}</td>
+                    <td data-label="Peso">---</td>
+                    <td data-label="Valor">R$ ${parseFloat(order.total_value).toFixed(2)}</td>
+                    <td data-label="Ações">
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        window.addEventListener('load', () => {
+            initPricingData();
+            fetchOrders();
+            setInterval(fetchOrders, 10000); // Poll every 10 seconds
+        });
+    </script>
+</body>
+
+</html>

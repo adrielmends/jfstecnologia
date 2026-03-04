@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Ex-Envios</title>
+    <link rel="stylesheet" href="assets/css/painel.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --navy-dark: #001a2c;
+            --navy-light: #002b49;
+            --orange-vibrant: #FF6B00;
+        }
+
+        body {
+            background-color: #f0f4f8;
+        }
+
+        .sidebar {
+            background-color: var(--navy-dark);
+            border-right: none;
+        }
+
+        .sidebar-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+        }
+
+        .nav-item {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0.2rem 1rem;
+            border-radius: 8px;
+            border-left: none;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background-color: rgba(255, 107, 0, 0.1) !important;
+            color: var(--orange-vibrant) !important;
+        }
+
+        .nav-item.active {
+            font-weight: 700;
+        }
+
+        .nav-item i {
+            margin-right: 0.6rem;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .sidebar-logo {
+            filter: invert(1) hue-rotate(180deg) brightness(1.2);
+            max-width: 100%;
+        }
+
+        .top-header {
+            background: #ffffff;
+            border-bottom: 1px solid #eef2f6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+            border: 1px solid #eef2f6;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-info h4 {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-info span {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--navy-dark);
+        }
+
+        .admin-table {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+            border: 1px solid #eef2f6;
+            border-collapse: collapse;
+        }
+
+        .admin-table th {
+            text-align: left;
+            padding: 1rem 1.5rem;
+            background: #f8fafc;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .admin-table td {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #f1f5f9;
+            color: var(--navy-dark);
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+
+        .status-deposited {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .status-transit {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .location-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        /* Real-time Alert Overlay */
+        #alert-overlay {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            display: none;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .realtime-alert {
+            background: var(--navy-dark);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            border-left: 5px solid var(--orange-vibrant);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            max-width: 400px;
+        }
+
+        .alert-icon {
+            font-size: 2.5rem;
+            color: var(--orange-vibrant);
+        }
+
+        .alert-content h4 {
+            margin-bottom: 0.3rem;
+            color: var(--orange-vibrant);
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .alert-content p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Section Visibility */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Modal System */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 26, 44, 0.9);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 550px;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: modalIn 0.2s ease-out;
+        }
+
+        @keyframes modalIn {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h3 {
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--navy-dark);
+            font-size: 1.25rem;
+            letter-spacing: 1px;
+        }
+
+        .close-modal {
+            background: #f1f5f9;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background: #e2e8f0;
+            color: #ef4444;
+        }
+
+        .admin-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .admin-form label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--navy-light);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .admin-form input,
+        .admin-form select,
+        .admin-form textarea {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8fafc;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .admin-form input:focus {
+            outline: none;
+            border-color: var(--orange-vibrant);
+            box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.1);
+        }
+
+        .btn-action-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-confirm {
+            flex: 2;
+            padding: 1rem;
+            border-radius: 10px;
+            border: none;
+            background: var(--orange-vibrant);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(255, 107, 0, 0.2);
+        }
+
+        .section-header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-new-item {
+            padding: 0.6rem 1.2rem;
+            background: var(--orange-vibrant);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.2s;
+        }
+
+        .btn-new-item:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/img/logo_exenvios.png" alt="Logo" class="sidebar-logo">
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" onclick="switchSection('dashboard', this)">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a>
+                <a href="#" class="nav-item" onclick="switchSection('encomendas', this)">
+                    <i class="fas fa-box"></i> Encomendas
+                </a>
+                <a href="#" class="nav-item" onclick="switchSection('locais', this)">
+                    <i class="fas fa-map-marker-alt"></i> Locais
+                </a>
+                <a href="#" class="nav-item" onclick="switchSection('totens', this)">
+                    <i class="fas fa-microchip"></i> Totens & Lockers
+                </a>
+                <a href="#" class="nav-item" onclick="switchSection('clientes', this)">
+                    <i class="fas fa-users"></i> Clientes
+                </a>
+                <a href="#" class="nav-item" onclick="switchSection('config', this)">
+                    <i class="fas fa-cog"></i> Configurações
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <h2 style="font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Visão Geral do Sistema
+                    </h2>
+                </div>
+                <div class="header-right">
+                    <div class="header-user-info">
+                        <span class="user-greeting">Olá, Administrador</span>
+                        <span class="wallet-badge-compact">Nível: Super Admin</span>
+                    </div>
+                    <div class="user-avatar">AD</div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <!-- Section: Dashboard -->
+                <div id="section-dashboard" class="content-section active">
+                    <!-- Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #fff7ed; color: #ea580c;">
+                                <i class="fas fa-box-open"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Pacotes Hoje</h4>
+                                <span>158</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #f0fdf4; color: #16a34a;">
+                                <i class="fas fa-map-pin"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Pontos Ativos</h4>
+                                <span>42</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #eff6ff; color: #2563eb;">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Status Totens</h4>
+                                <span>98% OK</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: #faf5ff; color: #9333ea;">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>Receita Diária</h4>
+                                <span>R$ 4.850</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Locais Section -->
+                    <div class="section-title">Monitoramento de Locais</div>
+                    <div class="admin-table-container" style="margin-bottom: 2rem;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Local / Unidade</th>
+                                    <th>Tipo</th>
+                                    <th>Totens</th>
+                                    <th>Lockers Ocupados</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Shopping Campo Grande</td>
+                                    <td>Shopping</td>
+                                    <td>02</td>
+                                    <td>15/20</td>
+                                    <td><span class="location-dot" style="background: #16a34a;"></span> Operando</td>
+                                </tr>
+                                <tr>
+                                    <td>Condomínio Royal Park</td>
+                                    <td>Residencial</td>
+                                    <td>01</td>
+                                    <td>04/08</td>
+                                    <td><span class="location-dot" style="background: #16a34a;"></span> Operando</td>
+                                </tr>
+                                <tr>
+                                    <td>Empresa TechSolutions HQ</td>
+                                    <td>Corporativo</td>
+                                    <td>01</td>
+                                    <td>02/05</td>
+                                    <td><span class="location-dot" style="background: #ea580c;"></span> Manutenção</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Recent Packages -->
+                    <div class="section-title">Últimas Encomendas (Locker/Totem)</div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Envio</th>
+                                    <th>Cliente</th>
+                                    <th>Origem (Ponto)</th>
+                                    <th>Destino</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>EX-8829-BR</td>
+                                    <td>Marcos Oliveira</td>
+                                    <td>Shopping Norte Sul</td>
+                                    <td>São Paulo, SP</td>
+                                    <td><span class="status-badge status-deposited">No Locker</span></td>
+                                </tr>
+                                <tr>
+                                    <td>EX-8830-BR</td>
+                                    <td>Ana Costa</td>
+                                    <td>Sede Rosário</td>
+                                    <td>Curitiba, PR</td>
+                                    <td><span class="status-badge status-transit">Em Trânsito</span></td>
+                                </tr>
+                                <tr>
+                                    <td>EX-8831-BR</td>
+                                    <td>João Silva</td>
+                                    <td>Shopping CG</td>
+                                    <td>Rio de Janeiro, RJ</td>
+                                    <td><span class="status-badge status-pending">Aguardando Coleta</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section: Encomendas -->
+                <div id="section-encomendas" class="content-section">
+                    <div class="section-header-actions">
+                        <div class="section-title" style="margin-bottom:0">Gestão Global de Encomendas</div>
+                        <div style="display:flex; gap:0.5rem">
+                            <button class="btn-new-item" onclick="openModal('modal-encomenda')">
+                                <i class="fas fa-plus"></i> NOVA ENCOMENDA
+                            </button>
+                            <button class="btn-new-item" style="background:var(--navy-dark)"
+                                onclick="openModal('modal-export')">
+                                <i class="fas fa-file-export"></i> EXPORTAR
+                            </button>
+                        </div>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Rastreio</th>
+                                    <th>Data/Hora</th>
+                                    <th>Modal</th>
+                                    <th>Peso</th>
+                                    <th>Valor</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Example rows -->
+                                <tr>
+                                    <td>EX-9901-BR</td>
+                                    <td>24/02 14:20</td>
+                                    <td><i class="fas fa-truck"></i> SEDEX</td>
+                                    <td>1.2kg</td>
+                                    <td>R$ 45,90</td>
+                                    <td><span class="status-badge status-transit">DETALHES</span></td>
+                                </tr>
+                                <tr>
+                                    <td>EX-9902-BR</td>
+                                    <td>24/02 13:45</td>
+                                    <td><i class="fas fa-shipping-fast"></i> JADLOG</td>
+                                    <td>5.0kg</td>
+                                    <td>R$ 82,00</td>
+                                    <td><span class="status-badge status-transit">DETALHES</span></td>
+                                </tr>
+                                <tr>
+                                    <td>EX-9905-BR</td>
+                                    <td>24/02 12:10</td>
+                                    <td><i class="fas fa-box"></i> AZUL</td>
+                                    <td>0.5kg</td>
+                                    <td>R$ 32,40</td>
+                                    <td><span class="status-badge status-deposited">COLETADO</span></td>
+                                </tr>
+                                <tr>
+                                    <td>EX-9908-BR</td>
+                                    <td>24/02 10:30</td>
+                                    <td><i class="fas fa-plane"></i> LATAM</td>
+                                    <td>10.5kg</td>
+                                    <td>R$ 215,00</td>
+                                    <td><span class="status-badge status-pending">AGUARDANDO</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section: Locais (Full View) -->
+                <div id="section-locais" class="content-section">
+                    <div class="section-header-actions">
+                        <div class="section-title" style="margin-bottom:0">Todos os Pontos de Coleta</div>
+                        <button class="btn-new-item" onclick="openModal('modal-local')">
+                            <i class="fas fa-plus"></i> NOVO LOCAL
+                        </button>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background:rgba(255,107,0,0.1);color:var(--orange-vibrant)"><i
+                                    class="fas fa-shopping-cart"></i></div>
+                            <div class="stat-info">
+                                <h4>Shoppings</h4><span>12</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background:rgba(255,107,0,0.1);color:var(--orange-vibrant)"><i
+                                    class="fas fa-home"></i></div>
+                            <div class="stat-info">
+                                <h4>Condomínios</h4><span>18</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background:rgba(255,107,0,0.1);color:var(--orange-vibrant)"><i
+                                    class="fas fa-building"></i></div>
+                            <div class="stat-info">
+                                <h4>Empresas</h4><span>12</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Unidade</th>
+                                    <th>Cidade</th>
+                                    <th>Giro Mensal</th>
+                                    <th>Manutenção</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Shopping Norte Sul</td>
+                                    <td>Campo Grande</td>
+                                    <td>450 pacotes</td>
+                                    <td>Há 12 dias</td>
+                                    <td><span class="location-dot" style="background: #16a34a;"></span> Ativo</td>
+                                </tr>
+                                <tr>
+                                    <td>Edifício Trade Center</td>
+                                    <td>Campo Grande</td>
+                                    <td>120 pacotes</td>
+                                    <td>Há 3 dias</td>
+                                    <td><span class="location-dot" style="background: #16a34a;"></span> Ativo</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section: Totens -->
+                <div id="section-totens" class="content-section">
+                    <div class="section-header-actions">
+                        <div class="section-title" style="margin-bottom:0">Hardware & Conectividade</div>
+                        <button class="btn-new-item" onclick="openModal('modal-toten')">
+                            <i class="fas fa-plus"></i> NOVO TOTEM / LOCKER
+                        </button>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Totem</th>
+                                    <th>Localização</th>
+                                    <th>Sinal 5G</th>
+                                    <th>Papel Impressora</th>
+                                    <th>Temperatura</th>
+                                    <th>Hardware</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>T-0428</td>
+                                    <td>Shopping Norte Sul</td>
+                                    <td><i class="fas fa-signal" style="color:#16a34a"></i> Forte</td>
+                                    <td>85%</td>
+                                    <td>34°C</td>
+                                    <td><span class="status-badge status-deposited">ONLINE</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section: Clientes -->
+                <div id="section-clientes" class="content-section">
+                    <div class="section-header-actions">
+                        <div class="section-title" style="margin-bottom:0">Base de Clientes Ativos</div>
+                        <button class="btn-new-item" onclick="openModal('modal-cliente')">
+                            <i class="fas fa-plus"></i> NOVO CLIENTE
+                        </button>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>CPF/CNPJ</th>
+                                    <th>E-mail</th>
+                                    <th>Total Envios</th>
+                                    <th>Nível</th>
+                                    <th>Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Fernando Costa</td>
+                                    <td>***.442.889-**</td>
+                                    <td>fernando@email.com</td>
+                                    <td>24</td>
+                                    <td><span class="wallet-badge-compact">VIP</span></td>
+                                    <td>R$ 150,00</td>
+                                </tr>
+                                <tr>
+                                    <td>Juliana Maria Silva</td>
+                                    <td>***.123.456-**</td>
+                                    <td>juliana@email.com</td>
+                                    <td>15</td>
+                                    <td><span class="wallet-badge-compact">Prata</span></td>
+                                    <td>R$ 45,20</td>
+                                </tr>
+                                <tr>
+                                    <td>Ricardo Ferreira</td>
+                                    <td>***.789.012-**</td>
+                                    <td>ricardo@email.com</td>
+                                    <td>58</td>
+                                    <td><span class="wallet-badge-compact"
+                                            style="background:#FFD700;color:#000">OURO</span></td>
+                                    <td>R$ 1.250,80</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section: Config -->
+                <div id="section-config" class="content-section">
+                    <div class="section-title">Configurações do Sistema</div>
+                    <div class="stat-card" style="margin-bottom:1rem">
+                        <div class="stat-info">
+                            <h4>API de Cálculo</h4>
+                            <p>Status: Conectado (v2.4.1)</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h4>Notificações</h4>
+                            <p>E-mail: Ativo | WhatsApp: Ativo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Alert Overlay -->
+    <div id="alert-overlay">
+        <div class="realtime-alert">
+            <div class="alert-icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="alert-content">
+                <h4>NOVO DEPÓSITO DETECTADO</h4>
+                <p>O cliente <strong id="alert-client-name">Fernando Costa</strong> acabou de depositar no
+                    <strong>LOCKER 04</strong> (Shopping
+                    Campo Grande).
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Adicionar Encomenda -->
+    <div id="modal-encomenda" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nova Encomenda</h3>
+                <button class="close-modal" onclick="closeModal('modal-encomenda')">&times;</button>
+            </div>
+            <form class="admin-form" onsubmit="handleFormSubmit(event, 'modal-encomenda')">
+                <div class="form-group">
+                    <label>Cliente</label>
+                    <input type="text" placeholder="Nome do cliente" required>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem">
+                    <div class="form-group">
+                        <label>Origem (Ponto)</label>
+                        <select>
+                            <option>Shopping Campo Grande</option>
+                            <option>Sede Rosário</option>
+                            <option>Shopping Norte Sul</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Destino (Cidade)</label>
+                        <input type="text" placeholder="Ex: São Paulo, SP" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Modal de Envio</label>
+                    <select>
+                        <option>SEDEX (Correios)</option>
+                        <option>PAC (Correios)</option>
+                        <option>JADLOG</option>
+                        <option>LATAM Cargo</option>
+                    </select>
+                </div>
+                <div class="btn-action-group">
+                    <button type="button" class="btn-cancel" onclick="closeModal('modal-encomenda')">CANCELAR</button>
+                    <button type="submit" class="btn-confirm">CADASTRAR ENCOMENDA</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Adicionar Cliente -->
+    <div id="modal-cliente" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Novo Cliente</h3>
+                <button class="close-modal" onclick="closeModal('modal-cliente')">&times;</button>
+            </div>
+            <form class="admin-form" onsubmit="handleFormSubmit(event, 'modal-cliente')">
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" placeholder="Nome completo" required>
+                </div>
+                <div class="form-group">
+                    <label>CPF ou CNPJ</label>
+                    <input type="text" placeholder="000.000.000-00" required>
+                </div>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" placeholder="cliente@email.com" required>
+                </div>
+                <div class="btn-action-group">
+                    <button type="button" class="btn-cancel" onclick="closeModal('modal-cliente')">CANCELAR</button>
+                    <button type="submit" class="btn-confirm">SALVAR CLIENTE</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Adicionar Local -->
+    <div id="modal-local" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Novo Local / Unidade</h3>
+                <button class="close-modal" onclick="closeModal('modal-local')">&times;</button>
+            </div>
+            <form class="admin-form" onsubmit="handleFormSubmit(event, 'modal-local')">
+                <div class="form-group">
+                    <label>Nome da Unidade</label>
+                    <input type="text" placeholder="Ex: Shopping Avenue" required>
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Unidade</label>
+                    <select>
+                        <option>Shopping</option>
+                        <option>Condomínio Residencial</option>
+                        <option>Edifício Corporativo</option>
+                        <option>Posto de Combustível</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Endereço Completo</label>
+                    <textarea placeholder="Rua, Número, Bairro, Cidade..." rows="3" required></textarea>
+                </div>
+                <div class="btn-action-group">
+                    <button type="button" class="btn-cancel" onclick="closeModal('modal-local')">CANCELAR</button>
+                    <button type="submit" class="btn-confirm">CADASTRAR LOCAL</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Adicionar Totem -->
+    <div id="modal-toten" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Novo Totem / Locker</h3>
+                <button class="close-modal" onclick="closeModal('modal-toten')">&times;</button>
+            </div>
+            <form class="admin-form" onsubmit="handleFormSubmit(event, 'modal-toten')">
+                <div class="form-group">
+                    <label>ID do Hardware</label>
+                    <input type="text" placeholder="Ex: T-9999" required>
+                </div>
+                <div class="form-group">
+                    <label>Vincular ao Local</label>
+                    <select>
+                        <option>Shopping Campo Grande</option>
+                        <option>Condomínio Royal Park</option>
+                        <option>Empresa TechSolutions HQ</option>
+                        <option>Aguardando Instalação</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Modelo</label>
+                    <select>
+                        <option>Kiosk Pro V3 (Touch)</option>
+                        <option>Locker Inteligente 20 Portas</option>
+                        <option>Locker Compacto 8 Portas</option>
+                    </select>
+                </div>
+                <div class="btn-action-group">
+                    <button type="button" class="btn-cancel" onclick="closeModal('modal-toten')">CANCELAR</button>
+                    <button type="submit" class="btn-confirm">ATVIAR HARDWARE</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Exportar Relatório -->
+    <div id="modal-export" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Exportar Relatório</h3>
+                <button class="close-modal" onclick="closeModal('modal-export')">&times;</button>
+            </div>
+            <form class="admin-form" onsubmit="handleExportSubmit(event)">
+                <div class="form-group">
+                    <label>Tipo de Relatório</label>
+                    <select>
+                        <option>Envios Diários</option>
+                        <option>Faturamento Mensal</option>
+                        <option>Ocupação de Lockers</option>
+                        <option>Performance por Unidade</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Formato</label>
+                    <select>
+                        <option>PDF (Documento)</option>
+                        <option>XLSX (Planilha Excel)</option>
+                        <option>CSV (Dados Brutos)</option>
+                    </select>
+                </div>
+                <div class="btn-action-group">
+                    <button type="button" class="btn-cancel" onclick="closeModal('modal-export')">FECHAR</button>
+                    <button type="submit" class="btn-confirm">GERAR E BAIXAR</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Modal Logic
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function handleFormSubmit(event, modalId) {
+            event.preventDefault();
+            alert('Conteúdo adicionado com sucesso! (Simulação)');
+            closeModal(modalId);
+        }
+
+        function handleExportSubmit(event) {
+            event.preventDefault();
+            alert('Relatório gerado com sucesso! O download começará em instantes.');
+            closeModal('modal-export');
+        }
+
+        // Section Switching Logic
+        function switchSection(sectionId, element) {
+            // Update Sidebar
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+
+            // Update Content
+            document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+            document.getElementById('section-' + sectionId).classList.add('active');
+
+            // Update Header Title
+            const titles = {
+                'dashboard': 'Visão Geral do Sistema',
+                'encomendas': 'Gestão de Encomendas',
+                'locais': 'Monitoramento de Unidades',
+                'totens': 'Hardware & Conectividade',
+                'clientes': 'Base de Clientes',
+                'config': 'Configurações Globais'
+            };
+            document.querySelector('.top-header h2').innerText = titles[sectionId];
+        }
+
+        // Simulated Real-time Alert
+        const clientNames = ["Fernando Costa", "Juliana Silva", "Ricardo Souza", "Beatriz Lima", "Marcelo Santos"];
+
+        function showDynamicAlert() {
+            const overlay = document.getElementById('alert-overlay');
+            const nameEl = document.getElementById('alert-client-name');
+            const randomName = clientNames[Math.floor(Math.random() * clientNames.length)];
+
+            nameEl.innerText = randomName;
+            overlay.style.display = 'block';
+            overlay.style.animation = 'slideUp 0.3s ease-out forwards';
+
+            setTimeout(() => {
+                overlay.style.animation = 'slideDown 0.3s ease-in forwards';
+                setTimeout(() => { overlay.style.display = 'none'; }, 300);
+            }, 8000);
+        }
+
+        // First alert after 5s
+        setTimeout(showDynamicAlert, 5000);
+        // Then every 45s
+        setInterval(showDynamicAlert, 45000);
+
+        // Add slideDown animation
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes slideDown {
+                from { transform: translateY(0); opacity: 1; }
+                to { transform: translateY(100px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>

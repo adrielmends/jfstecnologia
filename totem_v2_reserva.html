@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Totem Ex-Envios | Layout Split</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #FF9600;
+            --primary-hover: #E68700;
+            --secondary: #0A3750;
+            --text-main: #1A202C;
+            --text-muted: #718096;
+            --bg-body: #F7FAFC;
+            --white: #ffffff;
+            --border: #E2E8F0;
+            --sidebar-width: 350px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            flex-shrink: 0;
+            height: 100vh;
+            background: var(--secondary);
+            color: var(--white);
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .sidebar .logo img {
+            height: 60px;
+            margin-bottom: 4rem;
+            filter: brightness(0) invert(1);
+        }
+
+        .progress-list {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .progress-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.3;
+            transition: var(--transition);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .progress-item:hover {
+            opacity: 0.8;
+        }
+
+        .progress-item.active {
+            opacity: 1;
+            transform: scale(1.1);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .progress-item.complete {
+            opacity: 1;
+            color: var(--white);
+        }
+
+        .progress-item span {
+            text-transform: uppercase;
+        }
+
+        .progress-item .step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .summary-box {
+            margin-top: auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            height: 100vh;
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .screen-container {
+            width: 100%;
+            max-width: 750px;
+            margin-top: 4rem;
+            padding: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .screen-container {
+                margin: auto 0;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            body {
+                flex-direction: column;
+                overflow-y: auto;
+                height: auto;
+            }
+
+            .content {
+                height: auto;
+                min-height: 80vh;
+            }
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+        }
+
+        /* Option Stack */
+        .option-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-button {
+            background: var(--white);
+            border: 2px solid var(--border);
+            padding: 1.5rem 2rem;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--secondary);
+            text-transform: uppercase;
+        }
+
+        .option-button:hover {
+            border-color: var(--primary);
+            transform: translateX(10px);
+            background: rgba(255, 150, 0, 0.02);
+        }
+
+        .option-button i {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* Generic grid for boxes */
+        .box-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .box-card {
+            background: var(--white);
+            border: 2px solid var(--border);
+            padding: 2.5rem 1.5rem;
+            border-radius: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .box-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            background: rgba(255, 150, 0, 0.02);
+        }
+
+        .box-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .box-card span {
+            text-transform: uppercase;
+        }
+
+        /* Form Controls */
+        .input-box {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .input-box label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--secondary);
+            text-transform: uppercase;
+        }
+
+        .input-box input,
+        .input-box select {
+            width: 100%;
+            padding: 1.2rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .input-box input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-main {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1.2rem 3rem;
+            border-radius: 12px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transition);
+            margin-top: 2rem;
+            text-transform: uppercase;
+        }
+
+        .btn-main:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 150, 0, 0.2);
+        }
+
+        .btn-back {
+            margin-top: 2.5rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            text-transform: uppercase;
+        }
+
+        .btn-back:hover {
+            color: var(--secondary);
+        }
+
+        .disclaimer-alert {
+            background: #FFF5F5;
+            border: 1px solid #FED7D7;
+            padding: 2rem;
+            border-radius: 16px;
+            color: #C53030;
+            text-align: left;
+            margin-bottom: 2.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo"><a href="https://exenvios.com.br/"><img src="assets/img/logo_exenvios.png"
+                    alt="Ex-Envios"></a></div>
+
+        <ul class="progress-list">
+            <li class="progress-item active" id="dot-login" onclick="nextStep('login')">
+                <div class="step-num">1</div>
+                <span>Acesso</span>
+            </li>
+            <li class="progress-item" id="dot-initial" onclick="nextStep('main')">
+                <div class="step-num">2</div>
+                <span>Necessidade</span>
+            </li>
+            <li class="progress-item" id="dot-type" onclick="nextStep('boxes')">
+                <div class="step-num">3</div>
+                <span>Tipo/Embalagem</span>
+            </li>
+            <li class="progress-item" id="dot-labels" onclick="nextStep('labels')">
+                <div class="step-num">4</div>
+                <span>Etiquetas</span>
+            </li>
+            <li class="progress-item" id="dot-collection" onclick="nextStep('collection')">
+                <div class="step-num">5</div>
+                <span>Postagem</span>
+            </li>
+        </ul>
+
+        <div class="summary-box">
+            <h4
+                style="margin-bottom: 1rem; font-size: 0.8rem; letter-spacing: 1px; color: var(--primary); text-transform: uppercase;">
+                Resumo do Pedido</h4>
+            <div id="summary-content" style="font-size: 0.85rem; opacity: 0.8; line-height: 1.6;">
+                Aguardando início...
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="screen-container">
+            <!-- STEP 0: LOGIN -->
+            <div id="scr-login" class="screen active">
+                <h1>Bem-vindo</h1>
+                <p class="subtitle">Identifique-se para começar sua jornada no Totem Split.</p>
+                <div class="input-box">
+                    <label>E-mail ou Usuário</label>
+                    <input type="text" placeholder="Ex: fernando@exenvios.com">
+                </div>
+                <div class="input-box">
+                    <label>Senha</label>
+                    <input type="password" placeholder="••••••••">
+                </div>
+                <button class="btn-main" onclick="nextStep('main')">ACESSAR SISTEMA</button>
+            </div>
+
+            <!-- STEP 1: INITIAL CHOICE -->
+            <div id="scr-main" class="screen">
+                <h1>Como podemos ajudar?</h1>
+                <p class="subtitle">Selecione uma opção para prosseguir.</p>
+                <div class="option-stack">
+                    <div class="option-button" onclick="updateSummary('Solicitação: Caixa'); nextStep('boxes')">
+                        <span>Quero caixa para empacotar</span>
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <div class="option-button" onclick="updateSummary('Solicitação: Já Embalado'); nextStep('labels')">
+                        <span>Já está embalado</span>
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                </div>
+                <button class="btn-back" onclick="nextStep('login')"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+
+            <!-- STEP 2 (A): SELECT BOX -->
+            <div id="scr-boxes" class="screen">
+                <h1>Selecione a Embalagem</h1>
+                <p class="subtitle">Escolha o tamanho ideal para o seu envio.</p>
+                <div class="box-grid">
+                    <div class="box-card" onclick="updateSummary('Caixa: 20x13x21'); nextStep('after-pack')">
+                        <i class="fas fa-box"></i>
+                        <h3>Pequena</h3>
+                        <span>20x13x21 cm</span>
+                    </div>
+                    <div class="box-card" onclick="updateSummary('Caixa: 37x27x23'); nextStep('after-pack')">
+                        <i class="fas fa-box"></i>
+                        <h3>Média</h3>
+                        <span>37x27x23 cm</span>
+                    </div>
+                    <div class="box-card" onclick="updateSummary('Caixa: 18x26x48'); nextStep('after-pack')">
+                        <i class="fas fa-box"></i>
+                        <h3>Grande</h3>
+                        <span>18x26x48 cm</span>
+                    </div>
+                </div>
+                <button class="btn-back" onclick="nextStep('main')"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+
+            <!-- STEP 3 (A): AFTER PACKAGING -->
+            <div id="scr-after-pack" class="screen">
+                <h1>Pronto para rotular?</h1>
+                <p class="subtitle">Após embalar, escolha como prosseguir com a etiqueta.</p>
+                <div class="option-stack">
+                    <div class="option-button" onclick="nextStep('collection')">
+                        <span>Gerar nova etiqueta</span>
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <div class="option-button" onclick="nextStep('collection')">
+                        <span>Imprimir etiqueta existente</span>
+                        <i class="fas fa-print"></i>
+                    </div>
+                </div>
+                <button class="btn-back" onclick="nextStep('boxes')"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+
+            <!-- STEP 2 (B): LABEL CHOICE -->
+            <div id="scr-labels" class="screen">
+                <h1>Etiqueta de Envio</h1>
+                <p class="subtitle">Você já possui a etiqueta de postagem?</p>
+                <div class="option-stack">
+                    <div class="option-button" onclick="nextStep('gen-info')">
+                        <span>Gerar Etiqueta</span>
+                        <i class="fas fa-print"></i>
+                    </div>
+                    <div class="option-button" onclick="nextStep('disclaimer')">
+                        <span>Já tenho Etiqueta</span>
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <button class="btn-back" onclick="nextStep('main')"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+
+            <!-- STEP 2.1 (Gen): PERSONAL INFO -->
+            <div id="scr-gen-info" class="screen">
+                <h1>Cadastre-Se</h1>
+                <p class="subtitle">Informações Pessoais para a Etiqueta</p>
+                <div class="input-box">
+                    <label><i class="fas fa-user"></i> NOME COMPLETO</label>
+                    <input type="text" placeholder="Digite seu nome completo">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="input-box">
+                        <label><i class="fas fa-calendar-alt"></i> DATA DE NASC.</label>
+                        <input type="text" placeholder="DD/MM/AAAA">
+                    </div>
+                    <div class="input-box">
+                        <label><i class="fas fa-id-card"></i> CPF</label>
+                        <input type="text" placeholder="999.888.777-00">
+                    </div>
+                </div>
+                <div class="input-box">
+                    <label><i class="fas fa-envelope"></i> EMAIL</label>
+                    <input type="email" placeholder="Digite seu melhor email">
+                </div>
+                <button class="btn-main" onclick="nextStep('gen-calc')">CONTINUAR</button>
+                <button class="btn-back" onclick="nextStep('labels')"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+
+            <!-- STEP 2.2 (Gen): CALCULATION -->
+            <div id="scr-gen-calc" class="screen">
+                <h1>Calcular Frete</h1>
+                <p class="subtitle">Origem e Destino do Envio</p>
+                <div class="input-box">
+                    <label>CEP DE ORIGEM</label>
+                    <input type="text" value="79115-800">
+                </div>
+                <div class="input-box">
+                    <label>CEP DE DESTINO</label>
+                    <input type="text" placeholder="01022-070" value="01022-070">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+                    <div class="input-box"><label>ALT.</label><input type="text" value="23"></div>
+                    <div class="input-box"><label>LARG.</label><input type="text" value="40"></div>
+                    <div class="input-box"><label>COMP.</label><input type="text" value="30"></div>
+                </div>
+                <button class="btn-main" onclick="nextStep('gen-quotes')">COTAR AGORA</button>
+                <button class="btn-back" onclick="nextStep('gen-info')"><i class="fas fa-arrow-left"></i>
+                    Voltar</button>
+            </div>
+
+            <!-- STEP 2.3 (Gen): QUOTES -->
+            <div id="scr-gen-quotes" class="screen">
+                <h1>Melhores Opções</h1>
+                <p class="subtitle">Selecione o serviço de sua preferência</p>
+                <div class="option-stack">
+                    <div class="option-button" onclick="updateSummary('Frete: PAC (R$20,07)'); nextStep('collection')">
+                        <div style="text-align: left;">
+                            <span>PAC (Correios)</span>
+                            <p style="font-size: 0.8rem; font-weight: 400; opacity: 0.7;">6 dias úteis</p>
+                        </div>
+                        <strong>R$ 20,07</strong>
+                    </div>
+                    <div class="option-button"
+                        onclick="updateSummary('Frete: SEDEX (R$41,28)'); nextStep('collection')">
+                        <div style="text-align: left;">
+                            <span>SEDEX (Correios)</span>
+                            <p style="font-size: 0.8rem; font-weight: 400; opacity: 0.7;">2 dias úteis</p>
+                        </div>
+                        <strong>R$ 41,28</strong>
+                    </div>
+                </div>
+                <button class="btn-back" onclick="nextStep('gen-calc')"><i class="fas fa-arrow-left"></i>
+                    Voltar</button>
+            </div>
+
+            <!-- STEP 3 (B): DISCLAIMER -->
+            <div id="scr-disclaimer" class="screen">
+                <h1>Aviso Importante</h1>
+                <div class="disclaimer-alert">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Responsabilidade</h4>
+                    <p>Não nos responsabilizamos por etiquetas geradas por terceiros (Shopee, ML). Erros de rastreio são
+                        de responsabilidade da plataforma de origem.</p>
+                </div>
+                <button class="btn-main" onclick="nextStep('collection')">CONCORDAR E CONTINUAR</button>
+                <button class="btn-back" onclick="nextStep('labels')"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+
+            <!-- STEP 4: COLLECTION CHOICE -->
+            <div id="scr-collection" class="screen">
+                <h1>Coleta e Postagem</h1>
+                <div class="option-stack">
+                    <div class="option-button" onclick="nextStep('coleta-type')">
+                        <span>Quero Coleta</span>
+                        <i class="fas fa-truck-loading"></i>
+                    </div>
+                    <div class="option-button" onclick="finish('agencia')">
+                        <span>Levar na Agência</span>
+                        <i class="fas fa-store"></i>
+                    </div>
+                </div>
+                <button class="btn-back" onclick="nextStep('main')"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+
+            <!-- STEP 5: COLLECTION TYPE -->
+            <div id="scr-coleta-type" class="screen">
+                <h1>Tipo de Coleta</h1>
+                <div class="option-stack">
+                    <div class="option-button" onclick="updateSummary('Postagem: Locker'); nextStep('locker')">
+                        <span>Express (Imediata via Locker)</span>
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="option-button" onclick="finish('programada')">
+                        <span>Coleta Programada</span>
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
+                <button class="btn-back" onclick="nextStep('collection')"><i class="fas fa-arrow-left"></i>
+                    Voltar</button>
+            </div>
+
+            <!-- STEP 6: LOCKER -->
+            <div id="scr-locker" class="screen">
+                <h1>Quase lá!</h1>
+                <div style="font-size: 4rem; color: var(--primary); text-align: center; margin: 2rem 0;">
+                    <i class="fas fa-door-open"></i>
+                </div>
+                <h2 style="text-align: center; color: var(--secondary); margin-bottom: 2rem;">Deposite o pacote
+                    no<br><strong>LOCKER 04</strong></h2>
+                <div class="disclaimer-alert"
+                    style="background: #EBF8FF; border-color: #BEE3F8; color: #2B6CB0; text-align: center;">
+                    <p>Comprovante enviado por E-mail após o fechamento da porta.</p>
+                </div>
+                <button class="btn-main" onclick="finish('locker')">CONCLUIR PROCESSO</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function nextStep(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('scr-' + id).classList.add('active');
+
+            // Sidebar Progress Logic
+            document.querySelectorAll('.progress-item').forEach(p => p.classList.remove('active', 'complete'));
+            const steps = ['login', 'main', 'boxes', 'labels', 'collection'];
+            const ids = ['scr-login', 'scr-main', 'scr-boxes', 'scr-labels', 'scr-collection'];
+
+            if (id === 'login') {
+                document.getElementById('dot-login').classList.add('active');
+                // Se voltar ao login, limpa o resumo
+                document.getElementById('summary-content').innerHTML = 'Aguardando início...';
+            } else if (id === 'main') {
+                document.getElementById('dot-login').classList.add('complete');
+                document.getElementById('dot-initial').classList.add('active');
+            } else if (id === 'boxes' || id === 'after-pack') {
+                document.getElementById('dot-login').classList.add('complete');
+                document.getElementById('dot-initial').classList.add('complete');
+                document.getElementById('dot-type').classList.add('active');
+            } else if (id === 'labels' || id.startsWith('gen-') || id === 'disclaimer') {
+                document.getElementById('dot-login').classList.add('complete');
+                document.getElementById('dot-initial').classList.add('complete');
+                document.getElementById('dot-type').classList.add('complete');
+                document.getElementById('dot-labels').classList.add('active');
+            } else {
+                document.getElementById('dot-login').classList.add('complete');
+                document.getElementById('dot-initial').classList.add('complete');
+                document.getElementById('dot-type').classList.add('complete');
+                document.getElementById('dot-labels').classList.add('complete');
+                document.getElementById('dot-collection').classList.add('active');
+            }
+        }
+
+        function updateSummary(text) {
+            const el = document.getElementById('summary-content');
+            if (el.innerHTML.includes('Aguardando')) el.innerHTML = '';
+            el.innerHTML += `• ${text}<br>`;
+        }
+
+        function finish(type) {
+            alert("Processo finalizado com sucesso!");
+            window.location.reload();
+        }
+    </script>
+</body>
+
+</html>

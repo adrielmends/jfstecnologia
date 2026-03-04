@@ -1,0 +1,23 @@
+# Priorizar o index.html sobre o index.php do WordPress
+DirectoryIndex index.html index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # 1. Redirecionar /arquivo.html para /arquivo (URL limpa)
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s([^.]+)\.html [NC]
+    RewriteRule ^ %1 [R=301,L]
+
+    # 2. Se o arquivo .html existir fisicamente, usar ele
+    # Ignora diretórios para não quebrar pastas do WordPress
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.html -f
+    RewriteRule ^([^/]+)/?$ $1.html [L]
+
+    # 3. Regras padrão do WordPress (não alterar se quiser manter o WP funcionando)
+    RewriteRule ^index\.php$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.php [L]
+</IfModule>
