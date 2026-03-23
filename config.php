@@ -4,11 +4,12 @@
  * Site: Ex-Envios
  */
 
-// Database Credentials (Update these with your actual server data)
+// Database Credentials
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'exenvios_db');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_NAME', 'exen_exenvios');
+define('DB_USER', 'exen_Ex-Envios');
+define('DB_PASS', '12sC5LjycvG4l*iH'); // <--- COLOQUE A SENHA QUE VOCÊ CRIOU NO CYBERPANEL AQUI
+define('GEMINI_API_KEY', 'AIzaSyA97ClzuIQ0S8TW_SDqrTaA7ezZnk2Tg2c');
 
 /**
  * Get Database Connection
@@ -29,7 +30,7 @@ function getDB() {
             );
         } catch (PDOException $e) {
             error_log("Connection failed: " . $e->getMessage());
-            die("Algo deu errado na conexão com o banco de dados.");
+            throw new Exception("Connection failed: " . $e->getMessage());
         }
     }
     return $db;

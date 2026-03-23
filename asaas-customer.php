@@ -27,11 +27,24 @@ function getOrCreateAsaasCustomer($userData) {
 
     $createResponse = asaasRequest('/customers', 'POST', $newCustomer);
 
-    if ($createResponse['code'] === 200 && isset($createResponse['response']['id'])) {
+    // Asaas normally returns 200 or 201 on success
+    if (in_array($createResponse['code'], [200, 201]) && isset($createResponse['response']['id'])) {
         return $createResponse['response']['id'];
     }
 
-    error_log("Asaas Customer Creation Error: " . json_encode($createResponse));
-    return false;
+    // Improved error message extraction
+    $errors = $createResponse['response']['errors'] ?? [];
+    if (!empty($errors)) {
+        $errorMsg = $errors[0]['description'] ?? 'Erro sem descrição no array de erros';
+    } else {
+        $errorMsg = $createResponse['response']['description'] ?? ($createResponse['raw'] ?: 'Resposta vazia do Asaas');
+    }
+    
+    $errorCode = $createResponse['code'] ?? 'N/A';
+    
+    error_log("Asaas Customer Creation Error (Code $errorCode): " . json_encode($createResponse));
+    
+    // If it's a 400, it might be a specific business rule (invalid CPF, etc)
+    throw new Exception("Erro Asaas (HTTP $errorCode) ao criar cliente: " . $errorMsg);
 }
 ?>

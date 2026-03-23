@@ -5,17 +5,34 @@ DirectoryIndex index.html index.php
     RewriteEngine On
     RewriteBase /
 
-    # 1. Redirecionar /arquivo.html para /arquivo (URL limpa)
-    RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s([^.]+)\.html [NC]
-    RewriteRule ^ %1 [R=301,L]
+    # 1. Desativar MultiViews para evitar conflitos de extensao
+    Options -MultiViews
+    Options -Indexes
 
-    # 2. Se o arquivo .html existir fisicamente, usar ele
-    # Ignora diretórios para não quebrar pastas do WordPress
+    # 2. Redirecionar ACESSO DIRETO a .php/.html para a URL limpa
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^.]+)\.(php|html)\ [NC]
+    RewriteRule ^ /%1 [L,R=301]
+
+    # 3. REGRAS CRITICAS: Prioridade antes do WordPress
+    RewriteRule ^admin/?$ admin.php [NC,L]
+    RewriteRule ^admin-login/?$ admin-auth.php [L]
+    RewriteRule ^painel/?$ painel.php [NC,L]
+    RewriteRule ^login/?$ login.html [NC,L]
+    RewriteRule ^logout/?$ logout.php [NC,L]
+
+    # 4. Tratamento generico para outros arquivos .php (incluindo subpastas)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^([^.]+)/?$ $1.php [L]
+
+    # 5. Tratamento generico para outros arquivos .html
+    RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME}.html -f
-    RewriteRule ^([^/]+)/?$ $1.html [L]
+    RewriteRule ^([^.]+)/?$ $1.html [L]
 
-    # 3. Regras padrão do WordPress (não alterar se quiser manter o WP funcionando)
+    # 6. Regras padrão do WordPress (Fallback)
     RewriteRule ^index\.php$ - [L]
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d

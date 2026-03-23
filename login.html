@@ -11,8 +11,86 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&amp;display=swap"
         rel="stylesheet">
 
+    <!-- Preload Background Images to prevent "flashing" -->
+    <link rel="preload" as="image" href="assets/img/login/background.webp">
+    <link rel="preload" as="image" href="assets/img/login/van.png">
+
     <!-- Styles -->
     <link rel="stylesheet" href="assets/css/login.css">
+    
+    <!-- Custom Toast Notification System -->
+    <style>
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 99999;
+            background: #2d3748;
+            color: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            align-items: center;
+        }
+        .toast-container.show { opacity: 1; transform: translateY(0); }
+        .toast-content { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 1.5rem; }
+        #toast-message { font-size: 0.95rem; font-weight: 500; }
+        .toast-close { background: none; border: none; color: #cbd5e0; font-size: 1.2rem; cursor: pointer; padding: 0; margin: 0; transition: color 0.2s; }
+        .toast-close:hover { color: #fff; }
+    </style>
+    <script>
+        // Override standard alert early
+        window.alert = function showToast(message) {
+            let toast = document.getElementById('custom-toast');
+            if(!toast) {
+                // Determine if DOM is ready to inject
+                if(document.body) {
+                    injectToastUI();
+                    toast = document.getElementById('custom-toast');
+                } else {
+                    console.log("Alert (pre-DOM): ", message);
+                    return; 
+                }
+            }
+            document.getElementById('toast-message').innerText = message;
+            toast.style.display = 'flex';
+            setTimeout(() => { toast.classList.add('show'); }, 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => { toast.style.display = 'none'; }, 300);
+            }, 4000);
+        };
+        
+        function closeToast() {
+            const toast = document.getElementById('custom-toast');
+            if(toast) {
+                toast.classList.remove('show');
+                setTimeout(() => { toast.style.display = 'none'; }, 300);
+            }
+        }
+
+        function injectToastUI() {
+            if(!document.getElementById('custom-toast')) {
+                const div = document.createElement('div');
+                div.id = 'custom-toast';
+                div.className = 'toast-container';
+                div.style.display = 'none';
+                div.innerHTML = `
+                    <div class="toast-content">
+                        <span id="toast-message">Mensagem</span>
+                        <button class="toast-close" onclick="closeToast()">&times;</button>
+                    </div>
+                `;
+                document.body.appendChild(div);
+            }
+        }
+        
+        // Inject UI when DOM is ready
+        document.addEventListener('DOMContentLoaded', injectToastUI);
+    </script>
 </head>
 
 <body>
@@ -29,7 +107,7 @@
         <!-- Right Side: Form -->
         <div class="login-form-container">
             <div class="login-content">
-                <div class="logo-container">
+                <div class="logo-container" style="margin-top: 2rem; margin-bottom: 1rem;">
                     <img src="assets/img/logo_exenvios.png" alt="Ex-Envios Logo" class="logo">
                 </div>
 
@@ -44,15 +122,15 @@
                     <button class="toggle-btn" id="btn-register">Cadastrar</button>
                 </div>
 
-                <form class="login-form" action="#" method="POST">
+                <form class="login-form" id="form-auth-login" onsubmit="handleLogin(event)">
                     <div class="form-group">
                         <label for="email">E-MAIL</label>
-                        <input type="email" id="email" name="email" placeholder="seu@email.com" required="">
+                        <input type="email" id="login-email" name="email" placeholder="seu@email.com" required="">
                     </div>
 
                     <div class="form-group">
                         <label for="password">SENHA</label>
-                        <input type="password" id="password" name="password" placeholder="Sua senha" required="">
+                        <input type="password" id="login-password" name="password" placeholder="Sua senha" required="">
                     </div>
 
                     <div class="form-actions">
@@ -63,7 +141,7 @@
                         <a href="#" class="forgot-password">Esqueceu a senha?</a>
                     </div>
 
-                    <button type="submit" class="btn-submit">ACESSAR CONTA</button>
+                    <button type="submit" class="btn-submit" id="btn-submit-login">ACESSAR CONTA</button>
                 </form>
 
                 <!-- Registration Flow -->
@@ -110,16 +188,16 @@
                         <div id="form-pf">
                             <div class="form-group">
                                 <label>Nome Completo</label>
-                                <input type="text" placeholder="Nome e Sobrenome">
+                                <input type="text" id="reg-name-pf" placeholder="Nome e Sobrenome">
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>CPF</label>
-                                    <input type="text" placeholder="000.000.000-00">
+                                    <input type="text" id="reg-cpf-pf" placeholder="000.000.000-00">
                                 </div>
                                 <div class="form-group">
                                     <label>Data Nasc.</label>
-                                    <input type="date">
+                                    <input type="date" id="reg-birth-pf">
                                 </div>
                             </div>
                         </div>
@@ -128,16 +206,16 @@
                         <div id="form-pj" style="display: none;">
                             <div class="form-group">
                                 <label>Razão Social</label>
-                                <input type="text" placeholder="Nome da Empresa">
+                                <input type="text" id="reg-name-pj" placeholder="Nome da Empresa">
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>CNPJ</label>
-                                    <input type="text" placeholder="00.000.000/0000-00">
+                                    <input type="text" id="reg-cnpj-pj" placeholder="00.000.000/0000-00">
                                 </div>
                                 <div class="form-group">
                                     <label>Responsável</label>
-                                    <input type="text" placeholder="Nome do Responsável">
+                                    <input type="text" id="reg-resp-pj" placeholder="Nome do Responsável">
                                 </div>
                             </div>
                         </div>
@@ -145,11 +223,15 @@
                         <!-- Common Fields -->
                         <div class="form-group">
                             <label>Celular (WhatsApp)</label>
-                            <input type="tel" placeholder="(00) 00000-0000">
+                            <input type="tel" id="reg-phone" placeholder="(00) 00000-0000">
                         </div>
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" placeholder="seu@email.com">
+                            <input type="email" id="reg-email" placeholder="seu@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Senha</label>
+                            <input type="password" id="reg-password" placeholder="Crie uma senha">
                         </div>
 
                         <button class="btn-submit" onclick="nextRegStep(3)">Continuar</button>
@@ -227,6 +309,8 @@
     </div>
 
     <script>
+        let regType = 'pf';
+
         // Simple toggle script for visual feedback
         const btnLogin = document.getElementById('btn-login');
         const btnRegister = document.getElementById('btn-register');
@@ -240,7 +324,6 @@
             btnRegister.classList.remove('active');
             loginForm.style.display = 'block';
             regFlow.style.display = 'none';
-            // Reset welcome text
             welcomeTitle.innerText = "Bem-vindo de volta!";
             welcomeSubtitle.innerText = "Acesse sua conta para gerenciar seus envios.";
         });
@@ -250,11 +333,8 @@
             btnLogin.classList.remove('active');
             loginForm.style.display = 'none';
             regFlow.style.display = 'block';
-            // Update welcome text for registration
             welcomeTitle.innerText = "Crie sua conta";
             welcomeSubtitle.innerText = "Comece a enviar com a Ex-Envios hoje mesmo.";
-
-            // Reset to step 1
             showStep(1);
         });
 
@@ -264,8 +344,29 @@
         }
 
         function nextRegStep(stepId, type) {
+            // Validation for Step 2 -> 3
+            if (document.getElementById('reg-step-2').style.display === 'block') {
+                const email = document.getElementById('reg-email').value;
+                const password = document.getElementById('reg-password').value;
+                const name = regType === 'pf' ? document.getElementById('reg-name-pf').value : document.getElementById('reg-name-pj').value;
+
+                if (!name || !email || !password) {
+                    alert("Por favor, preencha nome, email e senha.");
+                    return;
+                }
+            }
+
+            // Validation for Step 3 -> 4
+            if (document.getElementById('reg-step-3').style.display === 'block') {
+                const street = document.getElementById('reg-street').value;
+                if (!street) {
+                    alert("Por favor, preencha os dados de endereço.");
+                    return;
+                }
+            }
+
             if (type) {
-                // Handle PF vs PJ logic
+                regType = type;
                 if (type === 'pf') {
                     document.getElementById('form-pf').style.display = 'block';
                     document.getElementById('form-pj').style.display = 'none';
@@ -282,16 +383,84 @@
         }
 
         function fillAddress() {
-            // Fake fill
+            // Fake fill for now
             document.getElementById('reg-city').value = 'Campo Grande';
             document.getElementById('reg-street').value = 'Av. Afonso Pena';
             document.getElementById('reg-neighborhood').value = 'Centro';
         }
 
-        function finishRegistration() {
-            alert("Cadastro finalizado! Entrando...");
-            // Redirect to client dashboard (root domain)
-            window.location.href = '/painel';
+        async function handleLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-login');
+            const originalText = btn.innerText;
+            btn.innerText = "CARREGANDO...";
+            btn.disabled = true;
+
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const res = await fetch('endpoints/login.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const result = await res.json();
+
+                if (result.ok) {
+                    if (result.role === 'admin') {
+                        window.location.href = '/admin';
+                    } else {
+                        window.location.href = '/painel';
+                    }
+                } else {
+                    alert(result.error || "Erro ao fazer login");
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                alert("Erro de conexão com o servidor");
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        async function finishRegistration() {
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = "PROCESSANDO...";
+            btn.disabled = true;
+
+            const data = {
+                type: regType,
+                name: regType === 'pf' ? document.getElementById('reg-name-pf').value : document.getElementById('reg-name-pj').value,
+                email: document.getElementById('reg-email').value,
+                password: document.getElementById('reg-password').value,
+                cpf: regType === 'pf' ? document.getElementById('reg-cpf-pf').value : document.getElementById('reg-cnpj-pj').value,
+                phone: document.getElementById('reg-phone').value
+            };
+
+            try {
+                const res = await fetch('endpoints/register.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+
+                if (result.ok) {
+                    alert("Bem-vindo! Seu cadastro foi realizado.");
+                    window.location.href = 'painel';
+                } else {
+                    alert(result.error || "Erro ao realizar cadastro");
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                alert("Erro de conexão com o servidor");
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
         }
     </script>
 

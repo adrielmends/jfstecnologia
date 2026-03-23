@@ -3,6 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=painel.php">
+    <script type="text/javascript">
+        window.location.href = "painel.php"
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel - Ex-Envios</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -576,7 +580,7 @@
                             <div class="form-row">
                                 <div class="input-group">
                                     <label>CEP de origem</label>
-                                    <input type="text" placeholder="00000-000" value="79115-800">
+                                    <input type="text" id="calc-cep-origem" placeholder="00000-000" value="79115-800">
                                 </div>
                                 <div class="action-buttons">
                                     <button class="btn-sm btn-primary">SALVAR</button>
@@ -587,18 +591,18 @@
                             <div class="form-row">
                                 <div class="input-group">
                                     <label>Formato</label>
-                                    <select>
-                                        <option>Caixa / Pacote</option>
-                                        <option>Envelope</option>
+                                    <select id="calc-formato">
+                                        <option value="1">Caixa / Pacote</option>
+                                        <option value="2">Envelope</option>
                                     </select>
                                 </div>
                                 <div class="input-group">
                                     <label>Peso</label>
-                                    <select>
-                                        <option>Selecione</option>
-                                        <option>Até 300g</option>
-                                        <option>Até 1kg</option>
-                                        <option>Até 2kg</option>
+                                    <select id="calc-peso">
+                                        <option value="">Selecione</option>
+                                        <option value="0.300">Até 300g</option>
+                                        <option value="1.000">Até 1kg</option>
+                                        <option value="2.000">Até 2kg</option>
                                     </select>
                                 </div>
                             </div>
@@ -607,21 +611,21 @@
                                 <div class="input-group">
                                     <label>Altura</label>
                                     <div class="input-suffix">
-                                        <input type="number" placeholder="00">
+                                        <input type="number" id="calc-altura" placeholder="00" value="10">
                                         <span>cm</span>
                                     </div>
                                 </div>
                                 <div class="input-group">
                                     <label>Largura</label>
                                     <div class="input-suffix">
-                                        <input type="number" placeholder="00">
+                                        <input type="number" id="calc-largura" placeholder="00" value="15">
                                         <span>cm</span>
                                     </div>
                                 </div>
                                 <div class="input-group">
                                     <label>Comprimento</label>
                                     <div class="input-suffix">
-                                        <input type="number" placeholder="00">
+                                        <input type="number" id="calc-comprimento" placeholder="00" value="20">
                                         <span>cm</span>
                                     </div>
                                 </div>
@@ -643,7 +647,7 @@
                                 <div class="input-group">
                                     <label>CEP de destino</label>
                                     <div class="input-link-row">
-                                        <input type="text" placeholder="00000-000">
+                                        <input type="text" id="calc-cep-destino" placeholder="00000-000">
                                         <a href="#" class="link-small">Pesquisar CEP</a>
                                     </div>
                                 </div>
@@ -654,40 +658,8 @@
 
                         <!-- Shipping Results (Hidden by default) -->
                         <div id="shipping-results" style="display: none; margin-top: 2rem;">
-                            <div class="shipping-options">
-                                <!-- Option 1 -->
-                                <div class="shipping-option">
-                                    <div class="ship-info">
-                                        <div class="ship-logo">📦</div>
-                                        <div>
-                                            <strong>PAC</strong>
-                                            <p>Até 6 dias úteis</p>
-                                        </div>
-                                    </div>
-                                    <div class="ship-price">
-                                        <strong>R$ 20,07</strong>
-                                        <span>R$ 32,00</span>
-                                    </div>
-                                    <button class="btn-select" onclick="openPostageModal('PAC')">Gerar Etiqueta</button>
-                                </div>
-
-                                <!-- Option 2 -->
-                                <div class="shipping-option">
-                                    <div class="ship-logo">🚀</div>
-                                    <div class="ship-info">
-                                        <div>
-                                            <strong>SEDEX</strong>
-                                            <p>Até 2 dias úteis</p>
-                                        </div>
-                                    </div>
-                                    <div class="ship-price">
-                                        <strong>R$ 41,28</strong>
-                                        <span>R$ 61,00</span>
-                                    </div>
-                                    <button class="btn-select" onclick="openPostageModal('SEDEX')">Gerar
-                                        Etiqueta</button>
-                                </div>
-
+                            <div class="shipping-options" id="shipping-options-container">
+                                <!-- Dynamic results will be injected here -->
                             </div>
                         </div>
                     </div>
@@ -1488,51 +1460,71 @@
     </main>
     </div>
 
-    <!-- Registration Modal (Reused) -->
-    <div id="modal-registration" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Cadastre-se para Continuar</h2>
+    <!-- Registration Modal (Redesigned) -->
+    <div id="modal-registration" class="modal-premium" style="display: none;">
+        <div class="modal-content-premium" style="max-width: 450px;">
+            <div class="modal-header" style="padding: 5rem 2rem 0rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--navy-dark);">Cadastre-se para Continuar
+                </h2>
                 <button class="btn-close" onclick="closeRegistration()">×</button>
             </div>
-            <div class="modal-body">
-                <p>Para emitir sua etiqueta com desconto, precisamos de alguns dados.</p>
-                <div class="input-group">
+            <div class="modal-body" style="padding: 0.5rem 2rem 2.5rem;">
+                <p class="modal-subtitle" style="margin-top: 0.5rem;">Para emitir sua etiqueta com desconto, precisamos
+                    de alguns dados.</p>
+                <div class="input-group" style="margin-bottom: 1.25rem;">
                     <label>Nome Completo</label>
-                    <input type="text" placeholder="Seu nome">
+                    <input type="text" placeholder="Seu nome" id="reg-name"
+                        style="background: #f8fafc; border: 2px solid #f1f4f9; border-radius: 12px; height: 50px;">
                 </div>
-                <div class="input-group">
+                <div class="input-group" style="margin-bottom: 1.5rem;">
                     <label>Email</label>
-                    <input type="email" placeholder="Seu email">
+                    <input type="email" placeholder="Seu email" id="reg-email"
+                        style="background: #f8fafc; border: 2px solid #f1f4f9; border-radius: 12px; height: 50px;">
                 </div>
-                <button class="btn-primary full-width" onclick="completeRegistration()"
-                    style="margin-top: 1rem;">Concluir Cadastro</button>
+                <button class="btn-calculate" onclick="completeRegistration()"
+                    style="margin-top: 0; width: 100%; height: 55px; font-size: 1rem;">Concluir Cadastro</button>
             </div>
         </div>
     </div>
 
-    <!-- NEW: Postage Method Modal -->
-    <div id="modal-postage" class="modal-overlay" style="display: none;">
-        <div class="modal-content postage-modal">
-            <div class="modal-header">
-                <h2>Escolha a Postagem</h2>
-                <button class="btn-close" onclick="closePostageModal()">×</button>
+    <!-- NEW: Postage Method Modal (Redesigned) -->
+    <div id="modal-postage" class="modal-premium" style="display: none;">
+        <div class="modal-content-premium" style="max-width: 500px;">
+            <div class="modal-header" style="justify-content: center; position: relative;">
+                <h2
+                    style="font-size: 1.5rem; font-weight: 800; color: var(--navy-dark); text-align: center; width: 100%;">
+                    Escolha a Postagem</h2>
+                <button class="btn-close" onclick="closePostageModal()"
+                    style="position: absolute; right: 2rem; top: 3.2rem;">×</button>
             </div>
-            <div class="modal-body">
-                <p>Como você deseja enviar seu pacote?</p>
-                <div class="postage-options">
-                    <div class="postage-card" onclick="selectShipping('agencia')">
-                        <div class="postage-icon">🏪</div>
-                        <div class="postage-info">
-                            <strong>Levar até a Agência</strong>
-                            <p>Poste em qualquer agência dos Correios ou ponto conveniado.</p>
+            <div class="modal-body" style="padding: 1rem 2rem 2.5rem;">
+                <p class="modal-subtitle" style="text-align: center; margin-bottom: 2rem;">Como você deseja enviar seu
+                    pacote?</p>
+                <div class="postage-options" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div class="postage-card" onclick="selectShipping('agencia')"
+                        style="cursor: pointer; display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border: 2px solid #f1f4f9; border-radius: 20px; transition: all 0.3s ease; background: #fff;">
+                        <div class="postage-icon"
+                            style="width: 60px; height: 60px; background: #fff9f0; display: flex; align-items: center; justify-content: center; border-radius: 16px; font-size: 2rem; border: 1px solid #fff0e0;">
+                            🏪</div>
+                        <div class="postage-info" style="flex: 1;">
+                            <strong
+                                style="display: block; color: var(--navy-dark); font-size: 1.1rem; margin-bottom: 4px;">Levar
+                                até a Agência</strong>
+                            <p style="margin: 0; color: #718096; font-size: 0.9rem; line-height: 1.4;">Poste em qualquer
+                                agência dos Correios ou ponto conveniado.</p>
                         </div>
                     </div>
-                    <div class="postage-card" onclick="selectShipping('coleta')">
-                        <div class="postage-icon">🚚</div>
-                        <div class="postage-info">
-                            <strong>Solicitar Coleta</strong>
-                            <p>Retiramos no seu endereço em até 60 minutos.</p>
+                    <div class="postage-card" onclick="selectShipping('coleta')"
+                        style="cursor: pointer; display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border: 2px solid #f1f4f9; border-radius: 20px; transition: all 0.3s ease; background: #fff;">
+                        <div class="postage-icon"
+                            style="width: 60px; height: 60px; background: #fff9f0; display: flex; align-items: center; justify-content: center; border-radius: 16px; font-size: 2rem; border: 1px solid #fff0e0;">
+                            🚚</div>
+                        <div class="postage-info" style="flex: 1;">
+                            <strong
+                                style="display: block; color: var(--navy-dark); font-size: 1.1rem; margin-bottom: 4px;">Solicitar
+                                Coleta</strong>
+                            <p style="margin: 0; color: #718096; font-size: 0.9rem; line-height: 1.4;">Retiramos no seu
+                                endereço em até 60 minutos.</p>
                         </div>
                     </div>
                 </div>
@@ -1542,14 +1534,93 @@
 
 
     <script>
-        function calculateShipping() {
+        async function calculateShipping() {
+            const cepDest = document.getElementById('calc-cep-destino').value;
+            if (!cepDest) {
+                alert('Informe o CEP de destino');
+                return;
+            }
+
             const btn = document.querySelector('.btn-calculate');
+            const originalText = btn.innerHTML;
             btn.innerHTML = "Calculando...";
-            setTimeout(() => {
-                btn.innerHTML = "CALCULAR FRETE COM DESCONTO";
-                document.getElementById('shipping-results').style.display = 'block';
-                document.getElementById('shipping-results').scrollIntoView({ behavior: 'smooth' });
-            }, 1000);
+            btn.disabled = true;
+
+            const payload = {
+                sCepOrigem: document.getElementById('calc-cep-origem').value,
+                sCepDestino: cepDest,
+                nCdFormato: document.getElementById('calc-formato').value,
+                nVlPeso: document.getElementById('calc-peso').value || '1',
+                nVlAltura: document.getElementById('calc-altura').value,
+                nVlLargura: document.getElementById('calc-largura').value,
+                nVlComprimento: document.getElementById('calc-comprimento').value,
+                nVlValorDeclarado: '0'
+            };
+
+            try {
+                const response = await fetch('endpoints/calc_frete_api.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+
+                if (result.ok) {
+                    if (result.servicos && result.servicos.length > 0) {
+                        renderShippingResults(result.servicos);
+                        document.getElementById('shipping-results').style.display = 'block';
+                        document.getElementById('shipping-results').scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        alert('Nenhum resultado de frete retornado. Verifique os dados informados.');
+                    }
+                } else {
+                    alert('Erro ao calcular frete: ' + (result.error || 'Erro desconhecido'));
+                }
+            } catch (e) {
+                console.error("Calculation error:", e);
+                alert('Erro na conexão com o servidor ou no processamento dos dados.');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function renderShippingResults(servicos) {
+            const container = document.getElementById('shipping-options-container');
+            container.innerHTML = '';
+
+            servicos.forEach(s => {
+                let logoPath = 'Correios.png';
+                let alt = 'Correios';
+                if (s.codigo === 'TEX' || s.servico_nome.includes('Total')) {
+                    logoPath = 'Total Express.png';
+                    alt = 'Total Express';
+                }
+
+                const valorBalcao = (s.valor_float * 1.3).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                const valorCalculado = s.valor_float.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                const prazo = s.prazo_dias ? `Até ${s.prazo_dias} dias úteis` : 'Consulte o prazo';
+
+                const html = `
+                    <div class="shipping-option" style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 0rem; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-bottom: 0;">
+                        <div class="ship-info" style="display: flex; align-items: center; gap: 1.5rem; flex: 1;">
+                            <div class="ship-logo" style="width: 70px; display: flex; justify-content: center; background: #fff; padding: 5px; border-radius: 8px;">
+                                <img src="${logoPath}" alt="${alt}" style="max-width: 100%; max-height: 40px; object-fit: contain;">
+                            </div>
+                            <div style="flex: 1;">
+                                <strong style="color: #002b49; font-size: 1.05rem; display: block;">${s.servico_nome}</strong>
+                                <p style="margin: 0; color: #718096; font-size: 0.85rem;">${prazo}</p>
+                            </div>
+                        </div>
+                        <div class="ship-price" style="text-align: right; padding: 0 1.5rem; min-width: 140px;">
+                            <strong style="color: #002b49; font-size: 1.15rem; display: block;">${valorCalculado}</strong>
+                            <span style="text-decoration: line-through; color: #cbd5e0; font-size: 0.85rem;">${valorBalcao}</span>
+                        </div>
+                        <button class="btn-select" onclick="openPostageModal('${s.servico_nome}')" style="background: #FF6B00; color: white; border: none; padding: 0.8rem 1.2rem; border-radius: 10px; font-weight: 700; cursor: pointer; min-width: 140px; transition: all 0.2s;">Gerar Etiqueta</button>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
         }
 
         function openPostageModal(type) {
@@ -1634,37 +1705,41 @@
     <!-- Modal: Adicionar Saldo (Asaas) -->
     <div id="modal-deposit" class="modal-premium" style="display: none;">
         <div class="modal-content-premium">
-            <div class="modal-header">
-                <h3>Adicionar Saldo</h3>
-                <button class="modal-close" onclick="closeDepositModal()">&times;</button>
+            <div class="modal-header" style="padding: 5rem 2rem 0rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--navy-dark);">Adicionar Saldo</h2>
+                <button class="btn-close" onclick="closeDepositModal()">×</button>
             </div>
-            <div class="modal-body">
-                <p class="modal-subtitle">Escolha o valor e o método de pagamento</p>
+            <div class="modal-body" style="padding: 0.5rem 2rem 2.5rem;">
+                <p class="modal-subtitle" style="margin-top: 0.5rem;">Escolha o valor e o método de pagamento</p>
 
-                <div class="deposit-grid">
+                <div class="deposit-grid" style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1rem;">
                     <div class="input-group">
-                        <label>VALOR (R$)</label>
-                        <input type="number" id="deposit-amount" placeholder="Min. R$ 20,00" min="20">
+                        <label
+                            style="display: block; margin-bottom: 0.8rem; font-weight: 800; color: var(--navy-dark); font-size: 0.9rem;">VALOR
+                            (R$)</label>
+                        <input type="number" id="deposit-amount" placeholder="Min. R$ 20,00" min="20"
+                            style="background: #f8fafc; border: 2px solid #f1f4f9; border-radius: 12px; height: 50px; width: 100%; padding: 0 1rem;">
                     </div>
-                    <div class="method-selector">
-                        <button class="method-btn active" onclick="setMethod('PIX')">
+                    <div class="method-selector" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <button class="method-btn active" onclick="setMethod('PIX')" style="height: 70px;">
                             <i class="fas fa-qrcode"></i> Pix
                         </button>
-                        <button class="method-btn" onclick="setMethod('CREDIT_CARD')">
+                        <button class="method-btn" onclick="setMethod('CREDIT_CARD')" style="height: 70px;">
                             <i class="fas fa-credit-card"></i> Cartão
                         </button>
                     </div>
                 </div>
 
                 <div id="pix-qr-container" style="display: none; text-align: center; margin-top: 2rem;">
-                    <h4>Escaneie o QR Code</h4>
-                    <img id="pix-qr-image" src="" alt="Pix QR Code" style="max-width: 200px; margin: 1rem auto;">
+                    <h4 style="color: var(--navy-dark); font-weight: 800; margin-bottom: 1rem;">Escaneie o QR Code</h4>
+                    <img id="pix-qr-image" src="" alt="Pix QR Code"
+                        style="max-width: 200px; margin: 0 auto 1.5rem; display: block; padding: 10px; background: white; border: 1px solid #f1f4f9; border-radius: 16px;">
                     <button class="btn-copy-pix" onclick="copyPixCode()">Copiar Código Pix</button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn-calculate" id="btn-generate-payment" onclick="generatePayment()">GERAR
-                    PAGAMENTO</button>
+            <div class="modal-footer" style="padding: 0 2rem 2.5rem;">
+                <button class="btn-calculate" id="btn-generate-payment" onclick="generatePayment()"
+                    style="width: 100%; height: 55px; font-size: 1rem; margin-top: 0;">GERAR PAGAMENTO</button>
             </div>
         </div>
     </div>
@@ -1678,7 +1753,6 @@
             right: 0;
             bottom: 0;
             background: rgba(0, 26, 44, 0.85);
-            backdrop-filter: blur(10px);
             z-index: 5000;
             display: flex;
             align-items: center;
@@ -1709,7 +1783,7 @@
         }
 
         .modal-header {
-            padding: 2rem 2rem 1rem;
+            padding: 3rem 2rem 0rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -1777,7 +1851,65 @@
             font-weight: 700;
             margin-top: 1rem;
         }
+
+        /* Modal Alert Premium */
+        #modal-alert .modal-content-premium {
+            max-width: 400px;
+            text-align: center;
+        }
+
+        #modal-alert .modal-body {
+            padding: 1rem 2rem 2.5rem;
+        }
+
+        #modal-alert .alert-message {
+            font-size: 1.1rem;
+            color: var(--navy-dark);
+            font-weight: 500;
+            line-height: 1.5;
+            margin-bottom: 2rem;
+        }
+
+        .postage-card:hover {
+            border-color: var(--primary-color) !important;
+            background: rgba(255, 107, 0, 0.02) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.05);
+        }
+
+        .shipping-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0rem;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .shipping-option:not(:last-child) {
+            border-bottom: 1px solid #f1f4f9 !important;
+        }
+
+        .shipping-option {
+            background: white !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
     </style>
+
+    <!-- Modal: Alert Personalizado -->
+    <div id="modal-alert" class="modal-premium" style="display: none;">
+        <div class="modal-content-premium">
+            <div class="modal-header" style="justify-content: center; padding-bottom: 0.5rem;">
+                <h3 style="color: var(--primary-color);">Aviso</h3>
+            </div>
+            <div class="modal-body">
+                <p class="alert-message" id="alert-message-text">Mensagem do sistema</p>
+                <button class="btn-calculate" onclick="closeAlertModal()" style="margin-top: 0;">ENTENDI</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         let selectedMethod = 'PIX';
@@ -1840,8 +1972,21 @@
 
         function copyPixCode() {
             navigator.clipboard.writeText(pixCode);
-            alert('Código Pix copiado!');
+            showAlert('Código Pix copiado!');
         }
+
+        // Custom Alert Logic
+        function showAlert(message) {
+            document.getElementById('alert-message-text').innerText = message;
+            document.getElementById('modal-alert').style.display = 'flex';
+        }
+
+        function closeAlertModal() {
+            document.getElementById('modal-alert').style.display = 'none';
+        }
+
+        // Replace global alert with showAlert
+        window.alert = showAlert;
 
         // Hook up the original button
         document.querySelector('.btn-add-funds-sm').onclick = openDepositModal;

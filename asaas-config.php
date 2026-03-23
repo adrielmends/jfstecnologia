@@ -26,7 +26,8 @@ function asaasRequest($endpoint, $method = 'GET', $data = null) {
 
     $headers = [
         'Content-Type: application/json',
-        'access_token: ' . ASAAS_API_KEY
+        'access_token: ' . ASAAS_API_KEY,
+        'User-Agent: Ex-Envios-App'
     ];
 
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -40,11 +41,16 @@ function asaasRequest($endpoint, $method = 'GET', $data = null) {
 
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
     curl_close($ch);
 
+    $decoded = json_decode($response, true);
+    
     return [
         'code' => $httpCode,
-        'response' => json_decode($response, true)
+        'response' => $decoded,
+        'raw' => $response,
+        'error' => $curlError
     ];
 }
 ?>

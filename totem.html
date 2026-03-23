@@ -68,16 +68,123 @@
             }
 
             header .logo img {
-                height: 50px;
+                height: 110px !important;
             }
 
             main {
-                padding: 1.5rem 1rem;
+                padding: 1rem 0.5rem;
+            }
+
+            .kiosk-wrapper {
+                padding: 0;
+                margin-top: 2rem;
+            }
+
+            h1 {
+                font-size: 1.5rem !important;
+                margin-bottom: 0.8rem !important;
+            }
+
+            .subtitle {
+                font-size: 0.9rem !important;
+                margin-bottom: 1rem !important;
+                margin-top: -0.5rem !important;
+            }
+
+            .kiosk-card {
+                width: 100% !important;
+                max-width: 380px !important;
+                padding: 3rem 2rem !important;
+                border-radius: 30px !important;
+            }
+
+            .kiosk-main-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+
+            .nav-buttons-shared {
+                justify-content: space-between;
+                gap: 0.5rem;
+            }
+
+            .btn-kiosk-back,
+            .btn-kiosk-home {
+                padding: 0.7rem 1.4rem !important;
+                font-size: 1.1rem !important;
+            }
+
+            .top-step-bar {
+                display: none !important;
+            }
+
+            .bottom-summary-bar {
+                padding: 0.5rem 1rem;
+            }
+
+            .summary-content {
+                flex-direction: column;
+                gap: 0.2rem;
+            }
+
+            .summary-label {
+                border-right: none !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                padding: 0 0 0.5rem 0 !important;
+                margin: 0 0 0.5rem 0 !important;
+                text-align: center;
+                width: 100%;
+                font-size: 1rem !important;
+            }
+
+            .order-summary-list {
+                flex-direction: column;
+                gap: 0.2rem !important;
                 align-items: center;
             }
 
+            .order-summary-item {
+                font-size: 0.95rem;
+                text-align: center;
+                margin: 0 !important;
+                padding: 0 !important;
+                line-height: 1.2 !important;
+            }
+
+            .order-summary-item span {
+                display: none !important;
+            }
+
+            .kiosk-grid.grid-3 {
+                grid-template-columns: repeat(1, 1fr) !important;
+                justify-items: center !important;
+            }
+
+            .location-card {
+                height: 179px !important;
+                padding: 1.2rem !important;
+            }
+
+            .total-item {
+                font-size: 1.7rem !important;
+            }
+
+            .kiosk-card i {
+                font-size: 4.5rem !important;
+            }
+
             .screen-container {
-                margin: auto 0;
+                margin-top: 0 !important;
+                padding: 0 !important;
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+            }
+
+            #scr-login.active {
+                margin: auto 0 !important;
             }
         }
 
@@ -126,7 +233,7 @@
             font-weight: 900;
             text-align: center;
             color: var(--secondary);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             letter-spacing: -0.5px;
             text-transform: uppercase;
         }
@@ -136,7 +243,7 @@
             text-align: center;
             color: var(--text-muted);
             margin-bottom: 2rem;
-            margin-top: -1rem;
+            margin-top: -1.5rem;
             text-transform: uppercase;
         }
 
@@ -190,22 +297,24 @@
             font-size: 1.1rem;
             letter-spacing: 1px;
             opacity: 0.7;
+            padding-top: 1rem;
         }
 
         .btn-kiosk-back {
             background: var(--white);
             border: 2px solid var(--border);
-            padding: 0.8rem 1.5rem;
-            border-radius: 15px;
-            font-size: 1rem;
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
             font-weight: 700;
             color: var(--secondary);
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 0.8rem;
+            gap: 0.5rem;
             transition: var(--transition);
             text-transform: uppercase;
+            white-space: nowrap;
         }
 
         .btn-kiosk-back:hover {
@@ -217,17 +326,18 @@
         .btn-kiosk-home {
             background: var(--white);
             border: 2px solid var(--border);
-            padding: 0.8rem 1.5rem;
-            border-radius: 15px;
-            font-size: 1rem;
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
             font-weight: 700;
             color: var(--primary);
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 0.8rem;
+            gap: 0.5rem;
             transition: var(--transition);
             text-transform: uppercase;
+            white-space: nowrap;
         }
 
         .btn-kiosk-home:hover {
@@ -238,22 +348,42 @@
 
         /* Kiosk Grid */
         .kiosk-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .kiosk-grid.grid-3 {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
+            width: 100%;
+        }
+
+        .kiosk-grid.grid-3 .kiosk-card {
+            width: 100% !important;
         }
 
         .kiosk-card {
             background: var(--white);
             border: 3px solid var(--border);
             border-radius: 30px;
-            padding: 2.5rem 1.5rem;
+            padding: 3rem 1.6rem;
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             flex-direction: column;
             align-items: center;
+            gap: 1rem;
+            width: 359px;
+            max-width: 100%;
+        }
+
+        .kiosk-card.card-compact {
+            padding: 2rem 1.5rem;
+            width: 320px;
             gap: 0.5rem;
         }
 
@@ -281,14 +411,18 @@
             text-transform: uppercase;
         }
 
+        .kiosk-card .card-subtitle {
+            font-size: 1.1rem !important;
+        }
+
         .location-card {
-            width: 250px;
-            height: 250px;
+            width: 220px;
+            height: 220px;
             text-align: center !important;
             flex-direction: column !important;
             justify-content: center !important;
-            gap: 1.2rem !important;
-            padding: 1.5rem !important;
+            gap: 0.5rem !important;
+            padding: 2rem !important;
             flex-shrink: 0;
             display: flex !important;
         }
@@ -354,6 +488,20 @@
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
+        }
+
+        .kiosk-form.small {
+            max-width: 600px;
+        }
+
+        .kiosk-form.small .btn-giant {
+            padding: 1.2rem;
+            font-size: 1.2rem;
+        }
+
+        .kiosk-form.small .disclaimer-box p {
+            font-size: 1.2rem !important;
+            line-height: 1.4;
         }
 
         @media (max-width: 768px) {
@@ -424,15 +572,15 @@
         .btn-giant {
             background: var(--primary);
             color: var(--white);
-            padding: 1.6rem;
-            border-radius: 20px;
-            font-size: 1.5rem;
+            padding: 1.4rem;
+            border-radius: 15px;
+            font-size: 1.4rem;
             font-weight: 900;
             border: none;
             cursor: pointer;
             width: 100%;
             transition: var(--transition);
-            margin-top: 1rem;
+            margin-top: 0.5rem;
             text-transform: uppercase;
             box-shadow: 0 10px 20px rgba(255, 150, 0, 0.2);
         }
@@ -506,7 +654,7 @@
             justify-content: center;
             align-items: center;
             min-height: calc(94vh - 300px);
-            padding-bottom: 2rem;
+            padding-bottom: 0;
         }
 
         /* Shared Global Nav */
@@ -523,6 +671,7 @@
         .nav-buttons-shared {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             gap: 1.5rem;
             width: 100%;
         }
@@ -531,21 +680,21 @@
         .top-step-bar {
             background: transparent;
             border-bottom: none;
-            padding-top: 12px;
+            padding: 0;
             display: flex;
             justify-content: center;
-            width: 100%;
+            flex: 1;
             position: relative;
             z-index: 1000;
-            font-size: 0.80rem;
+            font-size: 0.70rem;
         }
 
         .step-indicator-list {
             list-style: none;
             display: flex;
-            gap: 1.5rem;
-            max-width: 1200px;
-            margin: 0 auto;
+            gap: 1.2rem;
+            margin: 0;
+            padding: 0;
             justify-content: center;
             width: 100%;
         }
@@ -577,194 +726,109 @@
             opacity: 0.7;
         }
 
-        .step-indicator-item.completed .step-number {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
-
         .step-number {
-            width: 32px;
-            height: 32px;
-            border: 2px solid var(--secondary);
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--text-muted);
             border-radius: 50%;
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-weight: 900;
-            font-size: 1rem;
-            transition: var(--transition);
+            align-items: center;
+            font-weight: 700;
         }
 
         .step-text {
-            font-size: 0.85rem;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--secondary);
         }
 
-        /* Bottom Sticky Summary Bar */
+        /* Bottom Summary Bar */
         .bottom-summary-bar {
+            display: none;
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
             background: var(--secondary);
-            color: white;
-            padding: 1.2rem 2rem;
-            display: none;
-            justify-content: center;
-            align-items: center;
+            color: var(--white);
+            padding: 1.5rem;
+            z-index: 1500;
             box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
-            z-index: 2000;
         }
 
         .summary-content {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 3rem;
-            max-width: 1200px;
             width: 100%;
         }
 
-        .summary-label {
-            color: var(--primary);
-            text-transform: uppercase;
-            font-weight: 900;
-            font-size: 1rem;
-            letter-spacing: 1px;
-            flex-shrink: 0;
-        }
-
-        .order-summary-list {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
-            overflow-x: auto;
-            white-space: nowrap;
-            padding-bottom: 0.2rem;
-        }
-
-        .order-summary-item {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 600;
-        }
-
-        .order-summary-item::before {
-            content: "•";
-            color: var(--primary);
-            font-weight: bold;
-        }
-
-        @media (max-width: 1024px) {
-            header {
-                padding: 0rem;
-            }
-
-            header .logo img {
-                height: 120px;
-            }
-
-            main {
-                align-items: center;
-                min-height: calc(78vh - 60px);
-                padding-bottom: 150px;
-            }
-
-            .kiosk-shared-header {
-                align-items: flex-start;
-                margin-bottom: 3rem;
-            }
-
-            .nav-buttons-shared {
-                justify-content: space-between;
-            }
-
-            .step-indicator-list {
-                gap: 1.2rem;
-                justify-content: center;
-                padding: 0.5rem 0;
-                width: 100%;
-            }
-
-            .step-number {
-                width: 37px;
-                height: 37px;
-                font-size: 1.3rem;
-            }
-
-            .step-text {
-                display: block;
-                font-size: 0.80rem;
-                letter-spacing: 0;
-            }
-
-            .step-indicator-item {
-                flex-direction: column;
-                gap: 0.6rem;
-            }
-
-            .btn-kiosk-back,
-            .btn-kiosk-home {
-                padding: 0.8rem 1.5rem;
-                font-size: 1rem;
-                border-radius: 12px;
-            }
-
-            .btn-kiosk-back i,
-            .btn-kiosk-home i {
-                font-size: 0.9rem;
-            }
-
-            .location-card {
-                width: calc(50% - 1rem) !important;
-                height: auto !important;
-                aspect-ratio: 1 / 1;
-                padding: 1rem !important;
-                gap: 0.8rem !important;
-            }
-
-            .location-card i {
-                font-size: 2rem !important;
-            }
-
-            .location-card h3 {
-                font-size: 1rem !important;
-            }
-
-            .location-card p {
-                font-size: 0.8rem !important;
-            }
-
+        @media (min-width: 769px) {
             .summary-content {
-                flex-direction: column;
-                gap: 0.8rem;
-                align-items: center;
+                display: grid !important;
+                grid-template-columns: auto 1fr auto !important;
+                gap: 2rem !important;
             }
 
             .order-summary-list {
-                flex-direction: column;
-                gap: 0.6rem;
-                align-items: center;
-                white-space: normal;
-                width: 100%;
+                justify-content: flex-start !important;
+                max-height: 3.5rem;
+                overflow: hidden;
+                align-content: center;
+                line-height: 1.2;
             }
 
-            .order-summary-item {
-                font-size: 0.95rem;
-                text-align: center;
+            .summary-label {
+                margin-right: 0 !important;
             }
 
-            .kiosk-main-content {
-                min-height: auto;
-                align-items: center;
-                padding-bottom: 0;
+            .summary-total {
+                border-left: 2px solid rgba(255, 150, 0, 0.3);
+                padding-left: 1.5rem;
             }
+        }
+
+        .summary-label {
+            font-weight: 900;
+            text-transform: uppercase;
+            color: var(--primary);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            border-right: 2px solid rgba(255, 150, 0, 0.3);
+            padding-right: 1.5rem;
+            margin-right: 1.5rem;
+        }
+
+        .order-summary-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.2rem 0.8rem;
+            list-style: none;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .order-summary-item {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            font-weight: 600;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            text-transform: uppercase;
+        }
+
+        .summary-total {
+            white-space: nowrap;
+        }
+
+        .total-item {
+            font-size: 1.3rem !important;
+            font-weight: 900 !important;
+            color: var(--primary) !important;
         }
     </style>
 </head>
@@ -783,37 +847,39 @@
             <!-- Global Shared Header -->
             <div id="kiosk-shared-header" class="kiosk-shared-header">
                 <div class="nav-buttons-shared">
-                    <button id="btn-shared-back" class="btn-kiosk-back" onclick="prevStep()">
+                    <button id="btn-shared-back" class="btn-kiosk-back">
                         <i class="fas fa-arrow-left"></i> VOLTAR
                     </button>
+
+                    <!-- Top Step Indicator -->
+                    <div id="top-step-bar" class="top-step-bar">
+                        <ul class="step-indicator-list">
+                            <li id="step-1" class="step-indicator-item active">
+                                <div class="step-number">1</div>
+                                <span class="step-text">ACESSO</span>
+                            </li>
+                            <li id="step-2" class="step-indicator-item">
+                                <div class="step-number">2</div>
+                                <span class="step-text">NECESSIDADE</span>
+                            </li>
+                            <li id="step-3" class="step-indicator-item">
+                                <div class="step-number">3</div>
+                                <span class="step-text">TIPO/EMBALAGEM</span>
+                            </li>
+                            <li id="step-4" class="step-indicator-item">
+                                <div class="step-number">4</div>
+                                <span class="step-text">ETIQUETAS</span>
+                            </li>
+                            <li id="step-5" class="step-indicator-item">
+                                <div class="step-number">5</div>
+                                <span class="step-text">POSTAGEM</span>
+                            </li>
+                        </ul>
+                    </div>
+
                     <button id="btn-shared-home" class="btn-kiosk-home" onclick="goHome()">
                         <i class="fas fa-home"></i> INICIO
                     </button>
-                </div>
-                <!-- Top Step Indicator -->
-                <div id="top-step-bar" class="top-step-bar">
-                    <ul class="step-indicator-list">
-                        <li id="step-1" class="step-indicator-item active">
-                            <span class="step-number">1</span>
-                            <span class="step-text">Acesso</span>
-                        </li>
-                        <li id="step-2" class="step-indicator-item">
-                            <span class="step-number">2</span>
-                            <span class="step-text">Necessidade</span>
-                        </li>
-                        <li id="step-3" class="step-indicator-item">
-                            <span class="step-number">3</span>
-                            <span class="step-text">Tipo/Embalagem</span>
-                        </li>
-                        <li id="step-4" class="step-indicator-item">
-                            <span class="step-number">4</span>
-                            <span class="step-text">Etiquetas</span>
-                        </li>
-                        <li id="step-5" class="step-indicator-item">
-                            <span class="step-number">5</span>
-                            <span class="step-text">Postagem</span>
-                        </li>
-                    </ul>
                 </div>
             </div>
 
@@ -823,7 +889,7 @@
                     <div id="scr-login" class="screen active">
                         <h1>Emitir Novo Frete</h1>
                         <p class="subtitle">Faça login para gerenciar seus envios no Totem Ex-Envios.</p>
-                        <div class="kiosk-form">
+                        <div class="kiosk-form small">
                             <div class="input-hero"><label>Identificação</label><input type="text"
                                     placeholder="CPF ou E-mail">
                             </div>
@@ -850,59 +916,62 @@
                         <h1>O que deseja hoje?</h1>
                         <div class="kiosk-grid">
                             <div class="kiosk-card"
-                                onclick="setOrderData('necessidade', 'Preciso de Caixa'); nextStep('boxes', 30)">
+                                onclick="setOrderData('necessidade', 'Serviço de Embalagem'); nextStep('boxes', 30)">
                                 <i class="fas fa-box-open"></i>
-                                <h3>PRECISO DE CAIXA</h3>
-                                <span>Ainda não embalei meu item.</span>
+                                <h3>SERVIÇO DE EMBALAGEM</h3>
+                                <span class="card-subtitle">Ainda não embalei meu item.</span>
                             </div>
                             <div class="kiosk-card"
                                 onclick="setOrderData('necessidade', 'Já está embalado'); nextStep('labels', 30)">
                                 <i class="fas fa-shipping-fast"></i>
                                 <h3>JÁ ESTÁ EMBALADO</h3>
-                                <span>Pronto para identificar e postar.</span>
+                                <span class="card-subtitle">Pronto para identificar e postar.</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- scr-boxes -->
                     <div id="scr-boxes" class="screen">
-                        <span class="stage-label">EMBALAGENS</span>
-                        <h1>Escolha a Embalagem</h1>
-                        <div class="kiosk-grid" id="container-embalagens">
+                        <span class="stage-label">EMBALAGEM</span>
+                        <h1>Escolha o Tamanho</h1>
+                        <p class="subtitle">Selecione a embalagem ideal para o seu item</p>
+                        <div class="kiosk-grid grid-3" id="container-boxes">
                             <!-- Dynamic Content -->
                         </div>
                     </div>
 
                     <!-- scr-after-pack -->
                     <div id="scr-after-pack" class="screen">
-                        <span class="stage-label">PRÓXIMOS PASSOS</span>
-                        <h1>Pronto para rotular?</h1>
+                        <span class="stage-label">ETIQUETAS</span>
+                        <h1>Sobre as Etiquetas</h1>
                         <div class="kiosk-grid">
-                            <div class="kiosk-card" onclick="nextStep('collection', 90)">
-                                <i class="fas fa-plus-circle"></i>
-                                <h3>GERAR NOVA ETIQUETA</h3>
-                            </div>
-                            <div class="kiosk-card" onclick="nextStep('collection', 90)">
+                            <div class="kiosk-card" onclick="nextStep('disclaimer', 40)">
                                 <i class="fas fa-print"></i>
-                                <h3>IMPRIMIR EXISTENTE</h3>
+                                <h3>JÁ TENHO ETIQUETA</h3>
+                                <span class="card-subtitle">Shopee, Mercado Livre, etc.</span>
+                            </div>
+                            <div class="kiosk-card" onclick="nextStep('gen-info', 40)">
+                                <i class="fas fa-file-invoice"></i>
+                                <h3>PRECISO GERAR</h3>
+                                <span class="card-subtitle">Gerar nova etiqueta de envio.</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- scr-labels -->
                     <div id="scr-labels" class="screen">
-                        <span class="stage-label">ETIQUETAGEM</span>
-                        <h1>Etiqueta de Envio</h1>
+                        <span class="stage-label">ETIQUETAS</span>
+                        <h1>Suas Etiquetas</h1>
                         <div class="kiosk-grid">
-                            <div class="kiosk-card" onclick="nextStep('gen-info', 40)">
-                                <i class="fas fa-file-invoice"></i>
-                                <h3>GERAR ETIQUETA</h3>
-                                <span>Calcular frete e emitir agora.</span>
-                            </div>
                             <div class="kiosk-card" onclick="nextStep('disclaimer', 40)">
-                                <i class="fas fa-check-circle"></i>
+                                <i class="fas fa-print"></i>
                                 <h3>JÁ TENHO ETIQUETA</h3>
-                                <span>Marketplaces ou transportadoras.</span>
+                                <span class="card-subtitle">Imprimir etiquetas prontas.</span>
+                            </div>
+                            <div class="kiosk-card" onclick="nextStep('gen-info', 40)">
+                                <i class="fas fa-plus-circle"></i>
+                                <h3>GERAR NOVA</h3>
+                                <span class="card-subtitle">Calcular e emitir novo frete.</span>
                             </div>
                         </div>
                     </div>
@@ -958,15 +1027,15 @@
                     <div id="scr-disclaimer" class="screen">
                         <span class="stage-label">AVISO</span>
                         <h1>Aviso Importante</h1>
-                        <div class="kiosk-form">
+                        <div class="kiosk-form small">
                             <div class="disclaimer-box">
                                 <h4><i class="fas fa-exclamation-triangle"></i> RESPONSABILIDADE</h4>
-                                <p style="font-size: 1.5rem; line-height: 1.4;">Não nos responsabilizamos por etiquetas
+                                <p>Não nos responsabilizamos por etiquetas
                                     de
                                     terceiros (Shopee, ML). Erros de rastreio são da plataforma de origem.</p>
                             </div>
                             <button class="btn-giant" onclick="nextStep('collection', 90)">ESTOU CIENTE E
-                                CONCORDAR</button>
+                                CONCORDO</button>
                         </div>
                     </div>
 
@@ -979,13 +1048,13 @@
                                 onclick="setOrderData('postagem', 'Agência Própria'); nextStep('agencia', 95)">
                                 <i class="fas fa-store"></i>
                                 <h3>POSTAR EM AGÊNCIA</h3>
-                                <span>Consulte pontos próximos.</span>
+                                <span class="card-subtitle">Consulte pontos próximos.</span>
                             </div>
                             <div class="kiosk-card"
                                 onclick="setOrderData('postagem', 'Solicitar Coleta'); nextStep('coleta-type', 95)">
                                 <i class="fas fa-truck-loading"></i>
                                 <h3>SOLICITAR COLETA</h3>
-                                <span>Buscamos no seu endereço.</span>
+                                <span class="card-subtitle">Buscamos no seu endereço.</span>
                             </div>
                         </div>
                     </div>
@@ -994,17 +1063,8 @@
                     <div id="scr-agencia" class="screen">
                         <span class="stage-label">AGÊNCIAS</span>
                         <h1>Pontos Próximos</h1>
-                        <div class="kiosk-grid">
-                            <div class="location-card kiosk-card" onclick="selectLocation(this, 'agencia')">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <h3>EX-ENVIOS MATRIZ</h3>
-                                <p>Av. Afonso Pena, 1234</p>
-                            </div>
-                            <div class="location-card kiosk-card" onclick="selectLocation(this, 'agencia')">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <h3>EX-ENVIOS SHOPPING</h3>
-                                <p>Rua Amazonas, 567</p>
-                            </div>
+                        <div class="kiosk-grid" id="container-locations">
+                            <!-- Dynamic Locations -->
                         </div>
                         <button id="btn-finish-agencia" class="btn-giant"
                             style="opacity: 0.3; pointer-events: none; margin-top: 2rem;"
@@ -1014,17 +1074,41 @@
                     <div id="scr-coleta-type" class="screen">
                         <span class="stage-label">COLETA</span>
                         <h1>Tipo de Coleta</h1>
-                        <div class="kiosk-grid">
-                            <div class="kiosk-card" onclick="nextStep('programada', 98)">
-                                <i class="fas fa-calendar-alt"></i>
-                                <h3>PROGRAMADA</h3>
-                                <span>Defina dia e horário.</span>
+                        <div class="kiosk-grid" id="container-coleta-types">
+                            <!-- Dynamic Content -->
+                        </div>
+                    </div>
+
+                    <div id="scr-coleta-detalhes-prog" class="screen">
+                        <span class="stage-label">PROGRAMADA</span>
+                        <h1>Confirmar Coleta</h1>
+                        <div class="kiosk-form small">
+                            <div class="disclaimer-box" style="border-left-color: var(--secondary);">
+                                <h4 style="color: var(--secondary);"><i class="fas fa-clock"></i> HORÁRIO PREVISTO</h4>
+                                <p id="box-sched-info" style="font-size: 1.4rem; font-weight: 800; margin-top: 0.5rem;">
+                                    ---</p>
+                                <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">Sua coleta será realizada
+                                    no próximo ciclo disponível conforme o horário acima.</p>
                             </div>
-                            <div class="kiosk-card" onclick="nextStep('locker', 98)">
-                                <i class="fas fa-box"></i>
-                                <h3>LOCKER INTELIGENTE</h3>
-                                <span>Deixe no box seguro.</span>
+                            <button class="btn-giant"
+                                onclick="setOrderData('postagem', 'Coleta Programada'); finish()">FINALIZAR
+                                PEDIDO</button>
+                        </div>
+                    </div>
+
+                    <div id="scr-coleta-detalhes-exp" class="screen">
+                        <span class="stage-label">EXPRESS</span>
+                        <h1>Coleta Express</h1>
+                        <div class="kiosk-form small">
+                            <div class="disclaimer-box" style="border-left-color: var(--primary);">
+                                <h4 style="color: var(--primary);"><i class="fas fa-bolt"></i> TEMPO ESTIMADO</h4>
+                                <p id="box-express-info"
+                                    style="font-size: 1.4rem; font-weight: 800; margin-top: 0.5rem;">---</p>
+                                <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">Um entregador será
+                                    acionado imediatamente para o seu local.</p>
                             </div>
+                            <button class="btn-giant"
+                                onclick="setOrderData('postagem', 'Coleta Express'); finish()">SOLICITAR AGORA</button>
                         </div>
                     </div>
 
@@ -1039,6 +1123,9 @@
                 <ul id="order-summary-list" class="order-summary-list">
                     <!-- Dynamic Content -->
                 </ul>
+                <div id="summary-total" class="summary-total">
+                    <!-- Dynamic Total -->
+                </div>
             </div>
         </div>
     </main>
@@ -1065,67 +1152,146 @@
         </div>
     </div>
 
+    <!-- PIN Pad Modal -->
+    <div id="pinpad-modal" class="pix-modal">
+        <div class="pix-content">
+            <h2 style="color:var(--secondary); font-size:2rem; font-weight:900;">MÁQUINA DE CARTÃO</h2>
+            <p style="color:var(--text-muted); margin:1rem 0;">Siga as instruções na maquininha abaixo.</p>
+
+            <div class="qr-code" style="border:none; background:transparent;">
+                <i class="fas fa-credit-card fa-beat" style="font-size:5rem; color:var(--primary)"></i>
+            </div>
+
+            <div id="pinpad-status-box"
+                style="background:#f7fafc; padding:2rem; border-radius:20px; margin-bottom:2rem;">
+                <h3 id="pinpad-status-text" style="color:var(--secondary); margin-bottom:0.5rem;">AGURDANDO CARTÃO...
+                </h3>
+                <p style="color:var(--text-muted);">Insira ou aproxime seu cartão na maquininha.</p>
+            </div>
+
+            <div id="pinpad-error-actions" style="display:none;">
+                <button class="btn-giant" onclick="retryPinpad()">TENTAR NOVAMENTE</button>
+                <button class="btn-kiosk-back" style="margin-top:1rem; width:100%; justify-content:center;"
+                    onclick="document.getElementById('pinpad-modal').classList.remove('active')">CANCELAR</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let navigationHistory = [];
-        let pricingData = {};
-        let currentOrder = {
-            step: 1,
-            necessidade: '',
-            embalagem: '',
-            embalagemValor: 0,
-            servico: '',
-            valor: 0,
-            postagem: '',
-            local: '',
-            total: 0
-        };
+        let appSyncData = { services: [], locations: [], lockers: [] };
 
-        function initTotemData() {
-            const stored = localStorage.getItem('exenvios_pricing_v3');
-            if (stored) {
-                pricingData = JSON.parse(stored);
-            } else {
-                // Fallback defaults
-                pricingData = {
-                    'emb-01': { name: 'Caixa Pequena (20x13x21 cm)', cat: 'empacotamento', method: 'fixo', price: 6.90 },
-                    'emb-02': { name: 'Caixa Média (37x27x23 cm)', cat: 'empacotamento', method: 'fixo', price: 12.50 },
-                    'emb-03': { name: 'Caixa Grande (18x26x48 cm)', cat: 'empacotamento', method: 'fixo', price: 18.90 },
-                    'emb-04': { name: 'Sacola com Bolha', cat: 'empacotamento', method: 'fixo', price: 4.50 },
-                    'fre-01': { name: 'Correios SEDEX', cat: 'fretes', method: 'markup', base: 20.00, markup: 30 },
-                    'fre-02': { name: 'Correios PAC', cat: 'fretes', method: 'markup', base: 12.00, markup: 20 }
-                };
-                localStorage.setItem('exenvios_pricing_v3', JSON.stringify(pricingData));
+        async function initTotemData() {
+            try {
+                const response = await fetch('endpoints/get_sync_data');
+                const result = await response.json();
+                if (result.ok) {
+                    appSyncData = result.data;
+                    
+                    // Legacy maps for internal logic
+                    pricingData = {};
+                    appSyncData.services.forEach(s => {
+                        pricingData[s.id] = {
+                            name: s.name,
+                            price: parseFloat(s.price),
+                            cat: s.category,
+                            method: s.method,
+                            base: parseFloat(s.base_price),
+                            markup: parseFloat(s.markup),
+                            description: s.description
+                        };
+                    });
+
+                    locationsData = {};
+                    appSyncData.locations.forEach(l => {
+                        locationsData[l.id] = {
+                            name: l.name,
+                            address: l.address,
+                            sched: l.sched_info,
+                            express: l.express_info
+                        };
+                    });
+
+                    renderBoxes();
+                    renderQuotes();
+                    renderLocations();
+                    renderColetaTypes();
+                }
+            } catch (e) {
+                console.error("Data load failed", e);
             }
-            renderEmbalagens();
-            renderQuotes();
         }
 
-        function renderEmbalagens() {
-            const container = document.getElementById('container-embalagens');
+        function renderLocations() {
+            const container = document.getElementById('container-locations');
+            if (!container) return;
+            container.innerHTML = '';
+            Object.keys(locationsData).forEach(id => {
+                const loc = locationsData[id];
+                const card = document.createElement('div');
+                card.className = 'location-card kiosk-card';
+                card.onclick = () => selectLoc(id, card);
+                card.innerHTML = `
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>${loc.name}</h3>
+                    <p>${loc.address}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectLoc(id, element) {
+            const loc = locationsData[id];
+            currentOrder.local = loc.name;
+            currentOrder.localId = id;
+
+            // Pre-fill collection info for next steps
+            if (document.getElementById('label-sched-time')) document.getElementById('label-sched-time').innerText = loc.sched;
+            if (document.getElementById('label-express-time')) document.getElementById('label-express-time').innerText = loc.express;
+            if (document.getElementById('box-sched-info')) document.getElementById('box-sched-info').innerText = loc.sched;
+            if (document.getElementById('box-express-info')) document.getElementById('box-express-info').innerText = loc.express;
+
+            const container = document.getElementById('container-locations');
+            if (container) {
+                container.querySelectorAll('.location-card').forEach(c => c.classList.remove('selected'));
+                if (element) element.classList.add('selected');
+            }
+
+            setOrderData('local', loc.name);
+            const btn = document.getElementById('btn-finish-agencia');
+            if (btn) {
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+                if (currentOrder.postagem === 'Solicitar Coleta') {
+                    btn.innerHTML = 'CONTINUAR PARA HORÁRIOS <i class="fas fa-arrow-right"></i>';
+                    btn.onclick = () => nextStep('coleta-type', 98);
+                } else {
+                    btn.innerHTML = 'FINALIZAR PEDIDO';
+                    btn.onclick = () => finish('agencia');
+                }
+            }
+        }
+
+        function renderBoxes() {
+            const container = document.getElementById('container-boxes');
             if (!container) return;
             container.innerHTML = '';
 
             Object.keys(pricingData).filter(id => pricingData[id].cat === 'empacotamento').forEach(id => {
                 const item = pricingData[id];
                 const card = document.createElement('div');
-                card.className = 'kiosk-card';
+                card.className = 'kiosk-card card-compact';
                 card.onclick = () => {
                     setOrderData('embalagem', item.name);
                     setOrderData('embalagemValor', item.price);
                     nextStep('after-pack', 45);
                 };
-
-                let name = item.name;
-                let size = '';
-                if (name.includes('(')) {
-                    const parts = name.split('(');
-                    name = parts[0].trim();
-                    size = parts[1].replace(')', '').trim();
-                }
+                const size = item.name.match(/\((.*?)\)/)?.[1];
+                const nameOnly = item.name.split('(')[0];
 
                 card.innerHTML = `
                     <i class="fas fa-box"></i>
-                    <h3 style="text-transform:uppercase">${name}</h3>
+                    <h3>${nameOnly}</h3>
                     ${size ? `<span style="display:block; font-size:1.1rem; color:var(--text-muted); margin-bottom:0.5rem">${size}</span>` : ''}
                     <span style="font-weight:700; color:var(--secondary)">R$ ${parseFloat(item.price).toFixed(2)}</span>
                 `;
@@ -1158,6 +1324,55 @@
                         </div>
                         <span class="price">R$ ${finalPrice.toFixed(2)}</span>
                     `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderColetaTypes() {
+            const container = document.getElementById('container-coleta-types');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            const coletas = appSyncData.services.filter(s => s.category === 'coleta' && (s.status === 'active' || s.status === 'ativo'));
+            coletas.forEach(s => {
+                const card = document.createElement('div');
+                card.className = 'kiosk-card';
+                
+                const nameLower = s.name.toLowerCase();
+                const idLower = s.id.toLowerCase();
+
+                if (nameLower.includes('locker') || idLower.includes('locker') || nameLower.includes('box')) {
+                    card.style.marginTop = '1.5rem';
+                    card.style.maxWidth = '100%';
+                    card.style.width = '100%';
+                }
+                
+                let iconClass = 'fas fa-calendar-alt';
+                let target = 'coleta-detalhes-prog';
+                
+                if (nameLower.includes('express') || idLower.includes('express') || nameLower.includes('bolt')) { 
+                    iconClass = 'fas fa-bolt'; 
+                    target = 'coleta-detalhes-exp'; 
+                }
+                if (nameLower.includes('locker') || idLower.includes('locker') || nameLower.includes('box')) { 
+                    iconClass = 'fas fa-box'; 
+                    target = 'locker'; 
+                }
+                
+                card.onclick = () => {
+                    setOrderData('postagem', s.name);
+                    setOrderData('postagemValor', parseFloat(s.price));
+                    nextStep(target, 98);
+                };
+
+                card.innerHTML = `
+                    <i class="${iconClass}"></i>
+                    <h3>${s.name}</h3>
+                    <span class="card-subtitle">${s.description || ''}</span>
+                    <span style="font-weight:700; color:var(--secondary); margin-top:0.5rem">
+                        ${parseFloat(s.price) > 0 ? '+ R$ ' + parseFloat(s.price).toFixed(2) : 'GRÁTIS'}
+                    </span>
+                `;
                 container.appendChild(card);
             });
         }
@@ -1214,7 +1429,8 @@
                 const progressMap = {
                     'login': 5, 'main': 15, 'boxes': 30, 'after-pack': 45, 'labels': 30,
                     'gen-info': 40, 'gen-calc': 60, 'gen-quotes': 80, 'disclaimer': 40,
-                    'collection': 90, 'agencia': 95, 'coleta-type': 95, 'programada': 98, 'locker': 98
+                    'collection': 90, 'agencia': 95, 'coleta-type': 95,
+                    'coleta-detalhes-prog': 98, 'coleta-detalhes-exp': 98, 'locker': 98
                 };
                 nextStep(prevId, progressMap[prevId], true);
             }
@@ -1224,7 +1440,7 @@
             const stepMap = {
                 'main': 2, 'boxes': 3, 'after-pack': 3, 'labels': 4, 'gen-info': 4,
                 'gen-calc': 4, 'gen-quotes': 4, 'disclaimer': 4, 'collection': 5,
-                'agencia': 5, 'coleta-type': 5, 'programada': 5, 'locker': 5
+                'agencia': 5, 'coleta-type': 5, 'coleta-detalhes-prog': 5, 'coleta-detalhes-exp': 5, 'locker': 5
             };
             const currentStep = stepMap[stepId] || 2;
             document.querySelectorAll('.step-indicator-item').forEach((item, index) => {
@@ -1237,7 +1453,9 @@
 
         function updateOrderSummary() {
             const list = document.getElementById('order-summary-list');
-            if (!list) return;
+            const totalBox = document.getElementById('summary-total');
+            if (!list || !totalBox) return;
+
             list.innerHTML = '';
             const items = [];
             if (currentOrder.necessidade) items.push(`Solicitação: ${currentOrder.necessidade}`);
@@ -1247,15 +1465,28 @@
             if (currentOrder.local) items.push(`Local: ${currentOrder.local}`);
 
             currentOrder.total = (currentOrder.embalagemValor || 0) + (currentOrder.valor || 0);
-            if (items.length === 0) items.push('Configurando seu envio...');
-            else items.push(`<strong style="color:var(--primary); font-size:1.2rem;">TOTAL: R$ ${currentOrder.total.toFixed(2)}</strong>`);
 
-            items.forEach(text => {
+            if (items.length === 0) {
                 const li = document.createElement('li');
                 li.className = 'order-summary-item';
-                li.innerHTML = text;
+                li.textContent = 'Configurando seu envio...';
                 list.appendChild(li);
-            });
+            } else {
+                items.forEach((text, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'order-summary-item';
+                    li.textContent = text;
+                    if (index < items.length - 1) {
+                        const dot = document.createElement('span');
+                        dot.innerHTML = '&nbsp;•&nbsp;';
+                        dot.style.opacity = '0.3';
+                        li.appendChild(dot);
+                    }
+                    list.appendChild(li);
+                });
+            }
+
+            totalBox.innerHTML = `<span class="total-item">TOTAL: R$ ${currentOrder.total.toFixed(2)}</span>`;
         }
 
         function setOrderData(key, value) {
@@ -1293,11 +1524,19 @@
 
             // Collect user data
             const orderPayload = {
-                ...currentOrder,
+                channel: 'LOCKER', // Always LOCKER from totem.html
+                locker_id: 'LK_MS_01',
+                device_id: 'PINPAD_01',
                 name: document.getElementById('cust-name')?.value || 'Cliente Totem',
                 email: document.getElementById('cust-email')?.value || '',
                 cpf: document.getElementById('cust-cpf')?.value || '',
-                phone: ''
+                phone: '',
+                necessity: currentOrder.necessidade,
+                packaging: currentOrder.embalagem,
+                packagingValue: currentOrder.embalagemValor,
+                service: currentOrder.servico,
+                value: currentOrder.valor,
+                total: currentOrder.total
             };
 
             fetch('endpoints/process_order.php', {
@@ -1305,24 +1544,113 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderPayload)
             })
-                .then(res => res.json())
+                .then(async res => {
+                    const text = await res.text();
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        throw new Error("Resposta inválida do servidor: " + text.substring(0, 100));
+                    }
+                })
                 .then(result => {
                     if (result.ok) {
-                        showPixModal(result.data.pix);
-                        // Start checking for payment confirmation (optional, simple redirect for now after delay)
-                        setTimeout(() => {
-                            window.location.href = 'painel?order=' + result.data.orderId;
-                        }, 45000); // Wait 45s or until user closes/redirects
+                        if (result.data.payment.type === 'WEB_PIX') {
+                            showPixModal(result.data.payment.pix);
+                            startPaymentPolling(result.data.orderId);
+                        } else if (result.data.payment.type === 'LOCKER_PINPAD') {
+                            showPinpadModal(result.data.orderId);
+                        }
                     } else {
                         alert('Erro ao gerar pedido: ' + result.error);
-                        if (btn) btn.innerHTML = 'TENTAR NOVAMENTE';
-                        if (btn) btn.style.pointerEvents = 'auto';
+                        if (btn) {
+                            btn.innerHTML = 'TENTAR NOVAMENTE';
+                            btn.style.pointerEvents = 'auto';
+                        }
                     }
                 })
                 .catch(err => {
                     console.error(err);
-                    alert('Erro de conexão com o servidor.');
+                    alert('Erro: ' + err.message);
+                    if (btn) {
+                        btn.innerHTML = 'TENTAR NOVAMENTE';
+                        btn.style.pointerEvents = 'auto';
+                    }
                 });
+        }
+
+        let currentPinpadOrderId = null;
+
+        function showPinpadModal(orderId) {
+            currentPinpadOrderId = orderId;
+            const modal = document.getElementById('pinpad-modal');
+            const statusBox = document.getElementById('pinpad-status-box');
+            const statusText = document.getElementById('pinpad-status-text');
+            const errorActions = document.getElementById('pinpad-error-actions');
+
+            statusText.innerText = "AGUARDANDO CARTÃO...";
+            statusBox.style.background = "#f7fafc";
+            errorActions.style.display = "none";
+            modal.classList.add('active');
+
+            // Simulate SDK Integration
+            console.log("Iniciando ciclo de pagamento no PIN pad para Pedido: " + orderId);
+
+            // Mocking a successful payment after 5 seconds
+            setTimeout(() => {
+                processPinpadResult({
+                    status: 'APPROVED',
+                    orderId: orderId,
+                    rawPayload: { auth_code: "123456", card: "VISA **** 1234" }
+                });
+            }, 5000);
+        }
+
+        function processPinpadResult(result) {
+            const statusText = document.getElementById('pinpad-status-text');
+            const statusBox = document.getElementById('pinpad-status-box');
+            const errorActions = document.getElementById('pinpad-error-actions');
+
+            if (result.status === 'APPROVED') {
+                statusText.innerText = "PAGAMENTO APROVADO!";
+                statusBox.style.background = "#f0fff4";
+                statusText.style.color = "#2f855a";
+
+                // Inform backend
+                fetch('endpoints/pinpad_result.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(result)
+                }).then(() => {
+                    setTimeout(() => {
+                        window.location.href = 'painel.php?order=' + result.orderId + '&status=success';
+                    }, 2000);
+                });
+            } else {
+                statusText.innerText = "ERRO NO PAGAMENTO";
+                statusBox.style.background = "#fff5f5";
+                statusText.style.color = "#c53030";
+                errorActions.style.display = "block";
+            }
+        }
+
+        function retryPinpad() {
+            if (currentPinpadOrderId) showPinpadModal(currentPinpadOrderId);
+        }
+
+        function startPaymentPolling(orderId) {
+            const interval = setInterval(() => {
+                fetch('endpoints/get_order_status.php?id=' + orderId)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.ok && data.status === 'paid') {
+                            clearInterval(interval);
+                            window.location.href = 'painel?order=' + orderId + '&status=success';
+                        }
+                    });
+            }, 5000);
+
+            // Fallback redirect after 5 minutes
+            setTimeout(() => clearInterval(interval), 300000);
         }
 
         function showPixModal(pixData) {

@@ -1,0 +1,9 @@
+/adminer.php
+/db_acesso.php
+*.zip
+*.log
+__pycache__/
+local_db.sqlite
+temp_extraction/
+upload_to_server/
+exenvios/

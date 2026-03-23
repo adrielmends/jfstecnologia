@@ -31,6 +31,12 @@ switch ($event['event']) {
 
         try {
             $db = getDB();
+            
+            // 1. Update Payments table
+            $stmt = $db->prepare("UPDATE payments SET status = 'PAID', raw_payload = ? WHERE provider_reference = ?");
+            $stmt->execute([json_encode($event), $asaasId]);
+
+            // 2. Update Orders table (Dual check for backward compatibility)
             $stmt = $db->prepare("UPDATE orders SET status = 'paid', confirmed_at = NOW() WHERE asaas_id = ? OR external_ref = ?");
             $stmt->execute([$asaasId, $externalReference]);
             

@@ -14,24 +14,45 @@ function createAsaasPayment($paymentData) {
         'value' => (float)$paymentData['value'],
         'dueDate' => date('Y-m-d', strtotime('+3 days')),
         'description' => $paymentData['description'] ?? 'Depósito em conta Ex-Envios',
-        'externalReference' => $paymentData['externalReference'] ?? uniqid('DEP_')
+        'externalReference' => $paymentData['externalReference'] ?? uniqid('DEP_'),
+        'remoteIp' => $paymentData['remoteIp'] ?? ($_SERVER['REMOTE_ADDR'] ?? '127.0.0.1')
     ];
+
+    // Handle Credit Card specifics
+    if ($paymentData['billingType'] === 'CREDIT_CARD' && isset($paymentData['creditCard'])) {
+        $payload['creditCard'] = $paymentData['creditCard'];
+        $payload['creditCardHolderInfo'] = [
+            'name' => $paymentData['creditCard']['holderName'] ?? ($paymentData['customerName'] ?? ''),
+            'email' => $paymentData['customerEmail'] ?? '',
+            'cpfCnpj' => $paymentData['customerCpf'] ?? '',
+            'postalCode' => '79002010', // More specific Campo Grande CEP
+            'addressNumber' => 'SN',
+            'phone' => preg_replace('/\D/', '', $paymentData['customerPhone'] ?? '') ?: '67999999999'
+        ];
+    }
 
     $response = asaasRequest('/payments', 'POST', $payload);
 
-    if ($response['code'] === 200) {
-        $paymentId = $response['response']['id'];
+    if (in_array($response['code'], [200, 201])) {
+        $paymentDataResult = $response['response'];
+        $paymentId = $paymentDataResult['id'];
         
         // If PIX, get the QR Code
         if ($paymentData['billingType'] === 'PIX') {
             $pixResponse = asaasRequest('/payments/' . $paymentId . '/pixQrCode');
-            $response['response']['pix'] = $pixResponse['response'];
+            $paymentDataResult['pix'] = $pixResponse['response'];
         }
 
-        return ['ok' => true, 'data' => $response['response']];
+        return ['ok' => true, 'data' => $paymentDataResult];
     }
 
-    return ['ok' => false, 'error' => $response['response']['errors'][0]['description'] ?? 'Erro desconhecido ao criar pagamento'];
+    $errors = $response['response']['errors'] ?? [];
+    $errorDesc = !empty($errors) ? $errors[0]['description'] : ($response['response']['description'] ?? 'Erro desconhecido');
+    
+    // Add debug info to help understand why CVV is "missing"
+    $debugInfo = " | Payload Enviado: " . json_encode($payload);
+    
+    return ['ok' => false, 'error' => $errorDesc . " (HTTP " . $response['code'] . ")" . $debugInfo];
 }
 
 // Example AJAX Handler
