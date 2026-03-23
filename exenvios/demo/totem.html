@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Totem Ex-Envios | Autoatendimento (DEMO)</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS from production totem.html adjusted for Demo */
+        :root {
+            --primary: #FF9600;
+            --primary-hover: #E68700;
+            --secondary: #0A3750;
+            --text-main: #1A202C;
+            --text-muted: #718096;
+            --white: #ffffff;
+            --border: #E2E8F0;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        html {
+            font-size: 13px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: var(--white);
+            padding: 0rem;
+            display: flex;
+            justify-content: center;
+            border-bottom: 3px solid var(--border);
+        }
+
+        header .logo img {
+            height: 88px;
+            padding-top: 9px;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            padding-bottom: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: calc(100vh - 120px);
+        }
+
+        .screen-container {
+            width: 100%;
+            max-width: 950px;
+            margin-top: 1rem;
+            padding: 2rem 0;
+        }
+
+        .screen {
+            display: none;
+            animation: zoomIn 0.5s ease;
+            width: 100%;
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            text-align: center;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            margin-top: -1.5rem;
+            text-transform: uppercase;
+        }
+
+        .top-progress {
+            height: 10px;
+            background: var(--border);
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .p-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.8s ease;
+        }
+
+        .kiosk-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .kiosk-card {
+            background: var(--white);
+            border: 3px solid var(--border);
+            border-radius: 30px;
+            padding: 3rem 1.6rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: 359px;
+            max-width: 100%;
+        }
+
+        .kiosk-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .kiosk-card i {
+            font-size: 3.5rem;
+            color: var(--primary);
+        }
+
+        .kiosk-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            color: var(--secondary);
+            text-transform: uppercase;
+        }
+
+        .kiosk-form {
+            background: var(--white);
+            border-radius: 30px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .btn-giant {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1.4rem;
+            border-radius: 15px;
+            font-size: 1.4rem;
+            font-weight: 900;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transition);
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            box-shadow: 0 10px 20px rgba(255, 150, 0, 0.2);
+        }
+
+        /* Simple navigation buttons */
+        .nav-buttons-shared {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 950px;
+            margin: 0 auto 1rem auto;
+            display: none;
+        }
+
+        .btn-kiosk-back,
+        .btn-kiosk-home {
+            background: var(--white);
+            border: 2px solid var(--border);
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-progress">
+        <div class="p-fill" id="p-fill" style="width: 5%;"></div>
+    </div>
+    <header>
+        <div class="logo"><img src="../assets/img/login/logo.png" alt="Ex-Envios" style="height: 80px;"></div>
+    </header>
+
+    <main>
+        <div class="screen-container">
+            <!-- scr-login -->
+            <div id="scr-login" class="screen active">
+                <h1>Emitir Novo Frete (DEMO)</h1>
+                <p class="subtitle">Simule o processo de autoatendimento.</p>
+                <div class="kiosk-form" style="max-width: 500px;">
+                    <button class="btn-giant" onclick="nextScreen('main', 30)">INICIAR DEMONSTRAÇÃO <i
+                            class="fas fa-play"></i></button>
+                    <p style="text-align: center; margin-top: 1rem; color: var(--text-muted);">Processo de login pulado
+                        para demonstração.</p>
+                </div>
+            </div>
+
+            <!-- scr-main -->
+            <div id="scr-main" class="screen">
+                <h1>O que deseja hoje?</h1>
+                <div class="kiosk-grid">
+                    <div class="kiosk-card" onclick="nextScreen('collection', 60)">
+                        <i class="fas fa-box-open"></i>
+                        <h3>Enviar Encomenda</h3>
+                    </div>
+                    <div class="kiosk-card" onclick="alert('Simulado: Retirar Encomenda')">
+                        <i class="fas fa-download"></i>
+                        <h3>Retirar Encomenda</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- scr-collection -->
+            <div id="scr-collection" class="screen">
+                <h1>Escolha a Postagem</h1>
+                <div class="kiosk-grid">
+                    <div class="kiosk-card" onclick="alert('Simulado: Postagem em Agência'); location.reload();">
+                        <i class="fas fa-store"></i>
+                        <h3>Postar em Agência</h3>
+                    </div>
+                    <div class="kiosk-card" onclick="alert('Simulado: Solicitar Coleta'); location.reload();">
+                        <i class="fas fa-truck-loading"></i>
+                        <h3>Solicitar Coleta</h3>
+                    </div>
+                </div>
+                <button class="btn-giant" style="background: #f0f2f5; color: var(--secondary); margin-top: 2rem;"
+                    onclick="nextScreen('main', 30)">VOLTAR</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function nextScreen(id, progress) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('scr-' + id).classList.add('active');
+            document.getElementById('p-fill').style.width = progress + '%';
+        }
+    </script>
+</body>
+
+</html>

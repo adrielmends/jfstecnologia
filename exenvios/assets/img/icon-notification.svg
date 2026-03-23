@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<!-- Phone Body -->
+<rect x="128" y="64" width="256" height="416" rx="32" fill="#FF8C00" stroke="#002b49" stroke-width="12"/>
+<!-- Screen -->
+<rect x="152" y="112" width="208" height="320" fill="#FFFFFF"/>
+<!-- Notification Bubble -->
+<path d="M368,144 L368,240 L288,240 L288,144 Z" fill="#002b49" opacity="0"/> <!-- Helper for sizing -->
+<circle cx="256" cy="272" r="120" fill="#FF6D00" stroke="#002b49" stroke-width="10"/>
+<!-- Bell Icon inside bubble -->
+<path d="M256,192 C238.3,192 224,206.3 224,224 L224,288 L208,288 L208,304 L304,304 L304,288 L288,288 L288,224 C288,206.3 273.7,192 256,192 Z" fill="#FFFFFF"/>
+<path d="M240,304 L272,304 L272,312 C272,320.8 264.8,328 256,328 C247.2,328 240,320.8 240,312 Z" fill="#FFFFFF"/>
+<!-- Notification Lines -->
+<line x1="176" y1="144" x2="336" y2="144" stroke="#002b49" stroke-width="8" stroke-linecap="round"/>
+<line x1="176" y1="176" x2="224" y2="176" stroke="#002b49" stroke-width="8" stroke-linecap="round"/>
+</svg>

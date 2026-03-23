@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jornada do Cliente | Ex-Envios</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #FF9600;
+            --primary-hover: #E68700;
+            --secondary: #0A3750;
+            --text-main: #1A202C;
+            --text-muted: #718096;
+            --bg-body: #F7FAFC;
+            --white: #ffffff;
+            --border: #E2E8F0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html {
+            font-size: 14px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(255, 150, 0, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(10, 55, 80, 0.03) 0%, transparent 40%);
+        }
+
+        header {
+            padding: 1.5rem 5%;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .logo img {
+            height: 65px;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .screen {
+            display: none;
+            animation: slideUp 0.5s ease forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--secondary);
+            margin-bottom: 0.8rem;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+        }
+
+        /* Quiz Options */
+        .option-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .option-button {
+            background: var(--white);
+            border: 2px solid var(--border);
+            padding: 1.5rem 2rem;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--secondary);
+            text-align: left;
+            text-transform: uppercase;
+        }
+
+        .option-button:hover {
+            border-color: var(--primary);
+            background: rgba(255, 150, 0, 0.02);
+            transform: translateX(10px);
+        }
+
+        .option-button i {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* Box Grid */
+        .box-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .box-card {
+            border: 2px solid var(--border);
+            padding: 2.5rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .box-card:hover {
+            border-color: var(--primary);
+            background: rgba(255, 150, 0, 0.02);
+            transform: translateY(-5px);
+        }
+
+        .box-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .box-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .box-card span {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        /* Form Controls */
+        .input-box {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .input-box label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--secondary);
+            text-transform: uppercase;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 1.2rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .input-box input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-main {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1.2rem 3rem;
+            border-radius: 12px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transition);
+            margin-top: 2rem;
+            text-transform: uppercase;
+        }
+
+        .btn-main:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 150, 0, 0.2);
+        }
+
+        .btn-back {
+            margin-top: 2.5rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            text-transform: uppercase;
+        }
+
+        .btn-back:hover {
+            color: var(--secondary);
+        }
+
+        /* Disclaimer */
+        .disclaimer-alert {
+            background: #FFF5F5;
+            border: 1px solid #FED7D7;
+            padding: 2rem;
+            border-radius: 16px;
+            color: #C53030;
+            text-align: left;
+            margin-bottom: 2.5rem;
+        }
+
+        .disclaimer-alert h4 {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Progress Dots */
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 4rem;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--border);
+            border-radius: 50%;
+        }
+
+        .dot.active {
+            background: var(--primary);
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        footer {
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            background: var(--white);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="https://exenvios.com.br/"><img src="assets/img/logo_exenvios.png" alt="Ex-Envios"></a>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- STEP 0: LOGIN -->
+            <div id="scr-login" class="screen active">
+                <h1>Bem-vindo</h1>
+                <p class="subtitle">Identifique-se para começar sua jornada.</p>
+                <div class="input-box">
+                    <label>E-mail ou Usuário</label>
+                    <input type="text" placeholder="Ex: fernando@exenvios.com">
+                </div>
+                <div class="input-box">
+                    <label>Senha</label>
+                    <input type="password" placeholder="••••••••">
+                </div>
+                <button class="btn-main" onclick="nextStep('main')">ACESSAR SISTEMA</button>
+            </div>
+
+            <!-- STEP 1: INITIAL CHOICE -->
+            <div id="scr-main" class="screen">
+                <h1>Como podemos ajudar?</h1>
+                <p class="subtitle">Selecione uma opção para prosseguir.</p>
+                <div class="option-stack">
+                    <div class="option-button" onclick="nextStep('boxes')">
+                        <span>Quero caixa para empacotar</span>
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <div class="option-button" onclick="nextStep('labels')">
+                        <span>Já está embalado</span>
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                </div>
+                <button class="btn-back" onclick="nextStep('login')"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+
+            <!-- STEP 2 (A): SELECT BOX -->
+            <div id="scr-boxes" class="screen">
+                <h1>Selecione a Embalagem</h1>
+                <p class="subtitle">Escolha o tamanho ideal para o seu envio.</p>
+                <div class="box-grid">
+                    <div class="box-card" onclick="nextStep('after-pack')">
+                        <i class="fas fa-box"></i>
+                        <h3>Pequena</h3>
+                        <span>20x13x21 cm</span>
+                    </div>
+                    <div class="box-card" onclick="nextStep('after-pack')">
+                        <i class="fas fa-box"></i>
+                        <h3>Média</h3>
+                        <span>37x27x23 cm</span>
+                    </div>
+                    <div class="box-card" onclick="nextStep('after-pack')">
+                        <i class="fas fa-box"></i>
+                        <h3>Grande</h3>
+                        <span>18x26x48 cm</span>
+                    </div>
+                </div>
+                <button class="btn-back" onclick="nextStep('main')"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+
+            <!-- STEP 3 (A): AFTER PACKAGING -->
+            <div id="scr-after-pack" class="screen">
+                <h1>Pronto para rotular?</h1>
+                <p class="subtitle">Após embalar, escolha como prosseguir com a etiqueta.</p>
+                <div class="option-stack">
+                    <div class="option-button" onclick="nextStep('collection')">
+                        <span>Gerar nova etiqueta</span>
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <div class="option-button" onclick="nextStep('collection')">
+                        <span>Imprimir etiqueta existente</span>
+                        <i class="fas fa-print"></i>
+                    </div>
+                </div>
+                <button class="btn-back" onclick="nextStep('boxes')"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+
+            <!-- STEP 2 (B): LABEL CHOICE -->
+            <div id="scr-labels" class="screen">
+                <h1>Etiqueta de Envio</h1>
+                <p class="subtitle">Você já possui a etiqueta de postagem?</p>
+                <div class="option-stack">
+                    <div class="option-button" onclick="nextStep('gen-info')">
+                        <span>Gerar Etiqueta</span>
+                        <i class="fas fa-print"></i>
+                    </div>
+                    <div class="option-button" onclick="nextStep('disclaimer')">
+                        <span>Já tenho Etiqueta</span>
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <button class="btn-back" onclick="nextStep('main')"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+
+            <!-- STEP 2.1 (Gen): PERSONAL INFO -->
+            <div id="scr-gen-info" class="screen">
+                <button class="btn-back" onclick="nextStep('labels')" style="margin-top:0; margin-bottom:1rem;"><i
+                        class="fas fa-arrow-left"></i> Voltar</button>
+                <h1>Cadastre-Se</h1>
+                <p class="subtitle">Informações Pessoais</p>
+                <div class="input-box">
+                    <label><i class="fas fa-user"></i> NOME COMPLETO</label>
+                    <input type="text" placeholder="Digite seu nome completo">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="input-box">
+                        <label><i class="fas fa-calendar-alt"></i> DATA DE NASC.</label>
+                        <input type="text" placeholder="DD/MM/AAAA">
+                    </div>
+                    <div class="input-box">
+                        <label><i class="fas fa-id-card"></i> CPF</label>
+                        <input type="text" placeholder="999.888.777-00">
+                    </div>
+                </div>
+                <div class="input-box">
+                    <label><i class="fas fa-envelope"></i> EMAIL</label>
+                    <input type="email" placeholder="Digite seu melhor email">
+                </div>
+                <div class="input-box">
+                    <label><i class="fas fa-building"></i> CNPJ (OPCIONAL)</label>
+                    <input type="text" placeholder="00.000.000/0000-00">
+                </div>
+                <button class="btn-main" onclick="nextStep('gen-calc')">CONTINUAR</button>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 1rem;">
+                    Ao continuar, você concorda com os <a href="#" style="color: var(--primary);">Termos de Uso</a>.
+                </p>
+            </div>
+
+            <!-- STEP 2.2 (Gen): CALCULATION -->
+            <div id="scr-gen-calc" class="screen">
+                <button class="btn-back" onclick="nextStep('gen-info')" style="margin-top:0; margin-bottom:1rem;"><i
+                        class="fas fa-arrow-left"></i> Voltar</button>
+                <h1>Calcular Frete</h1>
+                <p class="subtitle">Informe a origem e o destino</p>
+                <div class="input-box">
+                    <label>CEP DE ORIGEM</label>
+                    <input type="text" placeholder="79115-800" value="79115-800">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="input-box">
+                        <label>FORMATO</label>
+                        <select
+                            style="width:100%; padding: 1.2rem; border: 2px solid var(--border); border-radius: 12px; font-size: 1.1rem;">
+                            <option>Caixa / Pacote</option>
+                        </select>
+                    </div>
+                    <div class="input-box">
+                        <label>PESO</label>
+                        <input type="text" placeholder="Até 1kg" value="Até 1kg">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                    <div class="input-box">
+                        <label>ALTURA</label>
+                        <input type="text" placeholder="23" value="23">
+                    </div>
+                    <div class="input-box">
+                        <label>LARGURA</label>
+                        <input type="text" placeholder="40" value="40">
+                    </div>
+                    <div class="input-box">
+                        <label>COMPRIMENTO</label>
+                        <input type="text" placeholder="30" value="30">
+                    </div>
+                </div>
+                <div class="input-box">
+                    <label>CEP DE DESTINO</label>
+                    <input type="text" placeholder="01022-070" value="01022-070">
+                </div>
+                <button class="btn-main" onclick="nextStep('gen-quotes')">CALCULAR FRETE COM DESCONTO</button>
+            </div>
+
+            <!-- STEP 2.3 (Gen): QUOTES -->
+            <div id="scr-gen-quotes" class="screen">
+                <button class="btn-back" onclick="nextStep('gen-calc')" style="margin-top:0; margin-bottom:1rem;"><i
+                        class="fas fa-arrow-left"></i> Voltar</button>
+                <h1>Melhores Opções</h1>
+                <p class="subtitle">Selecione o serviço de sua preferência</p>
+
+                <div class="option-stack" style="text-align: left;">
+                    <div class="option-button" onclick="nextStep('collection')"
+                        style="flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                            <span style="display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-box"
+                                    style="font-size: 1rem;"></i> PAC (Correios)</span>
+                            <strong style="color: #2F855A;">R$ 20,07</strong>
+                        </div>
+                        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 400;">Até 6 dias
+                            úteis</span>
+                    </div>
+
+                    <div class="option-button" onclick="nextStep('collection')"
+                        style="flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                            <span style="display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-bolt"
+                                    style="font-size: 1rem;"></i> SEDEX (Correios)</span>
+                            <strong>R$ 41,28</strong>
+                        </div>
+                        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 400;">Até 2 dias
+                            úteis</span>
+                    </div>
+
+                    <div class="option-button" onclick="nextStep('collection')"
+                        style="flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                            <span style="display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-truck"
+                                    style="font-size: 1rem;"></i> JADLOG</span>
+                            <strong>R$ 29,40</strong>
+                        </div>
+                        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 400;">Até 3 dias
+                            úteis</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3 (B): DISCLAIMER -->
+            <div id="scr-disclaimer" class="screen">
+                <h1>Aviso Importante</h1>
+                <p class="subtitle">Leia atentamente antes de prosseguir.</p>
+                <div class="disclaimer-alert">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Responsabilidade</h4>
+                    <p>Não nos responsabilizamos por etiquetas geradas por terceiros (Shopee, Mercado Livre, etc). Erros
+                        de rastreio ou coleta são de responsabilidade da plataforma de origem.</p>
+                </div>
+                <button class="btn-main" onclick="nextStep('collection')">ESTOU CIENTE E QUERO CONTINUAR</button>
+                <button class="btn-back" onclick="nextStep('labels')"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+
+            <!-- STEP 4: COLLECTION CHOICE -->
+            <div id="scr-collection" class="screen">
+                <h1>Coleta e Postagem</h1>
+                <p class="subtitle">Como o pacote chegará até nós?</p>
+                <div class="option-stack">
+                    <div class="option-button" onclick="nextStep('coleta-type')">
+                        <span>Quero Coleta</span>
+                        <i class="fas fa-truck-loading"></i>
+                    </div>
+                    <div class="option-button" onclick="finish('agencia')">
+                        <span>Levar na Agência</span>
+                        <i class="fas fa-store"></i>
+                    </div>
+                </div>
+                <button class="btn-back" onclick="nextStep('main')"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+
+            <!-- STEP 5: COLLECTION TYPE -->
+            <div id="scr-coleta-type" class="screen">
+                <h1>Tipo de Coleta</h1>
+                <p class="subtitle">Escolha a urgência da sua retirada.</p>
+                <div class="option-stack">
+                    <div class="option-button" onclick="nextStep('locker')">
+                        <span>Coleta Express (Imediata)</span>
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="option-button" onclick="finish('programada')">
+                        <span>Coleta Programada</span>
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
+                <button class="btn-back" onclick="nextStep('collection')"><i class="fas fa-arrow-left"></i>
+                    Voltar</button>
+            </div>
+
+            <!-- STEP 6: LOCKER -->
+            <div id="scr-locker" class="screen">
+                <h1>Quase lá!</h1>
+                <p class="subtitle">Instruções para finalização.</p>
+                <div style="font-size: 5rem; color: var(--primary); margin-bottom: 2rem;">
+                    <i class="fas fa-box-tissue"></i>
+                </div>
+                <h2 style="color: var(--secondary); margin-bottom: 2rem;">Por favor, depositar o pacote no **LOCKER 04**
+                </h2>
+                <div class="disclaimer-alert"
+                    style="text-align: center; background: #EBF8FF; border-color: #BEE3F8; color: #2B6CB0;">
+                    <p>Feche bem a porta após o depósito. Seu comprovante será enviado por E-mail.</p>
+                </div>
+                <button class="btn-main" onclick="finish('locker')">CONCLUIR POSTAGEM</button>
+            </div>
+
+            <!-- Progress Dots -->
+            <div class="progress-dots">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 Ex-Envios Logística Inteligente. v3.1
+    </footer>
+
+    <script>
+        function nextStep(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('scr-' + id).classList.add('active');
+
+            // Progress Dots Mapping
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach(d => d.classList.remove('active'));
+
+            let dotIndex = 0;
+            if (id === 'login') dotIndex = 0;
+            else if (id === 'main') dotIndex = 1;
+            else if (['boxes', 'after-pack', 'labels'].includes(id)) dotIndex = 2;
+            else if (id.startsWith('gen-') || id === 'disclaimer') dotIndex = 3;
+            else dotIndex = 4; // collection, coleta-type, locker
+
+            if (dots[dotIndex]) dots[dotIndex].classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function finish(type) {
+            let message = "Processando seu pedido...";
+            if (type === 'locker') message = "Locker confirmado! Obrigado por utilizar a Ex-Envios.";
+            if (type === 'agencia') message = "Aguardamos sua visita na agência selecionada.";
+            if (type === 'programada') message = "Coleta agendada com sucesso!";
+
+            alert(message);
+            window.location.href = 'painel.php';
+        }
+    </script>
+</body>
+
+</html>

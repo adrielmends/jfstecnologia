@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=painel.php">
+    <script type="text/javascript">
+        window.location.href = "painel.php"
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel - Ex-Envios</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/painel.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Mobile Layout Overrides - Premium UI */
+        .mobile-bottom-nav {
+            display: none;
+        }
+
+        @media (max-width: 991px) {
+            .dashboard-container {
+                display: block;
+                height: auto;
+                min-height: 100vh;
+                padding-bottom: 80px;
+                /* Space for bottom nav */
+                background: #f0f4f8;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .top-header {
+                height: 70px;
+                padding: 0 1.25rem;
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(15px);
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .header-right {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .header-user-info {
+                align-items: flex-end;
+                margin-left: auto;
+                margin-right: 15px;
+            }
+
+            .user-avatar {
+                width: 38px;
+                height: 38px;
+            }
+
+            .content-wrapper {
+                padding: 1rem;
+                max-width: 100%;
+            }
+
+            /* Bottom Nav Styles */
+            .mobile-bottom-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 70px;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(20px);
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                border-top: 1px solid rgba(0, 0, 0, 0.08);
+                z-index: 2000;
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+
+            .mobile-nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-decoration: none;
+                color: var(--text-muted);
+                font-size: 0.75rem;
+                gap: 4px;
+                flex: 1;
+                transition: color 0.3s;
+            }
+
+            .mobile-nav-item i {
+                font-size: 1.25rem;
+            }
+
+            .mobile-nav-item.active {
+                color: var(--primary-color);
+            }
+
+            .mobile-nav-item.center {
+                position: relative;
+                top: -20px;
+            }
+
+            .center-icon {
+                width: 54px;
+                height: 54px;
+                background: var(--primary-color);
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 8px 16px rgba(255, 107, 0, 0.3);
+                border: 4px solid white;
+            }
+
+            .center-icon i {
+                font-size: 1.5rem;
+            }
+
+            /* Card Visual Improvements */
+            .calculator-card,
+            .limit-section,
+            .hero-banner {
+                border-radius: 20px;
+                border: none;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            }
+
+            .hero-banner {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+                background: linear-gradient(135deg, #001A2C 0%, #004E82 100%);
+            }
+
+            .banner-content h1 {
+                font-size: 1.5rem;
+            }
+
+            /* Calculator UI - Standardized Top-aligned Labels */
+            .calculator-card {
+                padding: 1.75rem !important;
+                border-radius: 28px !important;
+                background: #ffffff !important;
+                box-shadow: 0 15px 50px rgba(0, 0, 0, 0.04) !important;
+                border: 1px solid rgba(0, 0, 0, 0.02) !important;
+            }
+
+            .input-group {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                width: 100% !important;
+            }
+
+            .input-group label {
+                display: block !important;
+                font-size: 0.7rem !important;
+                font-weight: 800 !important;
+                color: #8E9BAE !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.1em !important;
+                margin-bottom: 0.6rem !important;
+                text-align: left !important;
+                width: 100% !important;
+            }
+
+            .input-group input,
+            .input-group select {
+                width: 100% !important;
+                height: 52px !important;
+                padding: 0 1.25rem !important;
+                border-radius: 14px !important;
+                border: 2px solid #F1F4F9 !important;
+                font-weight: 700 !important;
+                color: var(--navy-dark) !important;
+                background: #FAFBFE !important;
+                font-size: 1rem !important;
+                transition: all 0.3s ease !important;
+            }
+
+            .input-group input:focus,
+            .input-group select:focus {
+                border-color: var(--primary-color) !important;
+                background: #fff !important;
+                box-shadow: 0 0 0 5px rgba(255, 107, 0, 0.1) !important;
+                outline: none !important;
+            }
+
+            .form-row {
+                flex-direction: column !important;
+                gap: 1.5rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+
+            .form-row.three-cols {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr 1fr !important;
+                gap: 0.8rem !important;
+                background: #F8FAFD;
+                padding: 1.25rem;
+                border-radius: 20px;
+                border: 1px solid #EBF0F7;
+            }
+
+            .form-row.three-cols .input-group label {
+                font-size: 0.65rem !important;
+                opacity: 0.9 !important;
+            }
+
+            .action-buttons {
+                display: grid !important;
+                grid-template-columns: 1.5fr 1fr !important;
+                gap: 1rem !important;
+                margin-top: 2rem !important;
+                width: 100% !important;
+            }
+
+            .btn-confirm,
+            .btn-secondary {
+                height: 56px !important;
+                margin: 0 !important;
+                border-radius: 18px !important;
+                font-weight: 900 !important;
+                font-size: 0.95rem !important;
+                letter-spacing: 0.05em !important;
+                text-transform: uppercase !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            .btn-secondary {
+                background: #F1F4F9 !important;
+                color: #718096 !important;
+                border: none !important;
+            }
+
+            /* Profile Section - Ultra Premium Redesign */
+            .profile-card-premium {
+                background: #ffffff !important;
+                border-radius: 32px !important;
+                padding: 2rem !important;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.04) !important;
+                margin-bottom: 1.5rem !important;
+                border: 1px solid rgba(0, 0, 0, 0.01) !important;
+            }
+
+            .profile-label-top {
+                font-size: 0.75rem !important;
+                font-weight: 800 !important;
+                color: #8E9BAE !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.12em !important;
+                display: block !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            .profile-user-name {
+                font-size: 2.2rem !important;
+                font-weight: 900 !important;
+                color: var(--navy-dark) !important;
+                letter-spacing: -0.03em !important;
+                margin: 0 !important;
+            }
+
+            .profile-stats-grid {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr 1fr !important;
+                gap: 0.75rem !important;
+                margin-top: 2rem !important;
+            }
+
+            .p-stat-item {
+                background: #FAFBFE !important;
+                border-radius: 20px !important;
+                padding: 1rem 0.5rem !important;
+                text-align: center !important;
+                border: 1.5px solid #F1F4F9 !important;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            }
+
+            .p-stat-icon {
+                width: 44px !important;
+                height: 44px !important;
+                background: #ffffff !important;
+                border-radius: 14px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                margin: 0 auto 0.6rem !important;
+                color: var(--primary-color) !important;
+                font-size: 1.1rem !important;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02) !important;
+            }
+
+            .p-stat-item span {
+                font-size: 0.65rem !important;
+                color: #718096 !important;
+                font-weight: 800 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.05em !important;
+                line-height: 1.2 !important;
+                display: block !important;
+            }
+
+            /* Promo Banner Premium */
+            .promo-banner-premium {
+                background: linear-gradient(135deg, #001A2C 0%, #004E82 100%) !important;
+                border-radius: 28px !important;
+                padding: 1.75rem !important;
+                position: relative !important;
+                overflow: hidden !important;
+                margin-bottom: 1.5rem !important;
+                box-shadow: 0 15px 40px rgba(0, 26, 44, 0.15) !important;
+            }
+
+            .promo-banner-premium::after {
+                content: '';
+                position: absolute;
+                top: -20%;
+                right: -10%;
+                width: 150px;
+                height: 150px;
+                background: rgba(255, 255, 255, 0.03);
+                border-radius: 50%;
+            }
+
+            .promo-chip {
+                background: rgba(255, 107, 0, 0.15) !important;
+                color: var(--primary-color) !important;
+                padding: 0.4rem 0.8rem !important;
+                border-radius: 10px !important;
+                font-size: 0.65rem !important;
+                font-weight: 900 !important;
+                letter-spacing: 0.1em !important;
+                display: inline-block !important;
+                margin-bottom: 0.75rem !important;
+                border: 1px solid rgba(255, 107, 0, 0.2) !important;
+            }
+
+            .promo-inner h3 {
+                color: #ffffff !important;
+                font-size: 1.35rem !important;
+                font-weight: 800 !important;
+                margin-bottom: 0.4rem !important;
+            }
+
+            .promo-inner p {
+                color: rgba(255, 255, 255, 0.7) !important;
+                font-size: 0.9rem !important;
+                margin-bottom: 1.5rem !important;
+                line-height: 1.4 !important;
+            }
+
+            .promo-btn-action {
+                width: 100% !important;
+                height: 52px !important;
+                background: #ffffff !important;
+                color: var(--navy-dark) !important;
+                border-radius: 16px !important;
+                border: none !important;
+                font-weight: 900 !important;
+                font-size: 0.85rem !important;
+                letter-spacing: 0.05em !important;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+            }
+
+            /* Profile Lists Elegant */
+            .profile-list {
+                padding: 0 !important;
+                margin: 0 !important;
+                list-style: none !important;
+            }
+
+            .profile-list-item {
+                background: #ffffff !important;
+                border-radius: 20px !important;
+                padding: 1.25rem 1.5rem !important;
+                margin-bottom: 0.8rem !important;
+                border: 1px solid #F1F4F9 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                transition: all 0.2s ease !important;
+            }
+
+            .profile-item-left {
+                display: flex !important;
+                align-items: center !important;
+                gap: 1rem !important;
+            }
+
+            .profile-item-left svg {
+                color: var(--primary-color) !important;
+                opacity: 0.8 !important;
+            }
+
+            .profile-item-right {
+                display: flex !important;
+                align-items: center !important;
+            }
+
+            .profile-item-text {
+                font-weight: 700 !important;
+                color: var(--navy-dark) !important;
+                font-size: 0.95rem !important;
+            }
+
+            .profile-item-value {
+                font-weight: 800 !important;
+                color: var(--primary-color) !important;
+                margin-right: 0.5rem !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/img/login/logo.png" alt="Ex-Envios" class="sidebar-logo">
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" onclick="switchView('calculator', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Calcular
+                </a>
+                <a href="#" class="nav-item" onclick="switchView('etiquetas', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.593l6.002-4.288a1.5 1.5 0 00.518-2.091l-9.581-9.581A2.25 2.25 0 009.568 3z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" />
+                    </svg>
+                    Etiquetas
+                </a>
+                <a href="#" class="nav-item" onclick="switchView('rastreio', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
+                    </svg>
+                    Rastreio
+                </a>
+                <a href="#" class="nav-item" onclick="switchView('ajuda', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                    </svg>
+                    Ajuda
+                </a>
+                <a href="#" class="nav-item" onclick="switchView('integracoes', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                    </svg>
+                    Integrações
+                </a>
+                <a href="#" class="nav-item" onclick="switchView('convide', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Convide e Ganhe
+                </a>
+                <a href="#" class="nav-item" onclick="switchView('perfil', this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Perfil
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="totem.html?direct=true" class="btn-sidebar-emitir">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
+                    </svg>
+                    Emitir Frete
+                </a>
+            </div>
+        </aside>
+
+        <!-- Bottom Navigation for Mobile -->
+        <nav class="mobile-bottom-nav">
+            <a href="#" class="mobile-nav-item active" onclick="switchView('calculator', this)">
+                <i class="fas fa-calculator"></i>
+                <span>Calcular</span>
+            </a>
+            <a href="#" class="mobile-nav-item" onclick="switchView('etiquetas', this)">
+                <i class="fas fa-tags"></i>
+                <span>Etiquetas</span>
+            </a>
+            <a href="#" class="mobile-nav-item center" onclick="switchView('calculator', this)">
+                <div class="center-icon">
+                    <i class="fas fa-plus"></i>
+                </div>
+            </a>
+            <a href="#" class="mobile-nav-item" onclick="switchView('rastreio', this)">
+                <i class="fas fa-truck"></i>
+                <span>Rastreio</span>
+            </a>
+            <a href="#" class="mobile-nav-item" onclick="switchView('perfil', this)">
+                <i class="fas fa-user"></i>
+                <span>Perfil</span>
+            </a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <!-- Title/Breadcrumbs -->
+                </div>
+                <div class="header-right">
+                    <button class="btn-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                        </svg>
+                    </button>
+
+                    <div class="header-user-info">
+                        <span class="user-greeting">Olá, Cliente</span>
+                        <div class="wallet-badge-compact">
+                            <span>Saldo: <strong>R$ 0,00</strong></span>
+                            <button class="btn-add-funds-sm" onclick="openDepositModal()">+</button>
+                        </div>
+                    </div>
+
+                    <div class="user-avatar">
+                        C
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <!-- VIEW 1: Calculator -->
+                <div id="view-calculator">
+                    <!-- Promo Banner -->
+                    <div class="hero-banner">
+                        <div class="banner-content">
+                            <h1>Frete que cabe <br>no bolso do <br>seu cliente!</h1>
+                            <p>Seu primeiro envio a partir de <strong>R$1,99</strong> <br>pelas principais
+                                transportadoras
+                            </p>
+                        </div>
+                        <div class="banner-image">
+                            <!-- Placeholder for banner image if needed, or CSS background -->
+                            <img src="assets/img/login/icon.png" alt="Promo" style="height: 150px; opacity: 0.2;">
+                        </div>
+                    </div>
+
+                    <div class="calculator-section">
+                        <h3 class="section-title">INFORME A ORIGEM</h3>
+                        <div class="calculator-card">
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label>CEP de origem</label>
+                                    <input type="text" id="calc-cep-origem" placeholder="00000-000" value="79115-800">
+                                </div>
+                                <div class="action-buttons">
+                                    <button class="btn-sm btn-primary">SALVAR</button>
+                                    <button class="btn-sm btn-outline">LIMPAR</button>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label>Formato</label>
+                                    <select id="calc-formato">
+                                        <option value="1">Caixa / Pacote</option>
+                                        <option value="2">Envelope</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label>Peso</label>
+                                    <select id="calc-peso">
+                                        <option value="">Selecione</option>
+                                        <option value="0.300">Até 300g</option>
+                                        <option value="1.000">Até 1kg</option>
+                                        <option value="2.000">Até 2kg</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row three-cols">
+                                <div class="input-group">
+                                    <label>Altura</label>
+                                    <div class="input-suffix">
+                                        <input type="number" id="calc-altura" placeholder="00" value="10">
+                                        <span>cm</span>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>Largura</label>
+                                    <div class="input-suffix">
+                                        <input type="number" id="calc-largura" placeholder="00" value="15">
+                                        <span>cm</span>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>Comprimento</label>
+                                    <div class="input-suffix">
+                                        <input type="number" id="calc-comprimento" placeholder="00" value="20">
+                                        <span>cm</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-option">
+                                <span>Seguro, aviso e mão própria</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" width="16" height="16">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <h3 class="section-title" style="margin-top: 2rem;">INFORME O DESTINO</h3>
+                        <div class="calculator-card">
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label>CEP de destino</label>
+                                    <div class="input-link-row">
+                                        <input type="text" id="calc-cep-destino" placeholder="00000-000">
+                                        <a href="#" class="link-small">Pesquisar CEP</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn-calculate" onclick="calculateShipping()">CALCULAR FRETE COM DESCONTO</button>
+
+                        <!-- Shipping Results (Hidden by default) -->
+                        <div id="shipping-results" style="display: none; margin-top: 2rem;">
+                            <div class="shipping-options" id="shipping-options-container">
+                                <!-- Dynamic results will be injected here -->
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- End view-calculator -->
+
+                <!-- VIEW 2: Etiquetas (Labels) -->
+                <div id="view-etiquetas" style="display: none;">
+                    <div class="section-header">
+                        <h2>Etiquetas</h2>
+                        <button class="btn-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.894.149c-.424.07-.764.383-.929.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="limit-section">
+                        <div class="limit-info">
+                            <span>Limite restante 5 de 5</span>
+                            <a href="#"
+                                style="color: var(--primary-color); font-size: 0.85rem; font-weight: 600; text-decoration: none;">Pedir
+                                aumento de limite</a>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 5%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="search-bar-row">
+                        <div class="search-input">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                            </svg>
+                            <input type="text" placeholder="Buscar por destinatário">
+                        </div>
+                    </div>
+
+                    <div class="tabs">
+                        <button class="tab active">Todas <span class="badge">0</span></button>
+                        <button class="tab">A Emitir <span class="badge">0</span></button>
+                        <button class="tab">A Postar <span class="badge">0</span></button>
+                    </div>
+
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+                            </svg>
+                        </div>
+                        <h3>Emita o seu primeiro frete com a gente <br>para ter acesso aos nossos benefícios</h3>
+                        <p>Caso queira saber mais sobre os nossos <br>descontos <a href="#"
+                                style="color: var(--primary-color);">veja
+                                aqui</a></p>
+                        <button class="btn-primary" onclick="selectShipping('empty-state')">Emitir frete</button>
+                    </div>
+                </div>
+
+
+                <!-- VIEW 3: Rastreio -->
+                <div id="view-rastreio" style="display: none; padding-top: 1rem;">
+                    <div class="section-header" style="margin-bottom: 1rem;">
+                        <h2>Rastreio</h2>
+                        <!-- Changed from confusing icon to a refresh or filter icon, or removed if not needed -->
+                    </div>
+
+                    <!-- Banner -->
+                    <div class="hero-banner"
+                        style="margin-bottom: 2rem; background: linear-gradient(135deg, #002b49 0%, #004e8a 100%);">
+                        <div class="banner-content">
+                            <h1 style="color: #fff9f0;">Frete que cabe <br>no bolso do <br>seu cliente!</h1>
+                            <p style="color: #cbd5e0;">Seu primeiro envio a partir de <strong
+                                    style="color: var(--primary-color);">R$1,99</strong> <br>pelas principais
+                                transportadoras
+                            </p>
+                        </div>
+                        <div class="banner-image">
+                            <!-- Placeholder for banner image -->
+                            <div
+                                style="width: 120px; height: 120px; opacity: 0.1; background: url('assets/img/login/icon.png') no-repeat center/contain;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchRastreioTab('todos', this)">
+                            TODOS <span class="badge">0</span>
+                        </button>
+                        <button class="tab" onclick="switchRastreioTab('pendentes', this)">
+                            PENDENTES <span class="badge">0</span>
+                        </button>
+                        <button class="tab" onclick="switchRastreioTab('entregues', this)">
+                            ENTREGUES <span class="badge">0</span>
+                        </button>
+                    </div>
+
+                    <!-- Tab Content Containers -->
+                    <div id="tab-content-todos" class="tab-content active">
+                        <div class="empty-state" style="text-align: center; padding: 4rem 0; color: var(--text-muted);">
+                            <p>Nenhuma encomenda encontrada.</p>
+                        </div>
+                    </div>
+                    <div id="tab-content-pendentes" class="tab-content" style="display: none;">
+                        <div class="empty-state" style="text-align: center; padding: 4rem 0; color: var(--text-muted);">
+                            <p>Nenhuma encomenda pendente.</p>
+                        </div>
+                    </div>
+                    <div id="tab-content-entregues" class="tab-content" style="display: none;">
+                        <div class="empty-state" style="text-align: center; padding: 4rem 0; color: var(--text-muted);">
+                            <p>Nenhuma encomenda entregue.</p>
+                        </div>
+                    </div>
+
+                    <!-- Floating Action Button -->
+                    <button class="fab"
+                        style="position: fixed; bottom: 2rem; right: 2rem; width: 56px; height: 56px; border-radius: 50%; background-color: var(--primary-color); color: white; border: none; font-size: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 100;">
+                        +
+                    </button>
+                </div>
+
+                <!-- VIEW 4: Ajuda -->
+                <div id="view-ajuda" style="display: none; padding-top: 1rem;">
+                    <!-- Header -->
+                    <div class="section-header"
+                        style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                        <button class="btn-icon"
+                            onclick="switchView('calculator', document.querySelector('.nav-item'))">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" style="width: 24px; height: 24px;">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                            </svg>
+                        </button>
+                        <h2 style="margin: 0; font-size: 1.5rem; color: #2d3748;">Central de Ajuda</h2>
+                    </div>
+
+                    <!-- Intro Hero with Search -->
+                    <div class="help-hero"
+                        style="background-color: var(--primary-color); border-radius: var(--border-radius); padding: 3rem 2rem; color: white; margin-bottom: 2rem; text-align: center; box-shadow: var(--shadow-md);">
+                        <div style="margin-bottom: 1.5rem;">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor"
+                                style="width: 48px; height: 48px; margin-bottom: 1rem; opacity: 0.9;">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                            </svg>
+                            <h1 style="color: white; margin-bottom: 0.5rem; font-size: 1.8rem;">Conheça a Ex-Envios</h1>
+                            <p style="opacity: 0.9; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Conheça o
+                                aplicativo Ex-Envios e garanta descontos de até 80% no envio de fretes dos Correios.</p>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <div class="help-search" style="position: relative; max-width: 600px; margin: 0 auto;">
+                            <input type="text" placeholder="Pesquise sua dúvida aqui"
+                                style="width: 100%; padding: 15px 25px; padding-left: 50px; border-radius: 30px; border: none; font-size: 1rem; color: #4a5568; outline: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="#cbd5e0"
+                                style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); width: 22px; height: 22px;">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Articles List -->
+                    <div class="help-articles"
+                        style="background: white; border-radius: var(--border-radius); border: 1px solid #e2e8f0; margin-bottom: 2rem; overflow: hidden;">
+
+                        <!-- Question 1 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" style="padding: 1.5rem;" onclick="toggleAccordion(this)">
+                                <span style="font-weight: 500; color: #2d3748; font-size: 1.05rem;">Como rastrear
+                                    encomendas?</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="#a0aec0" class="arrow-icon" style="width: 20px; height: 20px;">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="accordion-body">
+                                    Para rastrear sua encomenda, basta acessar a aba "Rastreio" no menu lateral, inserir
+                                    o código do objeto e clicar em pesquisar. Você verá o status em tempo real
+                                    diretamente da nossa base integrada com os Correios.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Question 2 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" style="padding: 1.5rem;" onclick="toggleAccordion(this)">
+                                <span style="font-weight: 500; color: #2d3748; font-size: 1.05rem;">Como cadastrar e
+                                    configurar minha conta?</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="#a0aec0" class="arrow-icon" style="width: 20px; height: 20px;">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="accordion-body">
+                                    O cadastro é feito na página inicial. Após o primeiro acesso, você pode completar
+                                    seu perfil na aba "Perfil", adicionando endereços padrão de remetente e métodos de
+                                    pagamento para agilizar suas emissões.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Question 3 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" style="padding: 1.5rem;" onclick="toggleAccordion(this)">
+                                <span style="font-weight: 500; color: #2d3748; font-size: 1.05rem;">Como integrar minha
+                                    loja com a Ex-Envios?</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="#a0aec0" class="arrow-icon" style="width: 20px; height: 20px;">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="accordion-body">
+                                    Vá até a aba "Integrações", selecione sua plataforma (Nuvemshop, Shopify,
+                                    WooCommerce, etc.) e siga as instruções na tela para conectar sua chave de API. Seus
+                                    pedidos aparecerão automaticamente para cálculo.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Question 4 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header" style="padding: 1.5rem;" onclick="toggleAccordion(this)">
+                                <span style="font-weight: 500; color: #2d3748; font-size: 1.05rem;">Posso excluir minha
+                                    conta?</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="#a0aec0" class="arrow-icon" style="width: 20px; height: 20px;">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="accordion-body">
+                                    Sim, a exclusão pode ser solicitada através do nosso chat de suporte ou e-mail.
+                                    Lembre-se que ao excluir a conta, seu histórico de etiquetas e saldo na carteira
+                                    serão permanentemente removidos.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer Buttons -->
+                    <div class="help-footer" style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button class="btn-outline"
+                            style="flex: 1; justify-content: center; padding: 1rem; border-color: #cbd5e0; color: var(--text-muted); font-weight: 600; background: white;">
+                            E-MAIL
+                        </button>
+                        <button class="btn-outline"
+                            style="flex: 1; justify-content: center; padding: 1rem; color: var(--primary-color); border-color: var(--primary-color); font-weight: 700; background: white;">
+                            CHAT
+                        </button>
+                        <!-- Floating Chat Button (Bottom Right Fixed) -->
+                        <button
+                            style="position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px; border-radius: 50%; background-color: #25D366; color: white; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.15); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 100;">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" style="width: 32px; height: 32px;">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- VIEW 5: Integrações -->
+                <div id="view-integracoes" style="display: none; padding-top: 1rem;">
+                    <!-- Header -->
+                    <div class="section-header" style="margin-bottom: 0.5rem;">
+                        <h2 style="font-size: 1.5rem; color: #2d3748;">Qual a integração?</h2>
+                        <p style="color: var(--text-muted); font-size: 0.95rem;">Selecione abaixo a plataforma que
+                            deseja
+                            realizar a integração:</p>
+                    </div>
+
+                    <!-- Grid of Integrations -->
+                    <div class="integrations-grid">
+                        <!-- Nuvemshop -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Flogo_nuvemshop.svg?alt=media&token=1c62fae0-da1d-47a8-aa6d-5c7ed2326cd2"
+                                alt="nuvemshop" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Wix -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2FWix.svg?alt=media&token=5d3c708f-bc9f-40fc-84a6-2feb648be4a1"
+                                alt="wix" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Yampi -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Fyampi.svg?alt=media&token=e2a5c08b-a6ff-4e92-bd4c-23b562490681"
+                                alt="yampi" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- WooCommerce -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Flogo_woocommerce.svg?alt=media&token=ff9f3a64-e06e-4e92-9b40-a6e5f09233f9"
+                                alt="woocommerce" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Shopify -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Flogo_shopify.svg?alt=media&token=ff19d3cf-7db3-4f45-8410-53f1fe4ef8c1"
+                                alt="shopify" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- KaBuM! -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Flogo_kabum.svg?alt=media&token=fc44a47f-6e73-4ab5-aa04-fe8fbeef00c1"
+                                alt="kabum" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Tray -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Ftray.svg?alt=media&token=7ef1979a-a2aa-4e79-9f2d-d65ceaf6466a"
+                                alt="tray" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Olist Tiny -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Folist.svg?alt=media&token=ee4fd9b5-8311-4427-afe8-53ef6f9dd307"
+                                alt="olist-tiny" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Bling -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2FBling.svg?alt=media&token=11e221c8-fa01-4124-ada6-4967646066b4"
+                                alt="bling" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Unicopag -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Flogo_unicopag.svg?alt=media&token=abe668f1-7d09-4668-82a7-e0a750084d3f"
+                                alt="unicopag" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Notazz -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Flogo_notazz.svg?alt=media&token=83d35f9c-b29d-4452-8774-f9487a230b7e"
+                                alt="notazz" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Magazord -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Flogo_magazord_211101.svg?alt=media&token=8adcdc84-5998-4526-8745-d7b94cf5be88"
+                                alt="magazord" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- BW Commerce -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Flogo_bw_commerce_211101.svg?alt=media&token=ae392804-71f7-40d5-8868-ad696a382f90"
+                                alt="bw" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- wBuy -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Flogo_wbuy.png?alt=media"
+                                alt="wbuy" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Facilzap -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Flogo_facilzap.svg?alt=media&token=c056bdef-c52d-40cb-bc1b-8179d53fc0f9"
+                                alt="facilzap" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Vendizap -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Flogo_vendizap.svg?alt=media&token=f6587578-771f-411b-969f-c007bb3a5fd8"
+                                alt="vendizap" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- LPQV -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Flogo_LPQV.svg?alt=media&token=52396098-aae2-4005-979d-6849526258e0"
+                                alt="lpqv" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Andcommerce -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2FAndcommerce.svg?alt=media&token=bbdbd87e-dc04-49bd-9206-42edd089db1b"
+                                alt="Andcommerce" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Base -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Flogo_base_191104.svg?alt=media&token=52f70d42-64cd-4dbc-8b97-9332d310759b"
+                                alt="base" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Irroba -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Flogo_irooba.svg?alt=media&token=1b4d688b-165c-47e4-aa1c-95fee3d87c07"
+                                alt="irroba" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- MeLoja -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Fmeloja.svg?alt=media&token=21947fec-836f-48d8-9cde-5d128c413784"
+                                alt="meloja" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Tribox -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Ftribox.svg?alt=media&token=c0de6ae9-813a-4bf9-b0a8-fa03abb6c20a"
+                                alt="tribox" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Lojas Virtuais BR -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Flogo_lojas_virtuais.svg?alt=media&token=621507eb-68d9-44d0-9626-cbc387677311"
+                                alt="Lojas virtuais" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Trocame -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2FFrame%20419.svg?alt=media&token=c5e962db-3fcd-4618-8eb5-8daa2c11cf5b"
+                                alt="Trocame" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Stoqui -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Fstoqui.svg?alt=media&token=a1f5746c-4864-443f-b313-7f5682506ba9"
+                                alt="stoqui" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Loja Integrada -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2Flogo-li.png?alt=media&token=45695854-dea7-46a6-9f09-f6743ba6de33"
+                                alt="lojaintegrada" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+
+                        <!-- Desenvolvedores (API) -->
+                        <div class="integration-card">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/freight-calculator-8d6c1.appspot.com/o/images%2Fintegrations%2FDesenvolvedores.svg?alt=media&token=45c8bf38-d4ab-4779-8edc-aed7fc2191d4"
+                                alt="api" class="integration-logo">
+                            <button class="btn-integrate">Integrar</button>
+                        </div>
+                    </div>
+
+                    <!-- Footer Info -->
+                    <div class="integrations-footer">
+                        <p>Não encontrou a plataforma do seu site?</p>
+                        <p><a href="#">Clique aqui</a> para nos falar qual plataforma você gostaria que a gente tivesse!
+                        </p>
+                    </div>
+                </div>
+
+                <div id="view-perfil" style="display: none; padding-top: 1.5rem;">
+                    <div class="profile-card-premium">
+                        <div class="profile-main-info">
+                            <span class="profile-label-top">Olá, Bem-vindo</span>
+                            <h2 class="profile-user-name">Fernando</h2>
+                        </div>
+
+                        <div class="profile-stats-grid">
+                            <div class="p-stat-item">
+                                <div class="p-stat-icon"><i class="fas fa-id-card"></i></div>
+                                <span>Dados Pessoais</span>
+                            </div>
+                            <div class="p-stat-item">
+                                <div class="p-stat-icon"><i class="fas fa-question-circle"></i></div>
+                                <span>Ajuda</span>
+                            </div>
+                            <div class="p-stat-item">
+                                <div class="p-stat-icon"><i class="fas fa-wallet"></i></div>
+                                <span>Pagamento</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="promo-banner-premium">
+                        <div class="promo-inner">
+                            <div class="promo-text-side">
+                                <span class="promo-chip">EXCLUSIVO</span>
+                                <h3>Convide e Ganhe</h3>
+                                <p>Ganhe <strong>R$ 10,00</strong> em créditos por cada amigo indicado.</p>
+                            </div>
+                            <button class="promo-btn-action"
+                                onclick="switchView('convide', document.querySelector('.nav-item[onclick*=\'convide\']'))">
+                                INDICAR AGORA
+                            </button>
+                        </div>
+                    </div>
+
+                    <ul class="profile-list">
+                        <li class="profile-list-item">
+                            <div class="profile-item-left">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M18 17H6v-2h12zm0-4H6v-2h12zm0-4H6V7h12zM3 22l1.5-1.5L6 22l1.5-1.5L9 22l1.5-1.5L12 22l1.5-1.5L15 22l1.5-1.5L18 22l1.5-1.5L21 22V2l-1.5 1.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2 4.5 3.5 3 2z"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <span class="profile-item-text">Minhas Etiquetas</span>
+                            </div>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cbd5e0"
+                                stroke-width="2">
+                                <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </li>
+                        <li class="profile-list-item">
+                            <div class="profile-item-left">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                                <span class="profile-item-text">Carteira</span>
+                            </div>
+                            <div class="profile-item-right">
+                                <span class="profile-item-value">R$ 0,00</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cbd5e0"
+                                    stroke-width="2">
+                                    <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </li>
+                        <li class="profile-list-item">
+                            <div class="profile-item-left">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2m6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5z"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <span class="profile-item-text">Notificações</span>
+                            </div>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e"
+                                stroke-width="2">
+                                <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </li>
+                        <li class="profile-list-item">
+                            <div class="profile-item-left">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1M8 13h8v-2H8zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <span class="profile-item-text">Inserir cupom amigo Ex-Envios</span>
+                            </div>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e"
+                                stroke-width="2">
+                                <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </li>
+                        <li class="profile-list-item">
+                            <div class="profile-item-left">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M19.43 12.98c.04-.32.07-.64.07-.98 0-.34-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.09-.16-.26-.25-.44-.25-.06 0-.12.01-.17.03l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.06-.02-.12-.03-.18-.03-.17 0-.34.09-.43.25l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98 0 .33.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.09.16.26.25.44.25.06 0 .12-.01.17-.03l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.06.02.12.03.18.03.17 0 .34-.09.43-.25l2-3.46c.12-.22.07-.49-.12-.64zm-1.98-1.71c.04.31.05.52.05.73 0 .21-.02.43-.05.73l-.14 1.13.89.7 1.08.84-.7 1.21-1.27-.51-1.04-.42-.9.68c-.43.32-.84.56-1.25.73l-1.06.43-.16 1.13-.2 1.35h-1.4l-.19-1.35-.16-1.13-1.06-.43c-.43-.18-.83-.41-1.23-.71l-.91-.7-1.06.43-1.27.51-.7-1.21 1.08-.84.89-.7-.14-1.13c-.03-.31-.05-.54-.05-.74s.02-.43.05-.73l.14-1.13-.89-.7-1.08-.84.7-1.21 1.27.51 1.04.42.9-.68c.43-.32.84-.56 1.25-.73l1.06-.43.16-1.13.2-1.35h1.39l.19 1.35.16 1.13 1.06.43c.43.18.83.41 1.23.71l.91.7 1.06-.43 1.27-.51.7 1.21-1.07.85-.89.7zM12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4m0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <span class="profile-item-text">Integrações</span>
+                            </div>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cbd5e0"
+                                stroke-width="2">
+                                <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </li>
+                        <li class="profile-list-item">
+                            <div class="profile-item-left">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <circle cx="12" cy="10" r="3" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <span class="profile-item-text">Meus endereços</span>
+                            </div>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cbd5e0"
+                                stroke-width="2">
+                                <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </li>
+                        <li class="profile-list-item accordion-item" style="display: block; padding: 0;">
+                            <div class="accordion-header" style="padding: 1.2rem 1.5rem;"
+                                onclick="toggleAccordion(this)">
+                                <div class="profile-item-left">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                        <polyline points="14 2 14 8 20 8" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                        <line x1="16" y1="13" x2="8" y2="13" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                        <line x1="16" y1="17" x2="8" y2="17" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                        <polyline points="10 9 9 9 8 9" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                    </svg>
+                                    <span class="profile-item-text">Termos e condições</span>
+                                </div>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cbd5e0"
+                                    stroke-width="2" class="arrow-icon">
+                                    <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="accordion-body">
+                                    Ao utilizar a Ex-Envios, você concorda com nossos termos de proteção de dados e
+                                    políticas de envio. Garantimos a segurança de suas informações e a transparência
+                                    em todo o processo de cotação e emissão de fretes.
+                                </div>
+                            </div>
+                        </li>
+                        <li class="profile-list-item accordion-item" style="display: block; padding: 0;">
+                            <div class="accordion-header" style="padding: 1.2rem 1.5rem;"
+                                onclick="toggleAccordion(this)">
+                                <div class="profile-item-left">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <circle cx="12" cy="8" r="7" stroke-linecap="round" stroke-linejoin="round" />
+                                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <span class="profile-item-text">Regras da promoção</span>
+                                </div>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cbd5e0"
+                                    stroke-width="2" class="arrow-icon">
+                                    <path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="accordion-body">
+                                    A cada amigo indicado que realizar o primeiro envio, você ganha R$ 10 em
+                                    créditos na sua carteira Ex-Envios. Os créditos podem ser utilizados para abater
+                                    o valor de qualquer frete futuro sem data de expiração.
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="app-version">
+                        App ID: mlsax4o7 - 5.6.0 - browser
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 7: Convide e Ganhe -->
+            <div id="view-convide" style="display: none; padding-top: 1rem;">
+                <!-- Hero Banner -->
+                <div class="referral-hero">
+                    <h2>Oi, Fernando!</h2>
+                    <p>Pronto(a) para indicar?</p>
+                </div>
+
+                <!-- Sharing Section -->
+                <div class="referral-section-title">
+                    <h3>Convide e ganhe</h3>
+                    <a href="#" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Termos
+                        da
+                        campanha</a>
+                </div>
+
+                <div class="referral-card">
+                    <div style="margin-bottom: 1rem;">
+                        <span class="referral-link-label">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Campanha ativo
+                        </span>
+                    </div>
+
+                    <p style="margin-bottom: 0.8rem; font-weight: 600; color: #1a202c;">Compartilhe seu link de
+                        indicação:</p>
+                    <div class="referral-share-box">
+                        <span class="referral-url">https://ex-envios.bvr.li/c/MDWQF</span>
+                        <button class="btn-copy" title="Copiar Link">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Performance Metrics -->
+                <h3 class="referral-section-title">Meu desempenho</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <span class="metric-value">0</span>
+                        <span class="metric-label">Clique</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-value">0</span>
+                        <span class="metric-label">Postagem</span>
+                    </div>
+                </div>
+
+                <!-- How to win -->
+                <h3 class="referral-section-title">Veja como fazer para ganhar</h3>
+                <div class="referral-steps">
+                    <div class="referral-step">
+                        <div class="step-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                                <polyline points="16 6 12 2 8 6"></polyline>
+                                <line x1="12" y1="2" x2="12" y2="15"></line>
+                            </svg>
+                        </div>
+                        <div class="step-content">
+                            <h4>Compartilhe seu link</h4>
+                            <p>Envie seu link de indicação para amigos lojistas que ainda não conhecem a Ex-Envios.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="referral-step">
+                        <div class="step-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <line x1="20" y1="8" x2="20" y2="14"></line>
+                                <line x1="23" y1="11" x2="17" y2="11"></line>
+                            </svg>
+                        </div>
+                        <div class="step-content">
+                            <h4>Eles se cadastram</h4>
+                            <p>Seus amigos se cadastram na plataforma através do seu link exclusivo.</p>
+                        </div>
+                    </div>
+
+                    <div class="referral-step">
+                        <div class="step-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                            </svg>
+                        </div>
+                        <div class="step-content">
+                            <h4>Você ganha prêmios</h4>
+                            <p>A cada nova postagem realizada pelos seus indicados, você acumula créditos e prêmios.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </main>
+    </div>
+
+    <!-- Registration Modal (Redesigned) -->
+    <div id="modal-registration" class="modal-premium" style="display: none;">
+        <div class="modal-content-premium" style="max-width: 450px;">
+            <div class="modal-header" style="padding: 5rem 2rem 0rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--navy-dark);">Cadastre-se para Continuar
+                </h2>
+                <button class="btn-close" onclick="closeRegistration()">×</button>
+            </div>
+            <div class="modal-body" style="padding: 0.5rem 2rem 2.5rem;">
+                <p class="modal-subtitle" style="margin-top: 0.5rem;">Para emitir sua etiqueta com desconto, precisamos
+                    de alguns dados.</p>
+                <div class="input-group" style="margin-bottom: 1.25rem;">
+                    <label>Nome Completo</label>
+                    <input type="text" placeholder="Seu nome" id="reg-name"
+                        style="background: #f8fafc; border: 2px solid #f1f4f9; border-radius: 12px; height: 50px;">
+                </div>
+                <div class="input-group" style="margin-bottom: 1.5rem;">
+                    <label>Email</label>
+                    <input type="email" placeholder="Seu email" id="reg-email"
+                        style="background: #f8fafc; border: 2px solid #f1f4f9; border-radius: 12px; height: 50px;">
+                </div>
+                <button class="btn-calculate" onclick="completeRegistration()"
+                    style="margin-top: 0; width: 100%; height: 55px; font-size: 1rem;">Concluir Cadastro</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Postage Method Modal (Redesigned) -->
+    <div id="modal-postage" class="modal-premium" style="display: none;">
+        <div class="modal-content-premium" style="max-width: 500px;">
+            <div class="modal-header" style="justify-content: center; position: relative;">
+                <h2
+                    style="font-size: 1.5rem; font-weight: 800; color: var(--navy-dark); text-align: center; width: 100%;">
+                    Escolha a Postagem</h2>
+                <button class="btn-close" onclick="closePostageModal()"
+                    style="position: absolute; right: 2rem; top: 3.2rem;">×</button>
+            </div>
+            <div class="modal-body" style="padding: 1rem 2rem 2.5rem;">
+                <p class="modal-subtitle" style="text-align: center; margin-bottom: 2rem;">Como você deseja enviar seu
+                    pacote?</p>
+                <div class="postage-options" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div class="postage-card" onclick="selectShipping('agencia')"
+                        style="cursor: pointer; display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border: 2px solid #f1f4f9; border-radius: 20px; transition: all 0.3s ease; background: #fff;">
+                        <div class="postage-icon"
+                            style="width: 60px; height: 60px; background: #fff9f0; display: flex; align-items: center; justify-content: center; border-radius: 16px; font-size: 2rem; border: 1px solid #fff0e0;">
+                            🏪</div>
+                        <div class="postage-info" style="flex: 1;">
+                            <strong
+                                style="display: block; color: var(--navy-dark); font-size: 1.1rem; margin-bottom: 4px;">Levar
+                                até a Agência</strong>
+                            <p style="margin: 0; color: #718096; font-size: 0.9rem; line-height: 1.4;">Poste em qualquer
+                                agência dos Correios ou ponto conveniado.</p>
+                        </div>
+                    </div>
+                    <div class="postage-card" onclick="selectShipping('coleta')"
+                        style="cursor: pointer; display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; border: 2px solid #f1f4f9; border-radius: 20px; transition: all 0.3s ease; background: #fff;">
+                        <div class="postage-icon"
+                            style="width: 60px; height: 60px; background: #fff9f0; display: flex; align-items: center; justify-content: center; border-radius: 16px; font-size: 2rem; border: 1px solid #fff0e0;">
+                            🚚</div>
+                        <div class="postage-info" style="flex: 1;">
+                            <strong
+                                style="display: block; color: var(--navy-dark); font-size: 1.1rem; margin-bottom: 4px;">Solicitar
+                                Coleta</strong>
+                            <p style="margin: 0; color: #718096; font-size: 0.9rem; line-height: 1.4;">Retiramos no seu
+                                endereço em até 60 minutos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        async function calculateShipping() {
+            const cepDest = document.getElementById('calc-cep-destino').value;
+            if (!cepDest) {
+                alert('Informe o CEP de destino');
+                return;
+            }
+
+            const btn = document.querySelector('.btn-calculate');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "Calculando...";
+            btn.disabled = true;
+
+            const payload = {
+                sCepOrigem: document.getElementById('calc-cep-origem').value,
+                sCepDestino: cepDest,
+                nCdFormato: document.getElementById('calc-formato').value,
+                nVlPeso: document.getElementById('calc-peso').value || '1',
+                nVlAltura: document.getElementById('calc-altura').value,
+                nVlLargura: document.getElementById('calc-largura').value,
+                nVlComprimento: document.getElementById('calc-comprimento').value,
+                nVlValorDeclarado: '0'
+            };
+
+            try {
+                const response = await fetch('endpoints/calc_frete_api.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+
+                if (result.ok) {
+                    if (result.servicos && result.servicos.length > 0) {
+                        renderShippingResults(result.servicos);
+                        document.getElementById('shipping-results').style.display = 'block';
+                        document.getElementById('shipping-results').scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        alert('Nenhum resultado de frete retornado. Verifique os dados informados.');
+                    }
+                } else {
+                    alert('Erro ao calcular frete: ' + (result.error || 'Erro desconhecido'));
+                }
+            } catch (e) {
+                console.error("Calculation error:", e);
+                alert('Erro na conexão com o servidor ou no processamento dos dados.');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function renderShippingResults(servicos) {
+            const container = document.getElementById('shipping-options-container');
+            container.innerHTML = '';
+
+            servicos.forEach(s => {
+                let logoPath = 'Correios.png';
+                let alt = 'Correios';
+                if (s.codigo === 'TEX' || s.servico_nome.includes('Total')) {
+                    logoPath = 'Total Express.png';
+                    alt = 'Total Express';
+                }
+
+                const valorBalcao = (s.valor_float * 1.3).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                const valorCalculado = s.valor_float.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                const prazo = s.prazo_dias ? `Até ${s.prazo_dias} dias úteis` : 'Consulte o prazo';
+
+                const html = `
+                    <div class="shipping-option" style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 0rem; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-bottom: 0;">
+                        <div class="ship-info" style="display: flex; align-items: center; gap: 1.5rem; flex: 1;">
+                            <div class="ship-logo" style="width: 70px; display: flex; justify-content: center; background: #fff; padding: 5px; border-radius: 8px;">
+                                <img src="${logoPath}" alt="${alt}" style="max-width: 100%; max-height: 40px; object-fit: contain;">
+                            </div>
+                            <div style="flex: 1;">
+                                <strong style="color: #002b49; font-size: 1.05rem; display: block;">${s.servico_nome}</strong>
+                                <p style="margin: 0; color: #718096; font-size: 0.85rem;">${prazo}</p>
+                            </div>
+                        </div>
+                        <div class="ship-price" style="text-align: right; padding: 0 1.5rem; min-width: 140px;">
+                            <strong style="color: #002b49; font-size: 1.15rem; display: block;">${valorCalculado}</strong>
+                            <span style="text-decoration: line-through; color: #cbd5e0; font-size: 0.85rem;">${valorBalcao}</span>
+                        </div>
+                        <button class="btn-select" onclick="openPostageModal('${s.servico_nome}')" style="background: #FF6B00; color: white; border: none; padding: 0.8rem 1.2rem; border-radius: 10px; font-weight: 700; cursor: pointer; min-width: 140px; transition: all 0.2s;">Gerar Etiqueta</button>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        function openPostageModal(type) {
+            window.selectedService = type;
+            document.getElementById('modal-postage').style.display = 'flex';
+        }
+
+        function closePostageModal() {
+            document.getElementById('modal-postage').style.display = 'none';
+        }
+
+        function selectShipping(method) {
+            window.selectedMethod = method;
+            closePostageModal();
+            document.getElementById('modal-registration').style.display = 'flex';
+        }
+
+
+        function closeRegistration() {
+            document.getElementById('modal-registration').style.display = 'none';
+        }
+
+        function completeRegistration() {
+            alert("Cadastro realizado! Etiqueta emitida.");
+            location.reload();
+        }
+
+        function switchView(viewName, element) {
+            // Update Navigation State
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            if (element) {
+                element.classList.add('active');
+            }
+
+            // Hide all views
+            document.getElementById('view-calculator').style.display = 'none';
+            document.getElementById('view-etiquetas').style.display = 'none';
+            document.getElementById('view-rastreio').style.display = 'none';
+            document.getElementById('view-ajuda').style.display = 'none';
+            document.getElementById('view-integracoes').style.display = 'none';
+            document.getElementById('view-perfil').style.display = 'none';
+            document.getElementById('view-convide').style.display = 'none';
+
+            // Show selected view
+            document.getElementById('view-' + viewName).style.display = 'block';
+        }
+
+        // Initialize with calculator view
+        // switchView('calculator'); // Default behavior handled by HTML style
+
+        function switchRastreioTab(tabName, element) {
+            // Update Tab Buttons
+            const container = element.closest('.tabs');
+            container.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+
+            // Hide all tab contents in Rastreio view
+            const view = document.getElementById('view-rastreio');
+            view.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+
+            // Show selected tab content
+            const selectedContent = document.getElementById('tab-content-' + tabName);
+            if (selectedContent) {
+                selectedContent.style.display = 'block';
+            }
+        }
+
+        function toggleAccordion(element) {
+            const item = element.parentElement;
+            const isActive = item.classList.contains('active');
+
+            // Close all other accordions (optional, but cleaner)
+            document.querySelectorAll('.accordion-item').forEach(acc => {
+                acc.classList.remove('active');
+            });
+
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        }
+    </script>
+    <!-- Modal: Adicionar Saldo (Asaas) -->
+    <div id="modal-deposit" class="modal-premium" style="display: none;">
+        <div class="modal-content-premium">
+            <div class="modal-header" style="padding: 5rem 2rem 0rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--navy-dark);">Adicionar Saldo</h2>
+                <button class="btn-close" onclick="closeDepositModal()">×</button>
+            </div>
+            <div class="modal-body" style="padding: 0.5rem 2rem 2.5rem;">
+                <p class="modal-subtitle" style="margin-top: 0.5rem;">Escolha o valor e o método de pagamento</p>
+
+                <div class="deposit-grid" style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1rem;">
+                    <div class="input-group">
+                        <label
+                            style="display: block; margin-bottom: 0.8rem; font-weight: 800; color: var(--navy-dark); font-size: 0.9rem;">VALOR
+                            (R$)</label>
+                        <input type="number" id="deposit-amount" placeholder="Min. R$ 20,00" min="20"
+                            style="background: #f8fafc; border: 2px solid #f1f4f9; border-radius: 12px; height: 50px; width: 100%; padding: 0 1rem;">
+                    </div>
+                    <div class="method-selector" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <button class="method-btn active" onclick="setMethod('PIX')" style="height: 70px;">
+                            <i class="fas fa-qrcode"></i> Pix
+                        </button>
+                        <button class="method-btn" onclick="setMethod('CREDIT_CARD')" style="height: 70px;">
+                            <i class="fas fa-credit-card"></i> Cartão
+                        </button>
+                    </div>
+                </div>
+
+                <div id="pix-qr-container" style="display: none; text-align: center; margin-top: 2rem;">
+                    <h4 style="color: var(--navy-dark); font-weight: 800; margin-bottom: 1rem;">Escaneie o QR Code</h4>
+                    <img id="pix-qr-image" src="" alt="Pix QR Code"
+                        style="max-width: 200px; margin: 0 auto 1.5rem; display: block; padding: 10px; background: white; border: 1px solid #f1f4f9; border-radius: 16px;">
+                    <button class="btn-copy-pix" onclick="copyPixCode()">Copiar Código Pix</button>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding: 0 2rem 2.5rem;">
+                <button class="btn-calculate" id="btn-generate-payment" onclick="generatePayment()"
+                    style="width: 100%; height: 55px; font-size: 1rem; margin-top: 0;">GERAR PAGAMENTO</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Deposit Modal Premium Styles */
+        .modal-premium {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 26, 44, 0.85);
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .modal-content-premium {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            padding: 3rem 2rem 0rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--navy-dark);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #cbd5e0;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 0 2rem 2rem;
+        }
+
+        .modal-subtitle {
+            color: #8E9BAE;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .method-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .method-btn {
+            height: 60px;
+            border-radius: 16px;
+            border: 2px solid #F1F4F9;
+            background: #FAFBFE;
+            color: var(--navy-dark);
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .method-btn.active {
+            border-color: var(--primary-color);
+            background: rgba(255, 107, 0, 0.05);
+            color: var(--primary-color);
+        }
+
+        .btn-copy-pix {
+            width: 100%;
+            height: 50px;
+            border-radius: 14px;
+            background: #f1f5f9;
+            border: none;
+            color: var(--navy-dark);
+            font-weight: 700;
+            margin-top: 1rem;
+        }
+
+        /* Modal Alert Premium */
+        #modal-alert .modal-content-premium {
+            max-width: 400px;
+            text-align: center;
+        }
+
+        #modal-alert .modal-body {
+            padding: 1rem 2rem 2.5rem;
+        }
+
+        #modal-alert .alert-message {
+            font-size: 1.1rem;
+            color: var(--navy-dark);
+            font-weight: 500;
+            line-height: 1.5;
+            margin-bottom: 2rem;
+        }
+
+        .postage-card:hover {
+            border-color: var(--primary-color) !important;
+            background: rgba(255, 107, 0, 0.02) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.05);
+        }
+
+        .shipping-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0rem;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .shipping-option:not(:last-child) {
+            border-bottom: 1px solid #f1f4f9 !important;
+        }
+
+        .shipping-option {
+            background: white !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+    </style>
+
+    <!-- Modal: Alert Personalizado -->
+    <div id="modal-alert" class="modal-premium" style="display: none;">
+        <div class="modal-content-premium">
+            <div class="modal-header" style="justify-content: center; padding-bottom: 0.5rem;">
+                <h3 style="color: var(--primary-color);">Aviso</h3>
+            </div>
+            <div class="modal-body">
+                <p class="alert-message" id="alert-message-text">Mensagem do sistema</p>
+                <button class="btn-calculate" onclick="closeAlertModal()" style="margin-top: 0;">ENTENDI</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedMethod = 'PIX';
+        let pixCode = '';
+
+        function openDepositModal() {
+            document.getElementById('modal-deposit').style.display = 'flex';
+        }
+        function closeDepositModal() {
+            document.getElementById('modal-deposit').style.display = 'none';
+            document.getElementById('pix-qr-container').style.display = 'none';
+            document.getElementById('btn-generate-payment').style.display = 'block';
+        }
+        function setMethod(method) {
+            selectedMethod = method;
+            document.querySelectorAll('.method-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        async function generatePayment() {
+            const amount = document.getElementById('deposit-amount').value;
+            if (amount < 20) { alert('Valor mínimo: R$ 20,00'); return; }
+
+            const btn = document.getElementById('btn-generate-payment');
+            btn.innerText = "PROCESSANDO...";
+            btn.disabled = true;
+
+            try {
+                // For demo, we send placeholder data since real auth isn't active
+                const formData = new FormData();
+                formData.append('action', 'generate_pix');
+                formData.append('amount', amount);
+                formData.append('userName', 'Fernando');
+                formData.append('userEmail', 'fernando@email.com');
+                formData.append('userCpf', '00000000000'); // Valid placeholder
+
+                const response = await fetch('asaas-checkout.php', { method: 'POST', body: formData });
+                const result = await response.json();
+
+                if (result.ok) {
+                    if (selectedMethod === 'PIX') {
+                        document.getElementById('pix-qr-image').src = 'data:image/png;base64,' + result.data.pix.encodedImage;
+                        pixCode = result.data.pix.payload;
+                        document.getElementById('pix-qr-container').style.display = 'block';
+                        btn.style.display = 'none';
+                    } else {
+                        // For Credit Card, Asaas returns a direct payment link
+                        window.open(result.data.invoiceUrl, '_blank');
+                    }
+                } else {
+                    alert('Erro: ' + result.error);
+                }
+            } catch (e) {
+                alert('Erro na conexão com o servidor.');
+            } finally {
+                btn.innerText = "GERAR PAGAMENTO";
+                btn.disabled = false;
+            }
+        }
+
+        function copyPixCode() {
+            navigator.clipboard.writeText(pixCode);
+            showAlert('Código Pix copiado!');
+        }
+
+        // Custom Alert Logic
+        function showAlert(message) {
+            document.getElementById('alert-message-text').innerText = message;
+            document.getElementById('modal-alert').style.display = 'flex';
+        }
+
+        function closeAlertModal() {
+            document.getElementById('modal-alert').style.display = 'none';
+        }
+
+        // Replace global alert with showAlert
+        window.alert = showAlert;
+
+        // Hook up the original button
+        document.querySelector('.btn-add-funds-sm').onclick = openDepositModal;
+    </script>
+</body>
+
+</html>

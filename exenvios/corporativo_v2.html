@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corporativo | Ex-Envios Soluções B2B</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #FF9600;
+            --primary-hover: #E68700;
+            --secondary: #0A3750;
+            --secondary-light: #124B6B;
+            --text-main: #1A202C;
+            --text-muted: #718096;
+            --bg-light: #F7FAFC;
+            --white: #ffffff;
+            --border: #E2E8F0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-color: var(--white);
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            background: var(--white);
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .btn-nav {
+            background: var(--primary);
+            color: var(--white) !important;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 700;
+        }
+
+        /* Hero Corporate */
+        .hero-corp {
+            padding: 180px 0 100px;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-corp::after {
+            content: '';
+            position: absolute;
+            right: -10%;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 150, 0, 0.1) 0%, transparent 70%);
+        }
+
+        .hero-corp h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+        }
+
+        .hero-corp p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+        }
+
+        /* B2B Benefits */
+        .b2b-benefits {
+            padding: 100px 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            margin-top: 50px;
+        }
+
+        .benefit-card {
+            padding: 3rem 2rem;
+            background: var(--bg-light);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            background: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.4rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Contact Form Section */
+        .contact-section {
+            padding: 100px 0;
+            background: var(--secondary);
+            color: var(--white);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .contact-info h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-item i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .contact-form {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 24px;
+            color: var(--text-main);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: inherit;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-submit {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1.2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-hover);
+        }
+
+        footer {
+            padding: 4rem 0 2rem;
+            background: #061F2D;
+            color: var(--white);
+        }
+
+        .footer-bottom {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            opacity: 0.5;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 992px) {
+
+            .benefits-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-corp h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <a href="index_v2.html" class="logo">
+                    <img src="assets/img/logo_exenvios.png" alt="Ex-Envios">
+                </a>
+                <div class="nav-links">
+                    <a href="index_v2.html">Início</a>
+                    <a href="#solucoes">Soluções</a>
+                    <a href="#contato">Fale com um Especialista</a>
+                    <a href="login.html" class="btn-nav">ÁREA DO CLIENTE</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-corp">
+        <div class="container">
+            <h1>Sua logística em <span>Vantagem Competitiva</span></h1>
+            <p>A Ex-Envios oferece soluções B2B customizadas, simplificando processos complexos e reduzindo custos
+                operacionais para empresas de todos os portes.</p>
+            <a href="#contato" class="btn-submit"
+                style="display:inline-block; width:auto; padding: 1.2rem 3rem;">SOLICITAR CONSULTORIA</a>
+        </div>
+    </section>
+
+    <section id="solucoes" class="b2b-benefits">
+        <div class="container">
+            <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+                <h2 style="font-size: 2.5rem; color: var(--secondary);">Por que ser um parceiro Ex-Envios?</h2>
+                <p class="text-muted">Integramos inteligência e tecnologia para potencializar sua operação logística de
+                    ponta a ponta.</p>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fas fa-hand-holding-dollar"></i></div>
+                    <h3>Economia em Escala</h3>
+                    <p>Acesso a tabelas de frete negociadas por grandes volumes, garantindo a melhor margem para sua
+                        empresa.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fas fa-microchip"></i></div>
+                    <h3>API de Integração</h3>
+                    <p>Conecte seu ERP ou E-commerce diretamente à nossa plataforma para automatizar toda a sua cadeia
+                        de envios.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fas fa-headset"></i></div>
+                    <h3>Gerente de Conta</h3>
+                    <p>Suporte dedicado e estratégico para otimizar sua malha logística e resolver qualquer imprevisto
+                        com prioridade.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contato" class="contact-section">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h2>Pronto para o Próximo Nível?</h2>
+                    <p style="margin-bottom:3rem; opacity:0.8;">Preencha o formulário e um de nossos consultores entrará
+                        em contato para desenhar o melhor plano para o seu negócio.</p>
+
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Telefone</h4>
+                            <p>(11) 4003-XXXX</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>E-mail Corporativo</h4>
+                            <p>b2b@exenvios.com.br</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form">
+                    <form>
+                        <div class="form-group">
+                            <label>Nome Completo</label>
+                            <input type="text" placeholder="Seu nome">
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail Corporativo</label>
+                            <input type="email" placeholder="email@empresa.com.br">
+                        </div>
+                        <div class="form-group">
+                            <label>Volume Mensal Estimado</label>
+                            <select>
+                                <option>Até 100 envios/mês</option>
+                                <option>100 a 500 envios/mês</option>
+                                <option>Acima de 500 envios/mês</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Mensagem</label>
+                            <textarea rows="4" placeholder="Como podemos ajudar sua empresa?"></textarea>
+                        </div>
+                        <button type="button" class="btn-submit">ENVIAR SOLICITAÇÃO</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p style="text-align: center; opacity: 0.7;">&copy; 2026 Ex-Envios Soluções Logísticas Corporativas. Todos
+                os direitos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
