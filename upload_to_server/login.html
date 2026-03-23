@@ -1,0 +1,470 @@
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Ex-Envios</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet">
+
+    <!-- Preload Background Images to prevent "flashing" -->
+    <link rel="preload" as="image" href="assets/img/login/background.webp">
+    <link rel="preload" as="image" href="assets/img/login/van.png">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/login.css">
+    
+    <!-- Custom Toast Notification System -->
+    <style>
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 99999;
+            background: #2d3748;
+            color: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            align-items: center;
+        }
+        .toast-container.show { opacity: 1; transform: translateY(0); }
+        .toast-content { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 1.5rem; }
+        #toast-message { font-size: 0.95rem; font-weight: 500; }
+        .toast-close { background: none; border: none; color: #cbd5e0; font-size: 1.2rem; cursor: pointer; padding: 0; margin: 0; transition: color 0.2s; }
+        .toast-close:hover { color: #fff; }
+    </style>
+    <script>
+        // Override standard alert early
+        window.alert = function showToast(message) {
+            let toast = document.getElementById('custom-toast');
+            if(!toast) {
+                // Determine if DOM is ready to inject
+                if(document.body) {
+                    injectToastUI();
+                    toast = document.getElementById('custom-toast');
+                } else {
+                    console.log("Alert (pre-DOM): ", message);
+                    return; 
+                }
+            }
+            document.getElementById('toast-message').innerText = message;
+            toast.style.display = 'flex';
+            setTimeout(() => { toast.classList.add('show'); }, 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => { toast.style.display = 'none'; }, 300);
+            }, 4000);
+        };
+        
+        function closeToast() {
+            const toast = document.getElementById('custom-toast');
+            if(toast) {
+                toast.classList.remove('show');
+                setTimeout(() => { toast.style.display = 'none'; }, 300);
+            }
+        }
+
+        function injectToastUI() {
+            if(!document.getElementById('custom-toast')) {
+                const div = document.createElement('div');
+                div.id = 'custom-toast';
+                div.className = 'toast-container';
+                div.style.display = 'none';
+                div.innerHTML = `
+                    <div class="toast-content">
+                        <span id="toast-message">Mensagem</span>
+                        <button class="toast-close" onclick="closeToast()">&times;</button>
+                    </div>
+                `;
+                document.body.appendChild(div);
+            }
+        }
+        
+        // Inject UI when DOM is ready
+        document.addEventListener('DOMContentLoaded', injectToastUI);
+    </script>
+</head>
+
+<body>
+    <div class="login-container">
+        <!-- Left Side: Image -->
+        <div class="login-image">
+            <img src="assets/img/login/background.webp" alt="Background Texture" class="bg-texture">
+            <div class="van-wrapper">
+                <img src="assets/img/login/van.png" alt="Entregas Ex-Envios" class="van-image">
+            </div>
+            <div class="overlay"></div> <!-- Optional overlay for text readability if needed -->
+        </div>
+
+        <!-- Right Side: Form -->
+        <div class="login-form-container">
+            <div class="login-content">
+                <div class="logo-container" style="margin-top: 2rem; margin-bottom: 1rem;">
+                    <img src="assets/img/logo_exenvios.png" alt="Ex-Envios Logo" class="logo">
+                </div>
+
+                <div class="text-center mb-4">
+                    <h1 class="welcome-title">Bem-vindo de volta!</h1>
+                    <p class="welcome-subtitle">Acesse sua conta para gerenciar seus envios.</p>
+                </div>
+
+                <!-- Toggle Buttons -->
+                <div class="auth-toggle">
+                    <button class="toggle-btn active" id="btn-login">Entrar</button>
+                    <button class="toggle-btn" id="btn-register">Cadastrar</button>
+                </div>
+
+                <form class="login-form" id="form-auth-login" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="email">E-MAIL</label>
+                        <input type="email" id="login-email" name="email" placeholder="seu@email.com" required="">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">SENHA</label>
+                        <input type="password" id="login-password" name="password" placeholder="Sua senha" required="">
+                    </div>
+
+                    <div class="form-actions">
+                        <label class="remember-me">
+                            <input type="checkbox" name="remember">
+                            <span>Lembrar-me</span>
+                        </label>
+                        <a href="#" class="forgot-password">Esqueceu a senha?</a>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="btn-submit-login">ACESSAR CONTA</button>
+                </form>
+
+                <!-- Registration Flow -->
+                <div id="registration-flow" style="display: none;">
+
+                    <!-- Step 1: Type Selection -->
+                    <div class="reg-step" id="reg-step-1">
+                        <h2 class="step-title">Escolha o tipo de conta</h2>
+                        <div class="promo-banner">
+                            ✨ No envio de mais de 5 encomendas, a coleta é por nossa conta!
+                        </div>
+                        <div class="account-types">
+                            <div class="account-type-card" onclick="nextRegStep(2, 'pf')">
+                                <div class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                                    </svg>
+                                </div>
+                                <h3>Pessoa Física</h3>
+                                <p>Para você que envia esporadicamente.</p>
+                            </div>
+                            <div class="account-type-card" onclick="nextRegStep(2, 'pj')">
+                                <div class="icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+                                    </svg>
+                                </div>
+                                <h3>Pessoa Jurídica</h3>
+                                <p>Para sua empresa com envios frequentes.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Personal/Company Data -->
+                    <div class="reg-step" id="reg-step-2" style="display: none;">
+                        <button class="btn-back-link" onclick="prevRegStep(1)">← Voltar</button>
+                        <h2 class="step-title">Seus Dados</h2>
+
+                        <!-- PF Form -->
+                        <div id="form-pf">
+                            <div class="form-group">
+                                <label>Nome Completo</label>
+                                <input type="text" id="reg-name-pf" placeholder="Nome e Sobrenome">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>CPF</label>
+                                    <input type="text" id="reg-cpf-pf" placeholder="000.000.000-00">
+                                </div>
+                                <div class="form-group">
+                                    <label>Data Nasc.</label>
+                                    <input type="date" id="reg-birth-pf">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PJ Form -->
+                        <div id="form-pj" style="display: none;">
+                            <div class="form-group">
+                                <label>Razão Social</label>
+                                <input type="text" id="reg-name-pj" placeholder="Nome da Empresa">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>CNPJ</label>
+                                    <input type="text" id="reg-cnpj-pj" placeholder="00.000.000/0000-00">
+                                </div>
+                                <div class="form-group">
+                                    <label>Responsável</label>
+                                    <input type="text" id="reg-resp-pj" placeholder="Nome do Responsável">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Common Fields -->
+                        <div class="form-group">
+                            <label>Celular (WhatsApp)</label>
+                            <input type="tel" id="reg-phone" placeholder="(00) 00000-0000">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="reg-email" placeholder="seu@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Senha</label>
+                            <input type="password" id="reg-password" placeholder="Crie uma senha">
+                        </div>
+
+                        <button class="btn-submit" onclick="nextRegStep(3)">Continuar</button>
+                    </div>
+
+                    <!-- Step 3: Address -->
+                    <div class="reg-step" id="reg-step-3" style="display: none;">
+                        <button class="btn-back-link" onclick="prevRegStep(2)">← Voltar</button>
+                        <h2 class="step-title">Endereço</h2>
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 1;">
+                                <label>CEP</label>
+                                <input type="text" placeholder="00000-000" onblur="fillAddress()">
+                            </div>
+                            <div class="form-group" style="flex: 2;">
+                                <label>Cidade</label>
+                                <input type="text" id="reg-city" readonly>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 3;">
+                                <label>Rua / Avenida</label>
+                                <input type="text" id="reg-street">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label>Número</label>
+                                <input type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Bairro</label>
+                            <input type="text" id="reg-neighborhood">
+                        </div>
+                        <div class="form-group">
+                            <label>Complemento</label>
+                            <input type="text">
+                        </div>
+
+                        <button class="btn-submit" onclick="nextRegStep(4)">Continuar</button>
+                    </div>
+
+                    <!-- Step 4: Verification -->
+                    <div class="reg-step" id="reg-step-4" style="display: none;">
+                        <button class="btn-back-link" onclick="prevRegStep(3)">← Voltar</button>
+                        <h2 class="step-title">Verificação</h2>
+                        <p class="step-desc">Enviamos um código para seu Email e WhatsApp.</p>
+
+                        <div class="verification-inputs">
+                            <input type="text" maxlength="1" class="code-box">
+                            <input type="text" maxlength="1" class="code-box">
+                            <input type="text" maxlength="1" class="code-box">
+                            <input type="text" maxlength="1" class="code-box">
+                        </div>
+
+                        <button class="btn-submit" onclick="nextRegStep(5)">Verificar</button>
+                    </div>
+
+                    <!-- Step 5: Finalization -->
+                    <div class="reg-step" id="reg-step-5" style="display: none;">
+                        <h2 class="step-title">Tudo Pronto! 🎉</h2>
+                        <p class="step-desc">Seu cadastro foi realizado com sucesso.</p>
+
+                        <div class="form-group">
+                            <label>Comentário (Opcional)</label>
+                            <textarea rows="4"
+                                placeholder="Deixe seu comentário para prepararmos um atendimento personalizado..."></textarea>
+                        </div>
+
+                        <button class="btn-submit" onclick="finishRegistration()">Finalizar e Entrar</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let regType = 'pf';
+
+        // Simple toggle script for visual feedback
+        const btnLogin = document.getElementById('btn-login');
+        const btnRegister = document.getElementById('btn-register');
+        const loginForm = document.querySelector('.login-form');
+        const regFlow = document.getElementById('registration-flow');
+        const welcomeTitle = document.querySelector('.welcome-title');
+        const welcomeSubtitle = document.querySelector('.welcome-subtitle');
+
+        btnLogin.addEventListener('click', () => {
+            btnLogin.classList.add('active');
+            btnRegister.classList.remove('active');
+            loginForm.style.display = 'block';
+            regFlow.style.display = 'none';
+            welcomeTitle.innerText = "Bem-vindo de volta!";
+            welcomeSubtitle.innerText = "Acesse sua conta para gerenciar seus envios.";
+        });
+
+        btnRegister.addEventListener('click', () => {
+            btnRegister.classList.add('active');
+            btnLogin.classList.remove('active');
+            loginForm.style.display = 'none';
+            regFlow.style.display = 'block';
+            welcomeTitle.innerText = "Crie sua conta";
+            welcomeSubtitle.innerText = "Comece a enviar com a Ex-Envios hoje mesmo.";
+            showStep(1);
+        });
+
+        function showStep(stepId) {
+            document.querySelectorAll('.reg-step').forEach(el => el.style.display = 'none');
+            document.getElementById('reg-step-' + stepId).style.display = 'block';
+        }
+
+        function nextRegStep(stepId, type) {
+            // Validation for Step 2 -> 3
+            if (document.getElementById('reg-step-2').style.display === 'block') {
+                const email = document.getElementById('reg-email').value;
+                const password = document.getElementById('reg-password').value;
+                const name = regType === 'pf' ? document.getElementById('reg-name-pf').value : document.getElementById('reg-name-pj').value;
+
+                if (!name || !email || !password) {
+                    alert("Por favor, preencha nome, email e senha.");
+                    return;
+                }
+            }
+
+            // Validation for Step 3 -> 4
+            if (document.getElementById('reg-step-3').style.display === 'block') {
+                const street = document.getElementById('reg-street').value;
+                if (!street) {
+                    alert("Por favor, preencha os dados de endereço.");
+                    return;
+                }
+            }
+
+            if (type) {
+                regType = type;
+                if (type === 'pf') {
+                    document.getElementById('form-pf').style.display = 'block';
+                    document.getElementById('form-pj').style.display = 'none';
+                } else if (type === 'pj') {
+                    document.getElementById('form-pf').style.display = 'none';
+                    document.getElementById('form-pj').style.display = 'block';
+                }
+            }
+            showStep(stepId);
+        }
+
+        function prevRegStep(stepId) {
+            showStep(stepId);
+        }
+
+        function fillAddress() {
+            // Fake fill for now
+            document.getElementById('reg-city').value = 'Campo Grande';
+            document.getElementById('reg-street').value = 'Av. Afonso Pena';
+            document.getElementById('reg-neighborhood').value = 'Centro';
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-login');
+            const originalText = btn.innerText;
+            btn.innerText = "CARREGANDO...";
+            btn.disabled = true;
+
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const res = await fetch('endpoints/login.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const result = await res.json();
+
+                if (result.ok) {
+                    if (result.role === 'admin') {
+                        window.location.href = '/admin';
+                    } else {
+                        window.location.href = '/painel';
+                    }
+                } else {
+                    alert(result.error || "Erro ao fazer login");
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                alert("Erro de conexão com o servidor");
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        async function finishRegistration() {
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = "PROCESSANDO...";
+            btn.disabled = true;
+
+            const data = {
+                type: regType,
+                name: regType === 'pf' ? document.getElementById('reg-name-pf').value : document.getElementById('reg-name-pj').value,
+                email: document.getElementById('reg-email').value,
+                password: document.getElementById('reg-password').value,
+                cpf: regType === 'pf' ? document.getElementById('reg-cpf-pf').value : document.getElementById('reg-cnpj-pj').value,
+                phone: document.getElementById('reg-phone').value
+            };
+
+            try {
+                const res = await fetch('endpoints/register.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+
+                if (result.ok) {
+                    alert("Bem-vindo! Seu cadastro foi realizado.");
+                    window.location.href = 'painel';
+                } else {
+                    alert(result.error || "Erro ao realizar cadastro");
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                alert("Erro de conexão com o servidor");
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>

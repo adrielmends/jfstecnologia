@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<!-- Box 1 (Bottom Left) -->
+<rect x="64" y="272" width="160" height="160" fill="#FF8C00" stroke="#002b49" stroke-width="12"/>
+<line x1="64" y1="272" x2="224" y2="432" stroke="#002b49" stroke-width="4" opacity="0.3"/>
+<!-- Box 2 (Bottom Right) -->
+<rect x="256" y="272" width="192" height="160" fill="#FF8C00" stroke="#002b49" stroke-width="12"/>
+<rect x="256" y="304" width="192" height="40" fill="#FFD180" stroke="#002b49" stroke-width="8"/>
+<!-- Box 3 (Top) -->
+<rect x="160" y="96" width="192" height="160" fill="#FF8C00" stroke="#002b49" stroke-width="12"/>
+<!-- Tape on Top Box -->
+<line x1="256" y1="96" x2="256" y2="256" stroke="#002b49" stroke-width="8"/>
+<!-- Open Flaps Top Box -->
+<path d="M160,96 L208,64 L304,64 L352,96" fill="none" stroke="#002b49" stroke-width="8" stroke-linejoin="round"/>
+</svg>
