@@ -4,12 +4,17 @@
  * Site: Ex-Envios
  */
 
+// Load Credentials (Git-ignored)
+if (file_exists(__DIR__ . '/credentials.php')) {
+    require_once __DIR__ . '/credentials.php';
+}
+
 // Database Credentials
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'exen_exenvios');
 define('DB_USER', 'exen_Ex-Envios');
-define('DB_PASS', '12sC5LjycvG4l*iH'); // <--- COLOQUE A SENHA QUE VOCÊ CRIOU NO CYBERPANEL AQUI
-define('GEMINI_API_KEY', 'AIzaSyA97ClzuIQ0S8TW_SDqrTaA7ezZnk2Tg2c');
+if (!defined('DB_PASS')) define('DB_PASS', defined('DB_PASS_REAL') ? DB_PASS_REAL : '');
+if (!defined('GEMINI_API_KEY')) define('GEMINI_API_KEY', '');
 
 /**
  * Get Database Connection
